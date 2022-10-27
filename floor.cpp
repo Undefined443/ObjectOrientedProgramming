@@ -20,7 +20,7 @@ void floor::request_elevator(passenger *p) {
 }
 
 void floor::set_elevators(std::vector<elevator *> &ev) {
-    for (auto e : ev) {
+    for (auto e: ev) {
         elevators.push_back(e);
     }
 }

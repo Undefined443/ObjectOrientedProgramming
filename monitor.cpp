@@ -2,7 +2,10 @@
 #include <iostream>
 #include <sstream>
 
-monitor::monitor(building *b) : budin(b), refresh_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()), base_time_stamp(refresh_time_stamp), refresh_rate(budin->conf["simulator.refreshRateMillisecond"]), elevNum(budin->conf["elevator.count"]), floorNum(budin->conf["building.floors"]) {
+monitor::monitor(building *b) : budin(b), refresh_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count()), base_time_stamp(refresh_time_stamp),
+                                refresh_rate(budin->conf["simulator.refreshRateMillisecond"]),
+                                elevNum(budin->conf["elevator.count"]), floorNum(budin->conf["building.floors"]) {
     budin->set_monitor(this);
 }
 
@@ -85,10 +88,12 @@ void monitor::get_boarding_que() {
 }
 
 void monitor::set_refresh_time() {
-    refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
 
 long long monitor::get_time_gap() const {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - refresh_time_stamp;
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count() - refresh_time_stamp;
 }

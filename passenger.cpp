@@ -4,7 +4,10 @@
 std::random_device passenger::rd;
 std::mt19937 passenger::e(rd());
 
-passenger::passenger(class building *b, class floor *f, const nlohmann::json &conf) : base_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()), current_building(b), current_floor(f), conf(conf) {
+passenger::passenger(class building *b, class floor *f, const nlohmann::json &conf) : refresh_time_stamp(
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()),
+        current_building(b), current_floor(f), conf(conf) {
+
     rand_floor = std::uniform_int_distribution<>(1, conf["building.floors"]);
     rand_boarding_time = std::uniform_int_distribution<>(conf["passenger.boardingTimeRange"][0], conf["passenger.boardingTimeRange"][1]);
     rand_active_time = std::uniform_int_distribution<>(conf["passenger.activeTimeRange"][0], conf["passenger.activeTimeRange"][1]);
@@ -48,7 +51,7 @@ void passenger::alight(class floor *f) {
     current_floor->add_passenger(this);
     current_elevator = nullptr;
     active_time = rand_active_time(e);  // reset active time
-    set_base_time();  // reset base time
+    set_refresh_time();  // reset base time
     activated = false;  // reset activated
 }
 
@@ -56,14 +59,15 @@ void passenger::set_monitor(monitor *m) {
     mon = m;
 }
 
-void passenger::set_base_time() {
-    base_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+void passenger::set_refresh_time() {
+    refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
 long long passenger::get_time_gap() const {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - base_time_stamp;
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count() - refresh_time_stamp;
 }
-
 
 class floor *passenger::get_current_floor() {
     return current_floor;
