@@ -1,5 +1,6 @@
 #include "monitor.h"
 #include "building.h"
+#include <iostream>
 
 void setup();
 void loop();
@@ -19,7 +20,8 @@ void loop() {
 
 int main() {
     setup();
-    while (true) {
+    while (mon->get_status()) {
         loop();
     }
+    std::cout << "Simulation finished." << std::endl;
 }

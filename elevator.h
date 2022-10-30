@@ -14,9 +14,11 @@ class monitor;
 
 class elevator {
 public:
-    elevator(monitor *mon, int id, const nlohmann::json &conf);
-
     void set_floors(std::vector<class floor *> &fv);  // set floors accessible by the elevator
+
+    elevator(int id, const nlohmann::json& conf);
+
+    void set_monitor(monitor *m);  // set the monitor
 
     void reg_pas(passenger *p);  // if a passenger want to board the elevator, register it (by floor)
 
@@ -28,10 +30,16 @@ public:
         up = 1, down = -1, stop = 0
     };
 
+    enum status {
+        running = 1, idle = 0
+    };
+
     // getters
     class floor *get_current_floor();
 
     int get_direction() const;
+
+    bool get_status() const;
 
 private:
     int id;
@@ -39,8 +47,8 @@ private:
     nlohmann::json conf;  // configuration data
     long long refresh_time_stamp;  // base time stamp for elevator
 
-    int direction = 0;  // 1 = up, -1 = down, 0 = stopped
-    bool status = false;  // true = running, false = idle
+    int direction = stop;
+    bool status = idle;
 
     class floor *current_floor;
     std::vector<class floor *> floors;  // floors attached to the elevator
@@ -54,7 +62,7 @@ private:
 
     int choose_direction();  // choose the direction of the elevator
 
-    void set_base_time();  // set base time for elevator
+    void set_refresh_time();  // set base time for elevator
 
     long long get_time_gap() const;  // calculate time gap between current time and last run time
 };

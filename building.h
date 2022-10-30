@@ -21,11 +21,11 @@ public:
 
     // Setup
     building();
-    void set_monitor(monitor *m);
+    void set_monitor(monitor *_monitor);
 
     // Methods
     void run();  // refresh the building
-    void remove_passenger(passenger &p);  // remove passenger from building
+    void remove_passenger(passenger *p);  // remove passenger from building
 
 private:
     static std::random_device rd;  // obtain a random number from hardware
@@ -35,7 +35,7 @@ private:
     monitor *mon;  // monitor for the building
     nlohmann::json conf;  // store configuration data
     long long refresh_time_stamp;
-    unsigned tot_traffic = 0;
+    int tot_traffic = 0;
 
     std::vector<class floor *> floors;  // floors in the building
     std::vector<elevator *> elevators;  // elevators in the building

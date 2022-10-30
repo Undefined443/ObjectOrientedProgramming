@@ -1,4 +1,5 @@
 #include "floor.h"
+#include <stdexcept>
 
 floor::floor(class building *b, int id, const nlohmann::json &conf) : budin(b), id(id), conf(conf) {}
 
@@ -39,4 +40,17 @@ void floor::add_passenger(passenger *p) {
 
 void floor::remove_passenger(passenger *p) {
     passengers.erase(std::remove(passengers.begin(), passengers.end(), p), passengers.end());
+}
+
+void floor::leave_building(passenger *p) {
+    if (id == 1) {
+        remove_passenger(p);
+        budin->remove_passenger(p);
+    } else {
+        throw std::runtime_error("Invalid operation: passenger can only leave the building from 1st floor.");
+    }
+}
+
+void floor::set_monitor(monitor *_monitor) {
+    mon = _monitor;
 }
