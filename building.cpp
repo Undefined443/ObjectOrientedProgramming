@@ -50,6 +50,7 @@ void building::run() {
             auto new_passenger = new passenger(this, floors[conf["passenger.initialFloor"].get<int>() - 1], conf);
             new_passenger->set_monitor(mon);
             passengers.push_back(new_passenger);
+            mon->print("\e[32mPassenger " + std::to_string(new_passenger->get_id()) + " spawned.\e[0m");
         }
     }
     // Refresh passengers
@@ -64,7 +65,7 @@ void building::run() {
 
 void building::remove_passenger(passenger *p) {
     passengers.erase(std::remove(passengers.begin(), passengers.end(), p), passengers.end());
-    mon->print("Passenger " + std::to_string(p->get_id()) + " left the building.");
+    mon->print("\e[36mPassenger " + std::to_string(p->get_id()) + " left the building.\e[0m");
     delete p;
     if (passengers.empty()) {
         mon->print("All passengers left the building.");

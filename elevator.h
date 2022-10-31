@@ -41,6 +41,8 @@ public:
 
     int get_alighting_num(class floor *f);
 
+    int get_free_space() const;
+
     enum direction {
         up = 1, down = -1, stop = 0
     };

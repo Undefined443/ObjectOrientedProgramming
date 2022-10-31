@@ -199,3 +199,7 @@ int elevator::get_alighting_num(class floor *f) {
     }
     return ret;
 }
+
+int elevator::get_free_space() const {
+    return conf["elevator.capacity"].get<int>() - int(passengers.size());
+}

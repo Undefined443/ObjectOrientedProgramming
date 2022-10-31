@@ -50,7 +50,7 @@ private:
 
     long long get_time_gap() const;
 
-    void print_msg(std::ostringstream &frame);
+    void print_msg(std::ostringstream &frame, std::string &padding);
 };
 
 

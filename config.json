@@ -6,12 +6,12 @@
   "building.floors": 40,
   "passenger.initialFloor": 1,
   "passenger.boardingTimeRange": [1, 3],
-  "passenger.activeTimeRange": [0, 10],
+  "passenger.activeTimeRange": [2, 10],
   "passenger.totalDestinationRange": [1, 10],
   "simulator.simulatedTime": 10,
-  "simulator.traffic": 1000,
-  "simulator.refreshRateMillisecond": 200,
-  "simulator.passengerSpawnRate": 50,
+  "simulator.traffic": 50,
+  "simulator.refreshRateMillisecond": 500,
+  "simulator.passengerSpawnRate": 0.3,
   "simulator.messageDurationMillisecond": 2000,
-  "simulator.timeUnitMillisecond": 200
+  "simulator.timeUnitMillisecond": 500
 }
