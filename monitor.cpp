@@ -81,8 +81,8 @@ void monitor::run() {
                     }
                 }
                 // print boarding queue
-                auto up_que_count = std::to_string(printing_floor->upside_boarding_lines[elevator].size());
-                auto down_que_count = std::to_string(printing_floor->downside_boarding_lines[elevator].size());
+                auto up_que_count = std::to_string(printing_floor->upside_boarding_queues[elevator].size());
+                auto down_que_count = std::to_string(printing_floor->downside_boarding_queues[elevator].size());
                 if (up_que_count == "0") {
                     up_que_count = "  ";
                 }
@@ -109,12 +109,12 @@ void monitor::run() {
         std::stringstream timer;
         timer << "running: ";
         if (minutes_passed) {
-            timer << minutes_passed << " min " << seconds_passed << " s";
+            timer << minutes_passed << "min " << seconds_passed << "s";
         } else {
             timer << seconds_passed << "s";
         }
-        frame << std::string(padding.size() + head.size(), ' ') << timer.str() << '\n';
-        print_msg(frame);
+        frame << std::string(padding.size() + head.size() - timer.str().size(), ' ') << timer.str() << '\n';
+        print_msg(frame, padding);
         std::cout << frame.str();
     }
 }
@@ -136,8 +136,8 @@ void monitor::get_elevator_loc() {
 void monitor::get_boarding_que() {
     for (int i = 0; i < floorNum; ++i) {
         for (int j = 0; j < elevNum; ++j) {
-            boarding_que[i][j].first = budin->floors[i]->upside_boarding_lines.size();
-            boarding_que[i][j].first = budin->floors[i]->downside_boarding_lines.size();
+            boarding_que[i][j].first = budin->floors[i]->upside_boarding_queues.size();
+            boarding_que[i][j].first = budin->floors[i]->downside_boarding_queues.size();
         }
     }
 }
@@ -161,14 +161,14 @@ bool monitor::get_status() const {
     return status;
 }
 
-void monitor::print_msg(std::ostringstream &frame) {
+void monitor::print_msg(std::ostringstream &frame, std::string &padding) {
     int message_duration = budin->conf["simulator.messageDurationMillisecond"];
     for (auto iter = messages.begin(); iter != messages.end(); ++iter) {
         auto message_time_stamp = iter->first;
         if (refresh_time_stamp - message_time_stamp > message_duration) {
             iter = messages.erase(iter) - 1;
         } else {
-            frame << iter->second << '\n';
+            frame << padding << iter->second << '\n';
         }
     }
 }

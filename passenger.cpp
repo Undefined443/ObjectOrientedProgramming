@@ -11,7 +11,7 @@ passenger::passenger(class building *b, class floor *f, const nlohmann::json &co
     rand_active_time = std::uniform_int_distribution<>(conf["passenger.activeTimeRange"][0], conf["passenger.activeTimeRange"][1]);
     rand_total_destination = std::uniform_int_distribution<>(conf["passenger.totalDestinationRange"][0], conf["passenger.totalDestinationRange"][1]);
     boarding_time = rand_boarding_time(e);  // set random boarding time
-    active_time = rand_active_time(e);
+    active_time = 0;  // passenger require elevator immediately when it enters the building
     total_destinations = rand_total_destination(e);
     original_floor = current_floor->get_id();
     current_floor->add_passenger(this);

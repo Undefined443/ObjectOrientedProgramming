@@ -46,8 +46,8 @@ private:
     std::vector<elevator *> elevators;
 
     // boarding lines, queue the passengers, each elevator has a boarding line
-    std::map<elevator *, std::queue<passenger *>> upside_boarding_lines;
-    std::map<elevator *, std::queue<passenger *>> downside_boarding_lines;
+    std::map<elevator *, std::queue<passenger *>> upside_boarding_queues;
+    std::map<elevator *, std::queue<passenger *>> downside_boarding_queues;
 };
 
 
