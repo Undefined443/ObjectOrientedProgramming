@@ -18,6 +18,8 @@ public:
 
     void run();
 
+    bool timer();  // passenger needs some time to alight/board the elevator, if time is up, then passenger can alight/board the elevator
+
     void board(elevator *el);  // set current elevator and clear current floor
 
     void alight(class floor *f);  // set current floor and clear current elevator and deactivate the passenger
@@ -40,17 +42,20 @@ private:
 
     const nlohmann::json conf;
     monitor *mon;
-    long long refresh_time_stamp;  // base time stamp for elevator
+
+    long long refresh_time_stamp;  // refresh time stamp for passenger
+    long long timer_time_stamp;  // time stamp for timer
 
     int id;
     int original_floor;
     int destination_floor;
-    int count_destination = 0;  // count how many floors a passenger has visited
-    int total_destination;
+    int count_destinations = 0;  // count how many floors a passenger has visited
+    int total_destinations;
     class floor *current_floor;
     int boarding_time;  // random boarding time for each passenger
     int active_time;  // random active time for each passenger
     bool activated = false;  // whether the passenger is active
+    bool is_timing = false;  // whether the timer is running
 
     elevator *current_elevator = nullptr;
     building *current_building;

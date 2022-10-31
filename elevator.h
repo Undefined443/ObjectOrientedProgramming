@@ -14,9 +14,11 @@ class monitor;
 
 class elevator {
 public:
-    void set_floors(std::vector<class floor *> &fv);  // set floors accessible by the elevator
+    friend class monitor;
 
     elevator(int id, const nlohmann::json& conf);
+
+    void set_floors(std::vector<class floor *> &fv);  // set floors accessible by the elevator
 
     void set_monitor(monitor *m);  // set the monitor
 
@@ -26,6 +28,19 @@ public:
 
     void run();  // move elevator up or down
 
+    // getters
+    class floor *get_current_floor();
+
+    int get_direction() const;
+
+    bool get_status() const;
+
+    int get_ding_stage() const;
+
+    bool is_full() const;
+
+    int get_alighting_num(class floor *f);
+
     enum direction {
         up = 1, down = -1, stop = 0
     };
@@ -33,13 +48,6 @@ public:
     enum status {
         running = 1, idle = 0
     };
-
-    // getters
-    class floor *get_current_floor();
-
-    int get_direction() const;
-
-    bool get_status() const;
 
 private:
     int id;
@@ -49,6 +57,8 @@ private:
 
     int direction = stop;
     bool status = idle;
+    bool full = false;
+    int ding_stage = 0;  // indicates at which stage the ding function is running
 
     class floor *current_floor;
     std::vector<class floor *> floors;  // floors attached to the elevator

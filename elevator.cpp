@@ -8,17 +8,21 @@ elevator::elevator(int id, const nlohmann::json &conf) : id(id), conf(conf) {}
 void elevator::run() {
     if (!status) {  // if elevator is not running
         return;
-    }
-    int speed = conf["elevator.speed"];
-    int time_unit = conf["simulator.timeUnitMillisecond"];
-    if (get_time_gap() > speed * time_unit) {  // if time gap is greater than <speed> second
-        auto next_floor = current_floor->get_id() + direction;
-        if (next_floor < 1 || next_floor > floors.size()) {
-            throw std::runtime_error("Invalid operation: index out of range.");
+    } else if (ding_stage) {  // elevator is still alighting/boarding passengers, continue to alight/board
+        ding();
+    } else {  // elevator is ready to move to the next floor
+        int speed = conf["elevator.speed"];
+        int time_unit = conf["simulator.timeUnitMillisecond"];
+        // if time gap is greater than <speed> second & not boarding or alighting, then move the elevator
+        if (get_time_gap() > speed * time_unit) {
+            auto next_floor = current_floor->get_id() + direction;
+            if (next_floor < 1 || next_floor > floors.size()) {
+                throw std::runtime_error("elevator " + std::to_string(id) + ": floor index (" + std::to_string(next_floor) + ") out of range.");
+            }
+            current_floor = floors[next_floor - 1];  // move elevator up or down
+            ding();  // elevator arrived at a floor
+            set_refresh_time();  // reset refresh time
         }
-        current_floor = floors[next_floor - 1];  // move elevator up or down
-        ding();  // elevator arrived at a floor
-        set_refresh_time();  // reset refresh time
     }
 }
 
@@ -31,6 +35,7 @@ void elevator::reg_pas(passenger *p) {
         status = true;
         if (current_floor == pas_cur_flr) {  // elevator is at the same floor as the passenger
             direction = pas_dst_flr->get_id() > current_floor->get_id() ? 1 : -1;  // set direction
+            ding_stage = 2;
             board();  // board the passenger
         } else {  // elevator is not at the same floor as the passenger
             direction = pas_cur_flr->get_id() > current_floor->get_id() ? 1 : -1;  // set direction
@@ -41,58 +46,86 @@ void elevator::reg_pas(passenger *p) {
 
 // elevator arrived at a floor
 void elevator::ding() {
-    // alight passengers
-    alight();
-    // board passengers
-    board();
-    // determine a new status and direction
-    if (passengers.empty()) {  // no passenger going to the same direction
-        direction = choose_direction();  // choose a new direction
-        if (direction == stop) {  // no passengers request the elevator currently
-            status = false;  // idle the elevator
-        } else {  // direction changed, board passengers on the new direction
-            board();
+    if (ding_stage == 0) {  // elevator arrived at a new floor, start ding process
+        ++ding_stage;
+    }
+    if (ding_stage == 1) {  // elevator is still alighting passengers, continue to alight
+        alight();
+    }
+    if (ding_stage == 2) {  // elevator is still boarding passengers, continue to board
+        board();
+    }
+    if (ding_stage == 3) {  // finished alight/alight process
+        ding_stage = 0;
+        // no passenger going to the same direction as the elevator
+        if (passengers.empty()) {
+            direction = choose_direction();  // choose a new direction
+            if (direction == stop) {  // no passengers request the elevator currently
+                status = false;  // idle the elevator
+            } else {  // direction changed, board passengers on the new direction
+                if (!current_floor->get_boarding_queue(this).empty()) {
+                    ding_stage = 2;
+                    board();
+                }
+            }
         }
     }
 }
 
 // board passengers, invoke in ding()
 void elevator::board() {
+    ding_stage = 3;  // move to the next stage (maybe)
     // get a boarding queue and board the passengers
     auto &boarding_queue = current_floor->get_boarding_queue(this);
     int capacity = conf["elevator.capacity"];
-    while (passengers.size() < capacity && !boarding_queue.empty()) {
+    while (!boarding_queue.empty() && passengers.size() < capacity) {
+        ding_stage = 2;  // keep in the current stage
         passenger *p = boarding_queue.front();
-        // remove old registry
-        registry[current_floor].erase(std::remove(registry[current_floor].begin(), registry[current_floor].end(), p),
-                                      registry[current_floor].end());
-        // insert new registry
-        registry[floors[p->get_destination() - 1]].push_back(p);
-        // passenger enter the elevator
-        p->board(this);
-        passengers.push_back(p);
-        // remove passenger from boarding queue
-        boarding_queue.pop();
+        if (p->timer()) {  // wait for passenger to board
+            // remove old registry
+            registry[current_floor].erase(
+                    std::remove(registry[current_floor].begin(), registry[current_floor].end(), p),
+                    registry[current_floor].end());
+            // insert new registry
+            registry[floors[p->get_destination() - 1]].push_back(p);
+            // passenger enter the elevator
+            p->board(this);
+            passengers.push_back(p);
+            // remove passenger from boarding queue
+            boarding_queue.pop();
+            ding_stage = 3;  // move to the next stage (maybe)
+        } else {  // passenger is still boarding, wait for next time
+            break;
+        }
     }
-    // print warning if the elevator is full and there are still passengers in the boarding queue
-//    if (passengers.size() == capacity && !current_floor->get_boarding_queue(this).empty()) {
-//        mon->print("Elevator E" + std::to_string(id) + " full");
-//    }
+    // determine if the elevator is full
+    if (passengers.size() == capacity) {
+        full = true;
+    } else {
+        full = false;
+    }
 }
 
 // alight passengers, invoke in ding()
 void elevator::alight() {
+    ding_stage = 2;  // move to the next stage (maybe)
     int cur_flr = current_floor->get_id();
     for (auto iter = registry[current_floor].begin(); iter != registry[current_floor].end(); ++iter) {  // scan the registry and alight passengers
         int dst_flr = (*iter)->get_destination();
-        if (dst_flr == cur_flr) {  // arrive at destination
-            // passenger out the elevator
-            (*iter)->alight(current_floor);
-            passengers.erase(
-                    std::remove(passengers.begin(), passengers.end(), *iter),
-                    passengers.end());
-            // remove passenger from registry
-            iter = registry[current_floor].erase(iter) - 1;
+        if (dst_flr == cur_flr) {  // find a passenger to alight
+            ding_stage = 1;  // keep in the current stage
+            if ((*iter)->timer()) {  // wait for passenger to alight
+                // passenger out the elevator
+                (*iter)->alight(current_floor);
+                passengers.erase(
+                        std::remove(passengers.begin(), passengers.end(), *iter),
+                        passengers.end());
+                // remove passenger from registry
+                iter = registry[current_floor].erase(iter) - 1;
+                ding_stage = 2;  // move to the next stage (maybe)
+            } else {  // passenger is still alighting, wait for next time
+                break;
+            }
         }
     }
 }
@@ -147,4 +180,22 @@ bool elevator::get_status() const {
 
 void elevator::set_monitor(monitor *m) {
     mon = m;
+}
+
+bool elevator::is_full() const {
+    return full;
+}
+
+int elevator::get_ding_stage() const {
+    return ding_stage;
+}
+
+int elevator::get_alighting_num(class floor *f) {
+    int ret = 0;
+    for (auto p: registry[current_floor]) {
+        if (p->get_destination() == current_floor->get_id()) {
+            ++ret;
+        }
+    }
+    return ret;
 }

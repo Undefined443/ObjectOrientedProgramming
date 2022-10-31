@@ -9,9 +9,9 @@
   "passenger.activeTimeRange": [0, 10],
   "passenger.totalDestinationRange": [1, 10],
   "simulator.simulatedTime": 10,
-  "simulator.traffic": 50,
-  "simulator.refreshRateMillisecond": 100,
-  "simulator.passengerSpawnRate": 0.5,
+  "simulator.traffic": 1000,
+  "simulator.refreshRateMillisecond": 200,
+  "simulator.passengerSpawnRate": 50,
   "simulator.messageDurationMillisecond": 2000,
-  "simulator.timeUnitMillisecond": 100
+  "simulator.timeUnitMillisecond": 200
 }
