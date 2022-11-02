@@ -18,27 +18,32 @@ class monitor;
 class building {
 public:
     friend class monitor;
+
+    // Setup
     building();
-    void set_monitor(monitor *m);
+    void set_monitor(monitor *_monitor);
+
+    // Methods
     void run();  // refresh the building
-    void remove_passenger(passenger &p);  // remove passenger from building
+    void remove_passenger(passenger *p);  // remove passenger from building
+
 private:
     static std::random_device rd;  // obtain a random number from hardware
     static std::mt19937 e;  // random number generator
-
     std::poisson_distribution<int> rand_passenger;  // generate random number of passengers
-    nlohmann::json conf;  // store configuration data
 
-    std::vector<class floor*> floors;  // floors in the building
-    std::vector<elevator*> elevators;  // elevators in the building
-    std::vector<passenger*> passengers;  // passengers in the building
     monitor *mon;  // monitor for the building
-
+    nlohmann::json conf;  // store configuration data
     long long refresh_time_stamp;
+    int tot_traffic = 0;
 
-    unsigned tot_traffic = 0;
+    std::vector<class floor *> floors;  // floors in the building
+    std::vector<elevator *> elevators;  // elevators in the building
 
-    void set_base_time();
+    std::vector<passenger *> passengers;  // passengers in the building
+
+    void set_refresh_time();  // set refresh time, invoke after each refresh
+
     long long get_time_gap() const;
 };
 
