@@ -80,14 +80,15 @@ void elevator::board() {
 // alight passengers, invoke in ding()
 void elevator::alight() {
     int cur_flr = current_floor->get_id();
-    for (auto p : registry[current_floor]) {  // scan the registry and alight passengers
-        int dst_flr = p->get_destination();
+    for (auto iter = registry[current_floor].begin(); iter != registry[current_floor].end(); ++iter) {  // scan the registry and alight passengers
+        int dst_flr = (*iter)->get_destination();
         if (dst_flr == cur_flr) {  // arrive at destination
             // passenger out the elevator
-            p->alight(current_floor);
-            passengers.erase(std::remove(passengers.begin(), passengers.end(), p), passengers.end());
+            (*iter)->alight(current_floor);
+            passengers.erase(std::remove(passengers.begin(), passengers.end(), *iter), passengers.end());
             // remove passenger from registry
-            registry[current_floor].erase(std::remove(registry[current_floor].begin(), registry[current_floor].end(), p), registry[current_floor].end());
+            registry[current_floor].erase(iter);
+            --iter;
         }
     }
 }
