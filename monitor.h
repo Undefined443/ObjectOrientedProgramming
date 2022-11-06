@@ -6,51 +6,50 @@
 #define MONITOR_H
 
 #include "building.h"
+#include "MainWindow.h"
 #include <queue>
-#include <map>
+#include <vector>
 #include <string>
 
 class building;
-
 class elevator;
+class MainWindow;
 
 class monitor {
 public:
-    monitor(building *_building);
+    monitor(building *_building, MainWindow *_main_window);
 
     void run();
 
-    void print(const std::string &msg);
+    void send_message(const std::string &msg);
 
     void set_status(bool status);
 
     bool get_status() const;
 
-    void force_refresh();
 
 private:
-    std::vector<std::pair<long long, std::string>> messages;
-    building *budin;
-    int refresh_rate;
-    std::map<int, std::pair<int, int>> elevator_loc;  // <elevID, <elevFlr, elevDir>>
-    std::map<int, std::map<int, std::pair<unsigned long, int>>> boarding_que;  // <flr, <elevID, <up_que, down_que>>>
+    building *b;
 
     int elevNum;
     int floorNum;
     bool status = false;
+    MainWindow *main_window;
 
-    long long refresh_time_stamp;
-    long long base_time_stamp;
+    long long base_time_stamp;  // base time stamp for monitor
+    long long refresh_time_stamp;  // refresh time stamp for monitor
 
-    void get_elevator_loc();
+    std::vector<std::vector<int>> elevator_status;  // [elevator]<flag, current floor, direction, load> flag: 0: needn't move 1: need to move
+    std::vector<std::vector<std::vector<int>>> floor_info;  // [elevator][floor]<upside_number, downside_number, alight number>
+    std::vector<std::pair<long long, std::string>> messages;
 
-    void get_boarding_que();
+    void get_elevator_status();
 
-    void set_refresh_time();
+    void get_floor_info();
 
-    long long get_time_gap() const;
+    void set_refresh_time_stamp();
 
-    void print_msg(std::ostringstream &frame, std::string &padding);
+    std::vector<std::string> get_pending_message();
 };
 
 

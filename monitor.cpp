@@ -1,156 +1,111 @@
 #include "monitor.h"
-#include <iostream>
-#include <sstream>
+#include <memory>
 
-monitor::monitor(building *b) : budin(b), refresh_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()).count()), base_time_stamp(refresh_time_stamp),
-                                refresh_rate(budin->conf["simulator.refreshRateMillisecond"]),
-                                elevNum(budin->conf["elevator.count"]), floorNum(budin->conf["building.floors"]) {
-    budin->set_monitor(this);
+monitor::monitor(building *_building, MainWindow *_main_window) :
+    b(_building),
+    main_window(_main_window),
+    base_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count()),
+    elevNum(b->conf["elevator.count"]),
+    floorNum(b->conf["building.floors"]),
+    elevator_status(elevNum, std::vector<int>(4, 0)), // [elevator]<flag, current floor, direction, load> flag: 0: needn't move 1: need to move
+    floor_info(elevNum, std::vector(floorNum, std::vector<int>(3, 0))) { // [elevator][floor]<upside number, downside number, alight number>
+    b->set_monitor(this);
 }
 
 void monitor::run() {
-    if (get_time_gap() > refresh_rate) {
-        set_refresh_time();
-        get_elevator_loc();
-        get_boarding_que();
-        std::ostringstream frame;
-        std::system("clear");
-        std::string row_padding = "\n\n\n\n";
-        std::string gap = "  ";
-        std::string head_unit = "+-----+-----+";
-        std::string head = head_unit;
-        for (int i = 0; i < elevNum - 1; ++i) {
-            head += gap +head_unit;
+    get_elevator_status();
+    get_floor_info();
+    for (int i = 0; i < elevNum; ++i) {
+        // Move elevator
+        if (elevator_status[i][0] == 1) {
+            elevator_status[i][0] = 0;
+            auto start = elevator_status[i][1];
+            auto end = start + elevator_status[i][2];
+            main_window->move_elevator(i, start, end);
         }
-        std::string padding = "          ";
-        frame << row_padding << padding << head << '\n';
-        for (int i = floorNum - 1; i >= 0; --i) {
-            std::ostringstream line;
-            line << padding;
-            for (int j = 0; j < elevNum; ++j) {
-                auto elevator = budin->elevators[j];
-                auto direction = elevator->get_direction();
-                auto cur_flr = elevator->get_current_floor()->get_id();
-                auto prt_flr = i + 1;
-                auto printing_floor = budin->floors[i];
-                // print elevator shaft
-                if (prt_flr == cur_flr + 1) {  // print direction
-                    if (direction == elevator::direction::up) {
-                        line << "|  \e[32m↑  \e[30m|\e[0m";  // up, green
-                    } else if (direction == elevator::direction::down) {
-                        line << "|  \e[33m↓  \e[30m|\e[0m";  // down, yellow
-                    } else {
-                        line << "|     \e[30m|\e[0m";
-                    }
-                } else if (prt_flr == cur_flr) {  // print elevator symbol
-                    if (elevator->is_full()) {
-                        line << "|  \e[31m☐  \e[30m|\e[0m";  // full, red
-                    } else {
-                        switch (elevator->get_ding_stage()) {
-                            case 1:  // alighting
-                                line << "|  \e[36m☐  \e[30m|\e[0m";  // alighting, cyan
-                                break;
-                            case 2:  // boarding
-                                if (elevator->get_direction() == elevator::direction::up) {
-                                    line << "|  \e[32m☐  \e[30m|\e[0m";  // up, green
-                                } else {
-                                    line << "|  \e[33m☐  \e[30m|\e[0m";  // down, yellow
-                                }
-                                break;
-                            default:
-                                line << "|  ☐  \e[30m|\e[0m";
-                                break;
-                        }
-                    }
-                } else if (prt_flr == cur_flr - 1 && elevator->get_ding_stage() == 1) {  // print number of alighting passengers
-                    int alighting_num = elevator->get_alighting_num(printing_floor);
-                    auto num_str = std::to_string(alighting_num);
-                    line << "| \e[36m" << std::setw(2) << num_str << "  \e[30m|\e[0m";  // alight, cyan
-                } else {
-                    bool flag = true;
-                    for (auto p: elevator->registry[printing_floor]) {
-                        if (p->get_destination() == prt_flr) {
-                            line << "|  \e[36m-  \e[30m|\e[0m";  // alighting, cyan
-                            flag = false;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        line << "|     \e[30m|\e[0m";
-                    }
-                }
-                // print boarding queue
-                auto up_que_count = std::to_string(printing_floor->upside_boarding_queues[elevator].size());
-                auto down_que_count = std::to_string(printing_floor->downside_boarding_queues[elevator].size());
-                if (up_que_count == "0") {
-                    up_que_count = "  ";
-                }
-                if (down_que_count == "0") {
-                    down_que_count = "  ";
-                }
-                if (up_que_count.size() > 2) {
-                    up_que_count = "..";
-                }
-                if (down_que_count.size() > 2) {
-                    down_que_count = "..";
-                }
-                std::stringstream queue;
-                queue << "\e[32m" << std::setw(2) << up_que_count << "\e[0m" << " "  // up, green
-                << "\e[33m" << std::setw(2) << down_que_count << "\e[0m";  // down, yellow
-                line << queue.str() << "|" + gap;
-            }
-            frame << line.str() << "\n";
+
+        // Set floor info
+        for (int j = 0; j < floorNum; ++j) {
+            main_window->set_floor_info(i, j, floor_info[i][j][0], floor_info[i][j][1], floor_info[i][j][2]);
         }
-        frame << padding << head << "\n";
-        auto seconds_passed = (refresh_time_stamp - base_time_stamp) / 1000;
-        auto minutes_passed = seconds_passed / 60;
-        seconds_passed %= 60;
-        std::stringstream timer;
-        timer << "running: ";
-        if (minutes_passed) {
-            timer << minutes_passed << "min " << seconds_passed << "s";
-        } else {
-            timer << seconds_passed << "s";
-        }
-        frame << std::string(padding.size() + head.size() - timer.str().size(), ' ') << timer.str() << '\n';
-        print_msg(frame, padding);
-        std::cout << frame.str();
     }
+
+    // Set message and time
+    set_refresh_time_stamp();
+    auto seconds_passed = (refresh_time_stamp - base_time_stamp) / 1000;
+    auto minutes_passed = seconds_passed / 60;
+    seconds_passed %= 60;
+    std::string timer = "running: ";
+    if (minutes_passed) {
+        timer += std::to_string(minutes_passed) + "min " + std::to_string(seconds_passed) + "s";
+    } else {
+        timer += std::to_string(seconds_passed) + "s";
+    }
+    main_window->set_message(get_pending_message());
+    main_window->set_timer(timer);
 }
 
-void monitor::print(const std::string &msg) {
+void monitor::send_message(const std::string &msg) {
     auto time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()).count();
+    if (messages.size() >= 3) {
+        while (messages.size() >= 3) {
+            messages.erase(messages.begin());
+        }
+    }
     messages.emplace_back(time_stamp, msg);
 }
 
-void monitor::get_elevator_loc() {
-
+void monitor::get_elevator_status() {
     for (int i = 0; i < elevNum; ++i) {
-        elevator_loc[i].first = budin->elevators[i]->get_current_floor()->get_id();
-        elevator_loc[i].second = budin->elevators[i]->get_direction();
+        auto elevator = b->elevators[i];
+        if (elevator->get_status() == elevator::status::running && !elevator->get_ding_stage()) {  // elevator is running and not boarding/alighting, we might need to move it
+            if (elevator_status[i][1] != elevator->get_current_floor()->get_id() - 1) {  // current floor changed
+                elevator_status[i][1] = elevator->get_current_floor()->get_id() - 1;  // update current floor
+                elevator_status[i][0] = 1;  // current floor changed, we need to move the elevator
+            }
+            if (elevator_status[i][2] != elevator->get_direction()) {  // direction changed
+                elevator_status[i][2] = elevator->get_direction();  // update direction
+                elevator_status[i][0] = 1;  // direction changed, we need to move the elevator
+            }
+        }
+        elevator_status[i][3] = elevator->get_load();  // update load
     }
 }
 
-void monitor::get_boarding_que() {
-    for (int i = 0; i < floorNum; ++i) {
-        for (int j = 0; j < elevNum; ++j) {
-            boarding_que[i][j].first = budin->floors[i]->upside_boarding_queues.size();
-            boarding_que[i][j].first = budin->floors[i]->downside_boarding_queues.size();
+void monitor::get_floor_info() {
+    for (int i = 0; i < elevNum; ++i) {
+        auto elevator = b->elevators[i];
+        for (int j = 0; j < floorNum; ++j) {
+            auto floor = b->floors[j];
+            floor_info[i][j][0] = int(floor->upside_boarding_queues[elevator].size());  // upside number
+            floor_info[i][j][1] = int(floor->downside_boarding_queues[elevator].size());  // downside number
+            floor_info[i][j][2] = int(elevator->get_alighting_num(floor));  // alight number
         }
     }
 }
 
-void monitor::set_refresh_time() {
-    refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()).count();
+std::vector<std::string> monitor::get_pending_message() {
+    int message_duration = b->conf["simulator.messageDurationMillisecond"];
+    std::vector<std::string> ret;
+    for (auto iter = messages.begin(); iter != messages.end(); ++iter) {
+        auto message_time_stamp = iter->first;
+        if (refresh_time_stamp - message_time_stamp > message_duration) {
+            iter = messages.erase(iter) - 1;
+        } else if (ret.size() < 3) {
+            ret.push_back(iter->second);
+        }
+    }
+    while (ret.size() < 3) {
+        ret.push_back("");
+    }
+    return ret;
 }
 
-
-long long monitor::get_time_gap() const {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()).count() - refresh_time_stamp;
+void monitor::set_refresh_time_stamp() {
+    refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
 void monitor::set_status(bool _status) {
@@ -159,20 +114,4 @@ void monitor::set_status(bool _status) {
 
 bool monitor::get_status() const {
     return status;
-}
-
-void monitor::print_msg(std::ostringstream &frame, std::string &padding) {
-    int message_duration = budin->conf["simulator.messageDurationMillisecond"];
-    for (auto iter = messages.begin(); iter != messages.end(); ++iter) {
-        auto message_time_stamp = iter->first;
-        if (refresh_time_stamp - message_time_stamp > message_duration) {
-            iter = messages.erase(iter) - 1;
-        } else {
-            frame << padding << iter->second << '\n';
-        }
-    }
-}
-
-void monitor::force_refresh() {
-    refresh_time_stamp = 0;
 }

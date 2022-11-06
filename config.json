@@ -3,7 +3,7 @@
   "elevator.capacity": 15,
   "elevator.initialFloor": 1,
   "elevator.speed": 1,
-  "building.floors": 40,
+  "building.floors": 20,
   "passenger.initialFloor": 1,
   "passenger.boardingTimeRange": [1, 3],
   "passenger.activeTimeRange": [2, 10],

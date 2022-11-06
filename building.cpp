@@ -8,7 +8,7 @@ std::mt19937 building::e = std::mt19937(rd());
 // Once the building instance is created, the constructor will read the configuration file and initialize the building.
 building::building() : refresh_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::system_clock::now().time_since_epoch()).count()) {
-    std::ifstream conf_file("../config.json");
+    std::ifstream conf_file("/Users/xiao/CLionProjects/ObjectOrientedProgramming/config.json");
     conf = nlohmann::json::parse(conf_file);
     conf_file.close();
     rand_passenger = std::poisson_distribution<>(conf["simulator.passengerSpawnRate"]);  // spawn passengers per time unit
@@ -50,7 +50,7 @@ void building::run() {
             auto new_passenger = new passenger(this, floors[conf["passenger.initialFloor"].get<int>() - 1], conf);
             new_passenger->set_monitor(mon);
             passengers.push_back(new_passenger);
-            mon->print("\e[32mPassenger " + std::to_string(new_passenger->get_id()) + " spawned.\e[0m");
+            mon->send_message("<font color=\"green\">Passenger " + std::to_string(new_passenger->get_id()) + " spawned.</font>");
         }
     }
     // Refresh passengers
@@ -65,11 +65,11 @@ void building::run() {
 
 void building::remove_passenger(passenger *p) {
     passengers.erase(std::remove(passengers.begin(), passengers.end(), p), passengers.end());
-    mon->print("\e[36mPassenger " + std::to_string(p->get_id()) + " left the building.\e[0m");
+    mon->send_message("<font color=\"blue\">Passenger " + std::to_string(p->get_id()) + " left the building.</font>");
     delete p;
     if (passengers.empty()) {
-        mon->print("All passengers left the building.");
-        mon->force_refresh();
+        mon->send_message("<font color=\"black\">All passengers left the building.</font>");
+        //mon->force_refresh();
         mon->set_status(false);
     }
 }
@@ -93,4 +93,8 @@ void building::set_refresh_time() {
 long long building::get_time_gap() const {
     return std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()).count() - refresh_time_stamp;
+}
+
+nlohmann::json building::get_conf() const {
+    return conf;
 }

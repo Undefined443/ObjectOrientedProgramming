@@ -43,6 +43,8 @@ public:
 
     int get_free_space() const;
 
+    int get_load() const;
+
     enum direction {
         up = 1, down = -1, stop = 0
     };
@@ -55,7 +57,7 @@ private:
     int id;
     monitor *mon;
     nlohmann::json conf;  // configuration data
-    long long refresh_time_stamp;  // base time stamp for elevator
+    long long refresh_time_stamp;  // refresh time stamp for elevator
 
     int direction = stop;
     bool status = idle;

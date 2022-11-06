@@ -1,7 +1,6 @@
 #include "elevator.h"
 #include "floor.h"
 #include <vector>
-#include <queue>
 
 elevator::elevator(int id, const nlohmann::json &conf) : id(id), conf(conf) {}
 
@@ -15,13 +14,12 @@ void elevator::run() {
         int time_unit = conf["simulator.timeUnitMillisecond"];
         // if time gap is greater than <speed> second & not boarding or alighting, then move the elevator
         if (get_time_gap() > speed * time_unit) {
-            auto next_floor = current_floor->get_id() + direction;
-            if (next_floor < 1 || next_floor > floors.size()) {
-                throw std::runtime_error("elevator " + std::to_string(id) + ": floor index (" + std::to_string(next_floor) + ") out of range.");
+            auto next_floor = current_floor->get_id() - 1 + direction;
+            if (next_floor < 0 || next_floor >= floors.size()) {
+                throw std::out_of_range("elevator " + std::to_string(id) + ": floor index (" + std::to_string(next_floor) + ") out of range.");
             }
-            current_floor = floors[next_floor - 1];  // move elevator up or down
+            current_floor = floors[next_floor];  // move elevator up or down
             ding();  // elevator arrived at a floor
-            set_refresh_time();  // reset refresh time
         }
     }
 }
@@ -39,8 +37,8 @@ void elevator::reg_pas(passenger *p) {
             board();  // board the passenger
         } else {  // elevator is not at the same floor as the passenger
             direction = pas_cur_flr->get_id() > current_floor->get_id() ? 1 : -1;  // set direction
+            set_refresh_time();  // set a new refresh time
         }
-        set_refresh_time();  // set a new refresh time
     }
 }
 
@@ -74,7 +72,6 @@ void elevator::ding() {
 
 // board passengers, invoke in ding()
 void elevator::board() {
-    ding_stage = 3;  // move to the next stage (maybe)
     // get a boarding queue and board the passengers
     auto &boarding_queue = current_floor->get_boarding_queue(this);
     int capacity = conf["elevator.capacity"];
@@ -93,7 +90,6 @@ void elevator::board() {
             passengers.push_back(p);
             // remove passenger from boarding queue
             boarding_queue.pop();
-            ding_stage = 3;  // move to the next stage (maybe)
         } else {  // passenger is still boarding, wait for next time
             break;
         }
@@ -103,6 +99,10 @@ void elevator::board() {
         full = true;
     } else {
         full = false;
+    }
+    if (boarding_queue.empty()) {  // no more passengers to board
+        ding_stage = 3;  // move to the next stage
+        set_refresh_time();  // elevator is ready to move
     }
 }
 
@@ -192,8 +192,8 @@ int elevator::get_ding_stage() const {
 
 int elevator::get_alighting_num(class floor *f) {
     int ret = 0;
-    for (auto p: registry[current_floor]) {
-        if (p->get_destination() == current_floor->get_id()) {
+    for (auto p: registry[f]) {
+        if (p->get_destination() == f->get_id()) {
             ++ret;
         }
     }
@@ -202,4 +202,8 @@ int elevator::get_alighting_num(class floor *f) {
 
 int elevator::get_free_space() const {
     return conf["elevator.capacity"].get<int>() - int(passengers.size());
+}
+
+int elevator::get_load() const {
+    return int(passengers.size());
 }
