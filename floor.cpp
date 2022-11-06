@@ -20,17 +20,26 @@ void floor::request_elevator(passenger *p) {
         bool is_at_same_floor = (el_cur_flr == id) && (el_direction == pas_direction)  && (el->get_ding_stage() != 0);  // same floor && same direction && open for boarding
         bool is_pass_by = el_direction == pas_direction && el_coming_direction == el_direction;  // indicates whether the elevator can pass by passenger's floor without changing direction
         bool non_return = !el_status || is_at_same_floor || is_pass_by;  // elevator is idle || at the same floor || elevator can pass by passenger's floor without changing direction
+        bool single_return = el_direction != pas_direction;
         int free_space = el->get_free_space() - int(boarding_queue.size());  // free space after boarding other passengers
 
         if (non_return) {
             int distance = std::abs(el_cur_flr - id);
             candidates.emplace_back(el, std::make_pair(distance, free_space));
-        } else {
+        } else if (single_return){
             int distance;
             if (el_direction == elevator::direction::up) {
                 distance = conf["building.floors"].get<int>() - id + conf["building.floors"].get<int>() - el_cur_flr;
             } else {
                 distance = id - 1 + el_cur_flr - 1;
+            }
+            candidates.emplace_back(el, std::make_pair(distance, free_space));
+        } else {  // double return
+            int distance;
+            if (el_direction == elevator::direction::up) {
+                distance = id - 1 + conf["building.floors"].get<int>() - el_cur_flr + conf["building.floors"].get<int>() - 1;
+            } else {
+                distance = conf["building.floors"].get<int>() - id + el_cur_flr - 1 + conf["building.floors"].get<int>() - 1;
             }
             candidates.emplace_back(el, std::make_pair(distance, free_space));
         }
