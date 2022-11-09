@@ -7,9 +7,10 @@
 
 #include "building.h"
 #include "MainWindow.h"
-#include <queue>
 #include <vector>
 #include <string>
+#include <QVector>
+#include <QString>
 
 class building;
 class elevator;
@@ -49,7 +50,7 @@ private:
 
     void set_refresh_time_stamp();
 
-    std::vector<std::string> get_pending_message();
+    QVector<QString> get_pending_message();
 };
 
 

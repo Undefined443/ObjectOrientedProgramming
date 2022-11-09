@@ -5,6 +5,8 @@
 #include <string>
 #include <QWidget>
 #include <QLabel>
+#include <QVector>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -17,14 +19,16 @@ public:
 
     void move_elevator(int elevator, int start, int end);
 
-    void set_floor_info(int elevator, int floor_num, int v1, int v2, int v3);
+    void set_floor_info(int elevator, int floor_num, int upside_num, int downside_num, int alight_num);
 
-    void set_message(std::vector<std::string> messages);
+    void set_message(QVector<QString> messages);
 
-    void set_timer(std::string);
+    void set_timer(QString time);
+
+    void set_load_info(int elevator, int load, QString color);
 
 private:
-Q_OBJECT
+    Q_OBJECT
     int id = 0;
     std::vector<ElevatorShaft *> elevator_shafts;
     std::vector<QLabel *> message_labels;
@@ -33,20 +37,24 @@ Q_OBJECT
     signals:
     void elevator_signal(int elevator, int start, int end);
 
-    void floor_signal(int elevator, int floor_num, int v1, int v2, int v3);
+    void floor_signal(int elevator, int floor_num, int upside_num, int downside_num, int alight_num);
 
-    void message_signal(std::vector<std::string> messages);
+    void message_signal(QVector<QString> messages);
 
-    void timer_signal(std::string time);
+    void timer_signal(QString time);
+
+    void load_signal(int elevator, int load, QString color);
 
 private slots:
     void elevator_slot(int elevator, int start, int end);
 
-    void floor_slot(int elevator, int floor_num, int v1, int v2, int v3);
+    void floor_slot(int elevator, int floor_num, int upside_num, int downside_num, int alight_num);
 
-    void message_slot(std::vector<std::string> messages);
+    void message_slot(QVector<QString> messages);
 
-    void timer_slot(std::string time);
+    void timer_slot(QString time);
+
+    void load_slot(int elevator, int load, QString color);
 };
 
 

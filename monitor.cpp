@@ -1,5 +1,7 @@
 #include "monitor.h"
 #include <memory>
+#include <QVector>
+#include <QString>
 
 monitor::monitor(building *_building, MainWindow *_main_window) :
     b(_building),
@@ -14,8 +16,15 @@ monitor::monitor(building *_building, MainWindow *_main_window) :
 }
 
 void monitor::run() {
+    // static variables, to reduce refresh rate, enhance performance
+    static std::vector<int> last_load_info(elevNum, 0);
+    static std::vector<std::vector<std::vector<int>>> last_floor_info(elevNum, std::vector(floorNum, std::vector<int>(3, 0)));
+    static QVector<QString> last_message(3);
+    static std::string last_time;
+
     get_elevator_status();
     get_floor_info();
+
     for (int i = 0; i < elevNum; ++i) {
         // Move elevator
         if (elevator_status[i][0] == 1) {
@@ -27,23 +36,45 @@ void monitor::run() {
 
         // Set floor info
         for (int j = 0; j < floorNum; ++j) {
-            main_window->set_floor_info(i, j, floor_info[i][j][0], floor_info[i][j][1], floor_info[i][j][2]);
+            if (floor_info[i][j] != last_floor_info[i][j]) {
+                last_floor_info[i][j] = floor_info[i][j];
+                main_window->set_floor_info(i, j, floor_info[i][j][0], floor_info[i][j][1], floor_info[i][j][2]);
+            }
+        }
+
+        // Set load info
+        if (elevator_status[i][3] != last_load_info[i]) {
+            last_load_info[i] = elevator_status[i][3];
+            if (elevator_status[i][3] == b->conf["elevator.capacity"]) {
+                main_window->set_load_info(i, elevator_status[i][3], QString::fromStdString("red"));
+            } else {
+                main_window->set_load_info(i, elevator_status[i][3], QString::fromStdString("white"));
+            }
         }
     }
 
-    // Set message and time
+    // Set time
     set_refresh_time_stamp();
     auto seconds_passed = (refresh_time_stamp - base_time_stamp) / 1000;
     auto minutes_passed = seconds_passed / 60;
     seconds_passed %= 60;
-    std::string timer = "running: ";
+    std::string time = "Running: ";
     if (minutes_passed) {
-        timer += std::to_string(minutes_passed) + "min " + std::to_string(seconds_passed) + "s";
+        time += std::to_string(minutes_passed) + " min " + std::to_string(seconds_passed) + " s";
     } else {
-        timer += std::to_string(seconds_passed) + "s";
+        time += std::to_string(seconds_passed) + " s";
     }
-    main_window->set_message(get_pending_message());
-    main_window->set_timer(timer);
+
+    // Set message
+    auto pending_message = get_pending_message();
+    if (pending_message != last_message) {
+        last_message = pending_message;
+        main_window->set_message(pending_message);
+    }
+    if (time != last_time) {
+        last_time = time;
+        main_window->set_timer(QString::fromStdString(time));
+    }
 }
 
 void monitor::send_message(const std::string &msg) {
@@ -86,15 +117,15 @@ void monitor::get_floor_info() {
     }
 }
 
-std::vector<std::string> monitor::get_pending_message() {
+QVector<QString> monitor::get_pending_message() {
     int message_duration = b->conf["simulator.messageDurationMillisecond"];
-    std::vector<std::string> ret;
+    QVector<QString> ret;
     for (auto iter = messages.begin(); iter != messages.end(); ++iter) {
         auto message_time_stamp = iter->first;
         if (refresh_time_stamp - message_time_stamp > message_duration) {
             iter = messages.erase(iter) - 1;
         } else if (ret.size() < 3) {
-            ret.push_back(iter->second);
+            ret.push_back(QString::fromStdString(iter->second));
         }
     }
     while (ret.size() < 3) {

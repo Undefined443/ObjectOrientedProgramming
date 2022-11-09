@@ -67,6 +67,9 @@ void passenger::set_random_dest() {
 
 void passenger::board(elevator *el) {
     // passenger out the floor
+    if (current_floor == nullptr) {
+        throw std::runtime_error("passenger " + std::to_string(id) + ": current floor is null.");
+    }
     current_floor->remove_passenger(this);
     current_floor = nullptr;
     current_elevator = el;

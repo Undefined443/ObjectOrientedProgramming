@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPropertyAnimation>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -16,24 +17,31 @@ public:
 
     void move_elevator(int start, int end);
 
-    void set_floor_info(int floor_num, int v1, int v2, int v3);
+    void set_floor_info(int floor_num, int upside_num, int downside_num, int alight_num);
+
+    void set_load_info(int load, QString color);
 
 private:
     Q_OBJECT
     int id = 0;
-    QPropertyAnimation *QAnimation;
     QLabel *elevator_label;
+    QLabel *load_label;
     std::vector<QLabel **> floor_labels;
+    QPropertyAnimation *QAnimation;
 
     signals:
-            void elevator_signal(int start, int end);
+    void elevator_signal(int start, int end);
 
-    void floor_signal(int floor_num, int v1, int v2, int v3);
+    void floor_signal(int floor_num, int upside_num, int downside_num, int alight_num);
+
+    void load_signal(int load, QString color);
 
 private slots:
-            void elevator_slot(int start, int end);
+    void elevator_slot(int start, int end);
 
-    void floor_slot(int floor_num, int v1, int v2, int v3);
+    void floor_slot(int floor_num, int upside_num, int downside_num, int alight_num);
+
+    void load_slot(int load, QString color);
 };
 
 #endif // ELEVATORSHAFT_H

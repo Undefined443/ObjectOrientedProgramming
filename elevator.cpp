@@ -100,7 +100,7 @@ void elevator::board() {
     } else {
         full = false;
     }
-    if (boarding_queue.empty()) {  // no more passengers to board
+    if (boarding_queue.empty() || passengers.size() >= capacity) {  // no more passengers to board
         ding_stage = 3;  // move to the next stage
         set_refresh_time();  // elevator is ready to move
     }
