@@ -13,7 +13,8 @@ passenger::passenger(class building *b, class floor *f, const nlohmann::json &co
     boarding_time = rand_boarding_time(e);  // set random boarding time
     active_time = 0;  // passenger require elevator immediately when it enters the building
     total_destinations = rand_total_destination(e);
-    original_floor = current_floor->get_id();
+    original_floor = current_floor->get_id();  // set original floor
+    destination_floor = original_floor;  // set destination floor (temporarily)
     current_floor->add_passenger(this);
     set_refresh_time();
 }
@@ -54,13 +55,11 @@ void passenger::set_random_dest() {
         destination_floor = 1;
         return;
     }
-    destination_floor = rand_floor(e);
+    // Set random destination floor
     while (destination_floor == original_floor) {
         destination_floor = rand_floor(e);
-    }
-    if (count_destinations == total_destinations - 1) {  // the last floor the passenger visit can't be the 1st floor
-        while (destination_floor == 1) {
-            destination_floor = rand_floor(e);
+        while (count_destinations == total_destinations - 1 && destination_floor == 1) {
+            destination_floor = rand_floor(e);  // the last floor the passenger visit can't be the 1st floor
         }
     }
 }
@@ -78,13 +77,12 @@ void passenger::board(elevator *el) {
 void passenger::alight(class floor *f) {
     ++count_destinations;
     // passenger enter the floor
-    current_floor = f;
-    current_elevator = nullptr;
-    current_floor->add_passenger(this);
-    original_floor = f->get_id();
-    destination_floor = 0;
+    current_floor = f;  // set current floor
+    current_elevator = nullptr;  // unset current elevator
+    current_floor->add_passenger(this);  // add passenger to current floor
+    original_floor = f->get_id();  // set original floor to current floor
     active_time = rand_active_time(e);  // reset active time
-    activated = false;  // reset activated
+    activated = false;  // unset activated
     set_refresh_time();  // reset refresh time
 
     if (count_destinations == total_destinations + 1) {
