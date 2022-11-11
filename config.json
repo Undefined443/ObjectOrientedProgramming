@@ -11,7 +11,7 @@
   "simulator.simulatedTime": 10,
   "simulator.traffic": 1000,
   "simulator.refreshRateMillisecond": 500,
-  "simulator.passengerSpawnRate": 1000,
+  "simulator.passengerSpawnRate": 1,
   "simulator.messageDurationMillisecond": 2000,
-  "simulator.timeUnitMillisecond": 50
+  "simulator.timeUnitMillisecond": 300
 }
