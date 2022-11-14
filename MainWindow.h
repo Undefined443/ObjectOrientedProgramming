@@ -27,6 +27,8 @@ public:
 
     void set_load_info(int elevator, int load, QString color);
 
+    void set_floor_color(int elevator, int floor_num, QString color);
+
 private:
     Q_OBJECT
     int id = 0;
@@ -35,26 +37,30 @@ private:
     QLabel *time_label;
 
     signals:
-    void elevator_signal(int elevator, int start, int end);
+    void move_elevator_signal(int elevator, int start, int end);
 
-    void floor_signal(int elevator, int floor_num, int upside_num, int downside_num, int alight_num);
+    void floor_info_signal(int elevator, int floor_num, int upside_num, int downside_num, int alight_num);
 
     void message_signal(QVector<QString> messages);
 
     void timer_signal(QString time);
 
-    void load_signal(int elevator, int load, QString color);
+    void load_info_signal(int elevator, int load, QString color);
+
+    void floor_color_signal(int elevator, int floor_num, QString color);
 
 private slots:
-    void elevator_slot(int elevator, int start, int end);
+    void move_elevator_slot(int elevator, int start, int end);
 
-    void floor_slot(int elevator, int floor_num, int upside_num, int downside_num, int alight_num);
+    void floor_info_slot(int elevator, int floor_num, int upside_num, int downside_num, int alight_num);
 
     void message_slot(QVector<QString> messages);
 
     void timer_slot(QString time);
 
-    void load_slot(int elevator, int load, QString color);
+    void load_info_slot(int elevator, int load, QString color);
+
+    void floor_color_slot(int elevator, int floor_num, QString color);
 };
 
 

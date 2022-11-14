@@ -18,7 +18,11 @@ public:
 
     elevator(int id, const nlohmann::json& conf);
 
-    void set_floors(std::vector<class floor *> &fv);  // set floors accessible by the elevator
+    void set_current_floor(class floor *f);  // set initial floor
+
+    void add_accessible_floor(class floor *f);  // set floors accessible by the elevator
+
+    void set_floors(std::vector<class floor *> &floors);  // set all floors
 
     void set_monitor(monitor *m);  // set the monitor
 
@@ -28,7 +32,12 @@ public:
 
     void run();  // move elevator up or down
 
+    bool is_full() const;
+
+    bool is_accessible(int floor_id);
+
     // getters
+
     class floor *get_current_floor();
 
     int get_direction() const;
@@ -37,13 +46,13 @@ public:
 
     int get_ding_stage() const;
 
-    bool is_full() const;
-
     int get_alighting_num(class floor *f);
 
     int get_free_space() const;
 
     int get_load() const;
+
+    std::vector<class floor *> get_accessible_floors() const;
 
     enum direction {
         up = 1, down = -1, stop = 0
@@ -65,8 +74,9 @@ private:
     int ding_stage = 0;  // indicates at which stage the ding function is running
 
     class floor *current_floor;
-    std::vector<class floor *> floors;  // floors attached to the elevator
     std::vector<passenger *> passengers;  // passengers on the elevator
+    std::vector<class floor *> floors;  // all floors
+    std::vector<class floor *> accessible_floors;  // floors accessible by the elevator
 
     std::map<class floor *, std::vector<passenger *>> registry;  // table of passengers to be boarded/alighted at each floor
 

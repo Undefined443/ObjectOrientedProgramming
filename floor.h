@@ -20,7 +20,7 @@ public:
 
     floor(class building *b, int id, const nlohmann::json &conf);
 
-    void set_elevators(std::vector<elevator *> &ev);  // set elevators reachable from this floor
+    void add_accessible_elevator(elevator *e);  // set elevators reachable from this floor
 
     void set_monitor(monitor *_monitor);
 
@@ -43,7 +43,7 @@ private:
     monitor *mon;
 
     std::vector<passenger *> passengers;
-    std::vector<elevator *> elevators;
+    std::vector<elevator *> accessible_elevators;
 
     // boarding lines, queue the passengers, each elevator has a boarding line
     std::map<elevator *, std::queue<passenger *>> upside_boarding_queues;

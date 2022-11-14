@@ -1,6 +1,7 @@
 #include "elevator.h"
 #include "floor.h"
 #include <vector>
+#include <algorithm>
 
 elevator::elevator(int id, const nlohmann::json &conf) : id(id), conf(conf) {}
 
@@ -147,26 +148,47 @@ int elevator::choose_direction() {
     return ret;
 }
 
+bool elevator::is_full() const {
+    return full;
+}
+
+bool elevator::is_accessible(int floor_id) {
+    return std::any_of(accessible_floors.cbegin(), accessible_floors.cend(), [floor_id](auto &floor) {
+        return floor->get_id() == floor_id;
+    });
+}
+
+// Setters
+void elevator::set_current_floor(class floor *f) {
+    current_floor = f;
+}
+
+void elevator::set_floors(std::vector<class floor *> &floors) {
+    this->floors = floors;
+}
+
 // set floors reachable by the elevator, invoke before starting the elevator
-void elevator::set_floors(std::vector<class floor *> &fv) {
-    for (class floor *f: fv) {
-        floors.push_back(f);
-    }
-    current_floor = floors[conf["elevator.initialFloor"].get<int>() - 1];
+void elevator::add_accessible_floor(class floor *f) {
+    accessible_floors.push_back(f);
+}
+
+void elevator::set_refresh_time() {
+    refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void elevator::set_monitor(monitor *m) {
+    mon = m;
 }
 
 // getters
+
 class floor *elevator::get_current_floor() {
     return current_floor;
 }
 
 int elevator::get_direction() const {
     return direction;
-}
-
-void elevator::set_refresh_time() {
-    refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
 long long elevator::get_time_gap() const {
@@ -176,14 +198,6 @@ long long elevator::get_time_gap() const {
 
 bool elevator::get_status() const {
     return status;
-}
-
-void elevator::set_monitor(monitor *m) {
-    mon = m;
-}
-
-bool elevator::is_full() const {
-    return full;
 }
 
 int elevator::get_ding_stage() const {
@@ -206,4 +220,8 @@ int elevator::get_free_space() const {
 
 int elevator::get_load() const {
     return int(passengers.size());
+}
+
+std::vector<class floor *> elevator::get_accessible_floors() const {
+    return accessible_floors;
 }

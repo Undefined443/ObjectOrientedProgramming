@@ -25,7 +25,7 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
         elevator_shafts.push_back(elevator_shaft);
     }
     elevator_shafts_widget->setLayout(elevator_shaft_horizontal_layout);
-    elevator_shafts_widget->setStyleSheet("background-color:white;border:2px groove gray;border-radius:10px;padding:2px 4px;");
+    elevator_shafts_widget->setStyleSheet("background-color:white;border:none;border-radius:10px;");
     elevator_shafts_widget->show();
 
     // Add labels in information widget
@@ -56,20 +56,21 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     setStyleSheet("background-color:#ECECEC;");
 
     // Connect signals and slots
-    connect(this, &MainWindow::elevator_signal, this, &MainWindow::elevator_slot);
-    connect(this, &MainWindow::floor_signal, this, &MainWindow::floor_slot);
+    connect(this, &MainWindow::move_elevator_signal, this, &MainWindow::move_elevator_slot);
+    connect(this, &MainWindow::floor_info_signal, this, &MainWindow::floor_info_slot);
     connect(this, &MainWindow::message_signal, this, &MainWindow::message_slot);
     connect(this, &MainWindow::timer_signal, this, &MainWindow::timer_slot);
-    connect(this, &MainWindow::load_signal, this, &MainWindow::load_slot);
+    connect(this, &MainWindow::load_info_signal, this, &MainWindow::load_info_slot);
+    connect(this, &MainWindow::floor_color_signal, this, &MainWindow::floor_color_slot);
 }
 
 // Emitters
 void MainWindow::move_elevator(int elevator, int start, int end) {
-    emit elevator_signal(elevator, start, end);
+    emit move_elevator_signal(elevator, start, end);
 }
 
 void MainWindow::set_floor_info(int elevator, int floor_num, int upside_num, int downside_num, int alight_num) {
-    emit floor_signal(elevator, floor_num, upside_num, downside_num, alight_num);
+    emit floor_info_signal(elevator, floor_num, upside_num, downside_num, alight_num);
 }
 
 void MainWindow::set_message(QVector<QString> messages) {
@@ -81,15 +82,19 @@ void MainWindow::set_timer(QString time) {
 }
 
 void MainWindow::set_load_info(int elevator, int load, QString color) {
-    emit load_signal(elevator, load, color);
+    emit load_info_signal(elevator, load, color);
+}
+
+void MainWindow::set_floor_color(int elevator, int floor_num, QString color) {
+    emit floor_color_signal(elevator, floor_num, color);
 }
 
 // Slots
-void MainWindow::elevator_slot(int elevator, int start, int end) {
+void MainWindow::move_elevator_slot(int elevator, int start, int end) {
     elevator_shafts[elevator]->move_elevator(start, end);
 }
 
-void MainWindow::floor_slot(int elevator, int floor_num, int upside_num, int downside_num, int alight_num) {
+void MainWindow::floor_info_slot(int elevator, int floor_num, int upside_num, int downside_num, int alight_num) {
     elevator_shafts[elevator]->set_floor_info(floor_num, upside_num, downside_num, alight_num);
 }
 
@@ -103,6 +108,10 @@ void MainWindow::timer_slot(QString time) {
     time_label->setText(time);
 }
 
-void MainWindow::load_slot(int elevator, int load, QString color) {
+void MainWindow::load_info_slot(int elevator, int load, QString color) {
     elevator_shafts[elevator]->set_load_info(load, color);
+}
+
+void MainWindow::floor_color_slot(int elevator, int floor_num, QString color) {
+    elevator_shafts[elevator]->set_floor_color(floor_num, color);
 }

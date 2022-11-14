@@ -8,7 +8,10 @@ void floor::request_elevator(passenger *p) {
     // find an elevator
     std::vector<std::pair<elevator *, std::pair<int, int>>> candidates;
     int pas_direction = p->get_destination() - id > 0 ? elevator::direction::up : elevator::direction::down;
-    for (auto el: elevators) {
+    for (auto el: accessible_elevators) {
+        if (!el->is_accessible(p->get_destination())) {
+            continue;
+        }
         auto el_status = el->get_status();
         auto el_direction = el->get_direction();
         auto el_cur_flr = el->get_current_floor()->get_id();
@@ -62,10 +65,8 @@ void floor::request_elevator(passenger *p) {
     nearest_elevator->reg_pas(p);
 }
 
-void floor::set_elevators(std::vector<elevator *> &ev) {
-    for (auto e: ev) {
-        elevators.push_back(e);
-    }
+void floor::add_accessible_elevator(elevator *e) {
+    accessible_elevators.push_back(e);
 }
 
 std::queue<passenger *> &floor::get_boarding_queue(elevator *e) {

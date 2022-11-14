@@ -22,12 +22,23 @@ building::building() : refresh_time_stamp(std::chrono::duration_cast<std::chrono
     for (int i = 1; i <= elevator_num; ++i) {
         elevators.push_back(new elevator(i, conf));
     }
-    // Configure floors and elevators
-    for (auto floor: floors) {
-        floor->set_elevators(elevators);
-    }
-    for (auto elevator: elevators) {
+    // Configure elevators and floors
+    for (auto &elevator : elevators) {
+        // Set all floors
         elevator->set_floors(floors);
+    }
+    for (int i = 0; i < elevator_num; ++i) {
+        // Set elevator's initial floor
+        int initial_floor = conf["elevator.initialFloor"];
+        elevators[i]->set_current_floor(floors[initial_floor - 1]);
+
+        // Set elevator's accessible floors
+        auto floor_array = conf["elevator.accessibleFloors"][i].get<std::vector<int>>();
+        for (auto &floor_id : floor_array) {
+            auto floor = floors[floor_id - 1];
+            elevators[i]->add_accessible_floor(floor);
+            floor->add_accessible_elevator(elevators[i]);
+        }
     }
 }
 

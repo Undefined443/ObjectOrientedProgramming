@@ -10,9 +10,14 @@ monitor::monitor(building *_building, MainWindow *_main_window) :
             std::chrono::system_clock::now().time_since_epoch()).count()),
     elevNum(b->conf["elevator.count"]),
     floorNum(b->conf["building.floors"]),
-    elevator_status(elevNum, std::vector<int>(4, 0)), // [elevator]<flag, current floor, direction, load> flag: 0: needn't move 1: need to move
-    floor_info(elevNum, std::vector(floorNum, std::vector<int>(3, 0))) { // [elevator][floor]<upside number, downside number, alight number>
+    elevator_status(elevNum, std::vector<int>(4, 0)),  // [elevator]<flag, current floor, direction, load> flag: 0: needn't move 1: need to move
+    floor_info(elevNum, std::vector(floorNum, std::vector<int>(3, 0))) {  // [elevator][floor]<upside number, downside number, alight number>
     b->set_monitor(this);
+    for (int i = 0; i < elevNum; ++i) {
+        for (auto accessible_floor: b->conf["elevator.accessibleFloors"][i].get<std::vector<int>>()) {
+            main_window->set_floor_color(i, accessible_floor - 1,"#EDFFED");
+        }
+    }
 }
 
 void monitor::run() {
