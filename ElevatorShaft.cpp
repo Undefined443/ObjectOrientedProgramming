@@ -11,7 +11,6 @@ const int PADDING = 0;
 const int BOTTOM_MARGIN = 35;
 const int PIC_WIDTH = LINE_HEIGHT - PADDING;
 
-const QString FLOOR_LABEL_QSS = ":/images/elevator.png";
 const QString LOAD_LABEL_QSS = "border:2px groove gray;border-radius:5px;";
 
 ElevatorShaft::ElevatorShaft(int floor_num, int speed, QWidget *parent) : QWidget(parent), floors(floor_num), floor_labels(floor_num) {
@@ -30,13 +29,13 @@ ElevatorShaft::ElevatorShaft(int floor_num, int speed, QWidget *parent) : QWidge
     auto floors_widget = new QWidget(elevator_floors_widget);
     elevator_widget->setFixedSize(PIC_WIDTH, LINE_HEIGHT * floor_num - PADDING);
     floors_widget->setFixedSize(LINE_WIDTH, LINE_HEIGHT * floor_num - PADDING);
-    elevator_widget->setStyleSheet("background-color:white;border:none;");
+    elevator_widget->setStyleSheet("background-color:white;border:none;border-radius:none;");
     floors_widget->setStyleSheet("background-color:#ECECEC;border:none;border-radius:10px;");
 
     // Set elevator label
     elevator_label = new QLabel(elevator_widget);
     elevator_label->setFixedSize(PIC_WIDTH, PIC_WIDTH);
-    QPixmap pixmap("/Users/xiao/CLionProjects/ObjectOrientedProgramming/images/elevator.svg");
+    QPixmap pixmap("../../../../images/elevator.svg");
     QPixmap scaled = pixmap.scaled(elevator_label->size(), Qt::KeepAspectRatio);
     elevator_label->setPixmap(scaled);
     elevator_label->setGeometry(0, (floor_num - 1) * LINE_HEIGHT, PIC_WIDTH, PIC_WIDTH);
@@ -51,7 +50,7 @@ ElevatorShaft::ElevatorShaft(int floor_num, int speed, QWidget *parent) : QWidge
     load_label->setNum(0);
     load_label->setAlignment(Qt::AlignCenter);
     load_label->setFixedSize(PIC_WIDTH, PIC_WIDTH);
-    load_label->setStyleSheet(LOAD_LABEL_QSS);
+    load_label->setStyleSheet("color:black;background-color:white;" + LOAD_LABEL_QSS);
 
     // Set layouts
     auto elevator_shaft_vertical_layout = new QVBoxLayout(this);

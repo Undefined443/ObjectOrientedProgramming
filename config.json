@@ -21,8 +21,8 @@
   "passenger.activeTimeRange": [2, 10],
   "passenger.totalDestinationRange": [1, 10],
   "simulator.simulatedTime": 10,
-  "simulator.traffic": 100000,
+  "simulator.traffic": 1000,
   "simulator.passengerSpawnRate": 1,
   "simulator.messageDurationMillisecond": 2000,
-  "simulator.timeUnitMillisecond": 100
+  "simulator.timeUnitMillisecond": 300
 }
