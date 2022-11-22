@@ -40,6 +40,10 @@ bool passenger::timer(elevator *el) {
         is_timing = true;
         current_elevator = el;
         timer_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+        // calculate waiting time
+        auto waiting_time = timer_time_stamp - waiting_timestamp;
+        mon->add_passenger_waiting_time(waiting_time);
         return false;
     } else {  // if timer is running, check if time is up
         int time_unit = conf["simulator.timeUnitMillisecond"];
@@ -75,10 +79,6 @@ void passenger::board(elevator *el) {
     }
     current_floor->remove_passenger(this, el);
     current_floor = nullptr;
-
-    auto current_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    auto waiting_time = current_time - waiting_timestamp;
-    mon->add_passenger_waiting_time(waiting_time);
 }
 
 void passenger::alight(class floor *f) {
