@@ -18,9 +18,9 @@ public:
 
     void run();
 
-    bool timer();  // passenger needs some time to alight/board the elevator, if time is up, then passenger can alight/board the elevator
+    bool timer(elevator *el);  // passenger needs some time to alight/board the elevator, if time is up, then passenger can alight/board the elevator
 
-    void board(elevator *el);  // set current elevator and clear current floor
+    void board(elevator *el);  // clear current floor
 
     void alight(class floor *f);  // set current floor and clear current elevator and deactivate the passenger
 
@@ -29,6 +29,8 @@ public:
     int get_destination() const;
 
     int get_id() const;
+
+    elevator *get_current_elevator();
 
 private:
     static int c_id;

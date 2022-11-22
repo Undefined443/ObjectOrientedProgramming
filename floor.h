@@ -18,7 +18,7 @@ class floor {
 public:
     friend class monitor;
 
-    floor(class building *b, int id, const nlohmann::json &conf);
+    floor(class building *_b, int id, const nlohmann::json &conf);
 
     void add_accessible_elevator(elevator *e);  // set elevators reachable from this floor
 
@@ -30,24 +30,24 @@ public:
 
     void leave_building(passenger *p);
 
-    std::queue<passenger *> &get_boarding_queue(elevator *e);
+    std::vector<passenger *> &get_boarding_queue(elevator *e);
 
     int get_id() const;
 
-    void remove_passenger(passenger *p);  // remove passenger from the floor, call after passenger board the elevator
+    void remove_passenger(passenger *p, elevator *e);  // remove passenger from the floor, call after passenger board the elevator
 
 private:
     int id;
     nlohmann::json conf;
-    building *budin;
+    building *b;
     monitor *mon;
 
     std::vector<passenger *> passengers;
     std::vector<elevator *> accessible_elevators;
 
     // boarding lines, queue the passengers, each elevator has a boarding line
-    std::map<elevator *, std::queue<passenger *>> upside_boarding_queues;
-    std::map<elevator *, std::queue<passenger *>> downside_boarding_queues;
+    std::map<int, std::vector<passenger *>> upside_boarding_queues;
+    std::map<int, std::vector<passenger *>> downside_boarding_queues;
 };
 
 

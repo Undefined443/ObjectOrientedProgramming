@@ -34,9 +34,11 @@ void passenger::run() {
     }
 }
 
-bool passenger::timer() {
+// Timer function for passenger to board/alight elevator
+bool passenger::timer(elevator *el) {
     if (!is_timing) {  // if timer is not running, start the timer
         is_timing = true;
+        current_elevator = el;
         timer_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         return false;
     } else {  // if timer is running, check if time is up
@@ -71,9 +73,8 @@ void passenger::board(elevator *el) {
     if (current_floor == nullptr) {
         throw std::runtime_error("passenger " + std::to_string(id) + ": current floor is null.");
     }
-    current_floor->remove_passenger(this);
+    current_floor->remove_passenger(this, el);
     current_floor = nullptr;
-    current_elevator = el;
 
     auto current_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     auto waiting_time = current_time - waiting_timestamp;
@@ -120,4 +121,8 @@ int passenger::get_destination() const {
 
 int passenger::get_id() const {
     return id;
+}
+
+elevator *passenger::get_current_elevator() {
+    return current_elevator;
 }

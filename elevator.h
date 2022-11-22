@@ -26,7 +26,7 @@ public:
 
     void set_monitor(monitor *m);  // set the monitor
 
-    void reg_pas(passenger *p);  // if a passenger want to board the elevator, register it (by floor)
+    bool reg_pas(passenger *p);  // if a passenger want to board the elevator, register it (by floor)
 
     void ding();  // the elevator has arrived at a floor
 
@@ -36,9 +36,15 @@ public:
 
     bool is_accessible(int floor_id);
 
+    void set_group_id(int g_id);
+
+    void set_group(std::vector<elevator *> &group);
+
     // getters
 
     class floor *get_current_floor();
+
+    int get_id() const;
 
     int get_direction() const;
 
@@ -54,6 +60,10 @@ public:
 
     std::vector<class floor *> get_accessible_floors() const;
 
+    int get_group_id() const;
+
+    std::vector<elevator *> get_group() const;
+
     enum direction {
         up = 1, down = -1, stop = 0
     };
@@ -64,6 +74,7 @@ public:
 
 private:
     int id;
+    int group_id = 0;
     monitor *mon;
     nlohmann::json conf;  // configuration data
     long long refresh_time_stamp;  // refresh time stamp for elevator
@@ -78,6 +89,7 @@ private:
     std::vector<passenger *> passengers;  // passengers on the elevator
     std::vector<class floor *> floors;  // all floors
     std::vector<class floor *> accessible_floors;  // floors accessible by the elevator
+    std::vector<elevator *> group;
 
     std::map<class floor *, std::vector<passenger *>> registry;  // table of passengers to be boarded/alighted at each floor
 

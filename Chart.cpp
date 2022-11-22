@@ -40,7 +40,6 @@ Chart::Chart(int _elevator_num, QWidget *parent) :
         chart_view_vector[i]->chart()->legend()->setAlignment(Qt::AlignBottom);
         chart_view_vector[i]->chart()->setTheme(QChart::ChartThemeBlueCerulean);
         chart_view_vector[i]->chart()->legend()->setFont(QFont("Arial", 10));
-//        chart_view_vector->chart()->legend()->setMarkerShape(QLegend::MarkerShapeFromSeries);
 
         grid_layout->addWidget(chart_view_vector[i], i / COLUMN, i % COLUMN);
     }
@@ -63,7 +62,6 @@ Chart::Chart(int _elevator_num, QWidget *parent) :
     chart->addAxis(axisX, Qt::AlignBottom);
     series->attachAxis(axisX);
 
-    axisY->setLabelFormat("%d s");
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
 
@@ -86,6 +84,7 @@ Chart::Chart(int _elevator_num, QWidget *parent) :
     // Passenger
     *bar_set << 0 << 0 << 0 << 0;
     axisY->setRange(0, 1);
+    axisY->setLabelFormat("%.1f s");
 
     // Connect signals and slots
     connect(this, &Chart::elevator_statistics_signal, this, &Chart::elevator_statistics_slot);
@@ -129,6 +128,9 @@ void Chart::passenger_statistics_slot(QVector<long long> passenger_statistics) {
             bar_set->replace(i, new_value);
             if (i == 1) {  // maximum value changed
                 axisY->setRange(0, new_value * 1.1);
+                if (axisY->labelFormat() == "%.1f s" && new_value >= 4) {
+                    axisY->setLabelFormat("%d s");
+                }
             }
         }
     }

@@ -6,8 +6,9 @@ std::random_device building::rd;
 std::mt19937 building::e = std::mt19937(rd());
 
 // Once the building instance is created, the constructor will read the configuration file and initialize the building.
-building::building() : refresh_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()).count()) {
+building::building() :
+    refresh_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count())
+    {
     std::ifstream conf_file("/Users/xiao/CLionProjects/ObjectOrientedProgramming/config.json");
     conf = nlohmann::json::parse(conf_file);
     conf_file.close();
@@ -27,17 +28,27 @@ building::building() : refresh_time_stamp(std::chrono::duration_cast<std::chrono
         // Set all floors
         elevator->set_floors(floors);
     }
-    for (int i = 0; i < elevator_num; ++i) {
-        // Set elevator's initial floor
-        int initial_floor = conf["elevator.initialFloor"];
-        elevators[i]->set_current_floor(floors[initial_floor - 1]);
-
-        // Set elevator's accessible floors
-        auto floor_array = conf["elevator.accessibleFloors"][i].get<std::vector<int>>();
-        for (auto &floor_id : floor_array) {
-            auto floor = floors[floor_id - 1];
-            elevators[i]->add_accessible_floor(floor);
-            floor->add_accessible_elevator(elevators[i]);
+    // Set elevator groups and attach elevators to floors
+    auto groups = conf["elevator.group"].get<std::vector<std::vector<int>>>();
+    int initial_floor = conf["elevator.initialFloor"].get<int>() - 1;
+    for (int g = 0; g < groups.size(); ++g) {
+        // Create elevator group
+        std::vector<elevator *> group_elevators;
+        for (int el : groups[g]) {
+            group_elevators.push_back(elevators[el - 1]);
+        }
+        for (auto el : groups[g]) {
+            auto elevator = elevators[el - 1];
+            elevator->set_group_id(g + 1);
+            elevator->set_group(group_elevators);  // set group id
+            elevator->set_current_floor(floors[initial_floor]);  // set initial floor
+            // set elevator's accessible floors
+            auto floor_array = conf["elevator.accessibleFloors"][g].get<std::vector<int>>();
+            for (auto floor_id : floor_array) {
+                auto floor = floors[floor_id - 1];
+                elevator->add_accessible_floor(floor);
+                floor->add_accessible_elevator(elevator);
+            }
         }
     }
 }
@@ -57,8 +68,9 @@ void building::run() {
         if (tot_traffic > traffic) {  // reached maximum traffic
             rand_num -= tot_traffic - traffic;
         }
+        auto initial_floor = conf["passenger.initialFloor"].get<int>() - 1;
         for (int i = 0; i < rand_num; ++i) {
-            auto new_passenger = new passenger(this, floors[conf["passenger.initialFloor"].get<int>() - 1], conf);
+            auto new_passenger = new passenger(this, floors[initial_floor], conf);
             new_passenger->set_monitor(mon);
             passengers.push_back(new_passenger);
             mon->send_message("<font color=\"green\">Passenger " + std::to_string(new_passenger->get_id()) + " spawned.</font>");

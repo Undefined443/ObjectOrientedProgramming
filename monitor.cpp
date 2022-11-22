@@ -16,9 +16,14 @@ monitor::monitor(building *_building, MainWindow *_main_window) :
     s(elevNum, _main_window)
     {
     b->set_monitor(this);
-    for (int i = 0; i < elevNum; ++i) {
-        for (auto accessible_floor: b->conf["elevator.accessibleFloors"][i].get<std::vector<int>>()) {
-            main_window->set_floor_color(i, accessible_floor - 1,"#EDFFED");
+    // color the accessible floors
+    auto groups = b->conf["elevator.group"].get<std::vector<std::vector<int>>>();
+    auto accessible_floors = b->conf["elevator.accessibleFloors"].get<std::vector<std::vector<int>>>();
+    for (int g = 0; g < groups.size(); ++g) {
+        for (auto e: groups[g]) {
+            for (auto f: accessible_floors[g]) {
+                main_window->set_floor_color(e - 1, f - 1, "#EDFFED");
+            }
         }
     }
 }
@@ -126,8 +131,8 @@ void monitor::get_floor_info() {
         auto elevator = b->elevators[i];
         for (int j = 0; j < floorNum; ++j) {
             auto floor = b->floors[j];
-            floor_info[i][j][0] = int(floor->upside_boarding_queues[elevator].size());  // upside number
-            floor_info[i][j][1] = int(floor->downside_boarding_queues[elevator].size());  // downside number
+            floor_info[i][j][0] = int(floor->upside_boarding_queues[elevator->get_group_id()].size());  // upside number
+            floor_info[i][j][1] = int(floor->downside_boarding_queues[elevator->get_group_id()].size());  // downside number
             floor_info[i][j][2] = int(elevator->get_alighting_num(floor));  // alight number
         }
     }

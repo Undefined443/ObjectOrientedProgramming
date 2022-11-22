@@ -29,7 +29,7 @@ void elevator::run() {
 }
 
 // register passenger's boarding floors and alighting floors, invoke by floor
-void elevator::reg_pas(passenger *p) {
+bool elevator::reg_pas(passenger *p) {
     class floor *pas_cur_flr = p->get_current_floor();
     class floor *pas_dst_flr = floors[p->get_destination() - 1];
     registry[pas_cur_flr].push_back(p);  // register passenger's boarding floor
@@ -39,11 +39,13 @@ void elevator::reg_pas(passenger *p) {
             direction = pas_dst_flr->get_id() > current_floor->get_id() ? 1 : -1;  // set direction
             ding_stage = 2;
             board();  // board the passenger
+            return true;  // no need for other elevators to board the passenger
         } else {  // elevator is not at the same floor as the passenger
             direction = pas_cur_flr->get_id() > current_floor->get_id() ? 1 : -1;  // set direction
             set_refresh_time();  // set a new refresh time
         }
     }
+    return false;  // other elevators can board the passenger
 }
 
 // elevator arrived at a floor
@@ -77,23 +79,33 @@ void elevator::ding() {
 // board passengers, invoke in ding()
 void elevator::board() {
     // get a boarding queue and board the passengers
-    auto &boarding_queue = current_floor->get_boarding_queue(this);
+    auto boarding_queue = current_floor->get_boarding_queue(this);
     int capacity = conf["elevator.capacity"];
+
+    // remove passengers that boarding other elevators in the group
+    while (!boarding_queue.empty() && boarding_queue.front()->get_current_elevator() != nullptr && boarding_queue.front()->get_current_elevator() != this) {
+        boarding_queue.erase(boarding_queue.begin());
+    }
+
+    // board passengers
     while (!boarding_queue.empty() && passengers.size() < capacity) {
         ding_stage = 2;  // keep in the current stage
         passenger *p = boarding_queue.front();
-        if (p->timer()) {  // wait for passenger to board
-            // remove old registry
-            registry[current_floor].erase(
-                    std::remove(registry[current_floor].begin(), registry[current_floor].end(), p),
-                    registry[current_floor].end());
+        if (p->get_current_elevator() == nullptr) {  // elevator reached the passenger and remove it from the registry
+            for (auto e: group) {
+                e->registry[current_floor].erase(
+                        std::remove(e->registry[current_floor].begin(), e->registry[current_floor].end(), p),
+                        e->registry[current_floor].end());
+            }
+        }
+        if (p->timer(this)) {  // passenger ready to board
             // insert new registry
             registry[floors[p->get_destination() - 1]].push_back(p);
             // passenger enter the elevator
             p->board(this);
             passengers.push_back(p);
-            // remove passenger from boarding queue
-            boarding_queue.pop();
+            // remove passenger from the boarding queue
+            boarding_queue.erase(boarding_queue.begin());  // attention: this is a copy of the original vector
         } else {  // passenger is still boarding, wait for next time
             break;
         }
@@ -118,7 +130,7 @@ void elevator::alight() {
         int dst_flr = (*iter)->get_destination();
         if (dst_flr == cur_flr) {  // find a passenger to alight
             ding_stage = 1;  // keep in the current stage
-            if ((*iter)->timer()) {  // wait for passenger to alight
+            if ((*iter)->timer(this)) {  // passenger ready to alight
                 // passenger out the elevator
                 (*iter)->alight(current_floor);
                 passengers.erase(
@@ -184,9 +196,21 @@ void elevator::set_monitor(monitor *m) {
     mon = m;
 }
 
+void elevator::set_group_id(int g_id) {
+    group_id = g_id;
+}
+
+void elevator::set_group(std::vector<elevator *> &g) {
+    group = g;
+}
+
 // Getters
 class floor *elevator::get_current_floor() {
     return current_floor;
+}
+
+int elevator::get_id() const {
+    return id;
 }
 
 int elevator::get_direction() const {
@@ -213,6 +237,9 @@ int elevator::get_alighting_num(class floor *f) {
             ++ret;
         }
     }
+//    return std::accumulate(registry[f].begin(), registry[f].end(), 0, [f](int sum, passenger *p) {
+//        return sum + (p->get_destination() == f->get_id());
+//    });
     return ret;
 }
 
@@ -234,4 +261,12 @@ long long elevator::get_time() {
     auto time = current_time - timer;
     timer = current_time;
     return time;
+}
+
+int elevator::get_group_id() const {
+    return group_id;
+}
+
+std::vector<elevator *> elevator::get_group() const {
+    return group;
 }

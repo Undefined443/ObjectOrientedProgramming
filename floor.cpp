@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <cmath>
 
-floor::floor(class building *b, int id, const nlohmann::json &conf) : budin(b), id(id), conf(conf) {}
+floor::floor(class building *_b, int id, const nlohmann::json &conf) : b(_b), id(id), conf(conf) {}
 
 void floor::request_elevator(passenger *p) {
     // find an elevator
@@ -18,7 +18,7 @@ void floor::request_elevator(passenger *p) {
 
         // some temporary variables
         int el_coming_direction = id - el_cur_flr > 0 ? elevator::direction::up : elevator::direction::down;
-        auto &boarding_queue = pas_direction > 0 ? upside_boarding_queues[el] : downside_boarding_queues[el];
+        auto &boarding_queue = pas_direction > 0 ? upside_boarding_queues[el->get_group_id()] : downside_boarding_queues[el->get_group_id()];
 
         bool is_at_same_floor = (el_cur_flr == id) && (el_direction == pas_direction)  && (el->get_ding_stage() != 0);  // same floor && same direction && open for boarding
         bool is_pass_by = el_direction == pas_direction && el_coming_direction == el_direction;  // indicates whether the elevator can pass by passenger's floor without changing direction
@@ -57,20 +57,24 @@ void floor::request_elevator(passenger *p) {
 
     // add the passenger to the boarding queue
     if (p->get_destination() > id) {
-        upside_boarding_queues[nearest_elevator].push(p);
+        upside_boarding_queues[nearest_elevator->get_group_id()].push_back(p);
     } else {
-        downside_boarding_queues[nearest_elevator].push(p);
+        downside_boarding_queues[nearest_elevator->get_group_id()].push_back(p);
     }
     // register the passenger
-    nearest_elevator->reg_pas(p);
+    for (auto e:nearest_elevator->get_group()) {
+        if (e->reg_pas(p)) {
+            break;
+        }
+    }
 }
 
 void floor::add_accessible_elevator(elevator *e) {
     accessible_elevators.push_back(e);
 }
 
-std::queue<passenger *> &floor::get_boarding_queue(elevator *e) {
-    return e->get_direction() > 0 ? upside_boarding_queues[e] : downside_boarding_queues[e];
+std::vector<passenger *> &floor::get_boarding_queue(elevator *e) {
+    return e->get_direction() > 0 ? upside_boarding_queues[e->get_group_id()] : downside_boarding_queues[e->get_group_id()];
 }
 
 int floor::get_id() const {
@@ -81,14 +85,16 @@ void floor::add_passenger(passenger *p) {
     passengers.push_back(p);
 }
 
-void floor::remove_passenger(passenger *p) {
+void floor::remove_passenger(passenger *p, elevator *e) {
     passengers.erase(std::remove(passengers.begin(), passengers.end(), p), passengers.end());
+    auto &boarding_queue = get_boarding_queue(e);
+    boarding_queue.erase(std::remove(boarding_queue.begin(), boarding_queue.end(), p), boarding_queue.end());
 }
 
 void floor::leave_building(passenger *p) {
     if (id == 1) {
-        remove_passenger(p);
-        budin->remove_passenger(p);
+        passengers.erase(std::remove(passengers.begin(), passengers.end(), p), passengers.end());
+        b->remove_passenger(p);
     } else {
         throw std::runtime_error("Invalid operation: passenger can only leave the building from 1st floor.");
     }
