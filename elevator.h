@@ -67,6 +67,7 @@ private:
     monitor *mon;
     nlohmann::json conf;  // configuration data
     long long refresh_time_stamp;  // refresh time stamp for elevator
+    long long timer;  // to calculate the running/idle time
 
     int direction = stop;
     bool status = idle;
@@ -89,6 +90,8 @@ private:
     void set_refresh_time();  // set base time for elevator
 
     long long get_time_gap() const;  // calculate time gap between current time and last run time
+
+    long long get_time();  // get the running/idle time
 };
 
 

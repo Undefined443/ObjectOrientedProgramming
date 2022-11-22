@@ -56,6 +56,7 @@ private:
     int active_time;  // random active time for each passenger
     bool activated = false;  // whether the passenger is active
     bool is_timing = false;  // whether the timer is running
+    long long waiting_timestamp;
 
     elevator *current_elevator = nullptr;
     building *current_building;

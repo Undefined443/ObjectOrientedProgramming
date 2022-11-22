@@ -2,6 +2,7 @@
 #define BUILDINGWIDGET_H
 
 #include "ElevatorShaft.h"
+#include "Chart.h"
 #include <string>
 #include <QWidget>
 #include <QLabel>
@@ -9,6 +10,8 @@
 #include <QString>
 
 QT_BEGIN_NAMESPACE
+class Chart;
+class QWidget;
 class QLabel;
 QT_END_NAMESPACE
 
@@ -29,12 +32,17 @@ public:
 
     void set_floor_color(int elevator, int floor_num, QString color);
 
+    void set_elevator_statistics(int elevator, QVector<long long> elevator_statistics);
+
+    void set_passenger_statistics(QVector<long long> passenger_statistics);
+
 private:
     Q_OBJECT
     int id = 0;
     std::vector<ElevatorShaft *> elevator_shafts;
     std::vector<QLabel *> message_labels;
     QLabel *time_label;
+    Chart *chart;
 
     signals:
     void move_elevator_signal(int elevator, int start, int end);
@@ -49,6 +57,10 @@ private:
 
     void floor_color_signal(int elevator, int floor_num, QString color);
 
+    void elevator_statistics_signal(int elevator, QVector<long long> elevator_statistics);
+
+    void passenger_statistics_signal(QVector<long long> passenger_statistics);
+
 private slots:
     void move_elevator_slot(int elevator, int start, int end);
 
@@ -61,6 +73,10 @@ private slots:
     void load_info_slot(int elevator, int load, QString color);
 
     void floor_color_slot(int elevator, int floor_num, QString color);
+
+    void elevator_statistics_slot(int elevator, QVector<long long> elevator_statistics);
+
+    void passenger_statistics_slot(QVector<long long> passenger_statistics);
 };
 
 

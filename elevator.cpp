@@ -3,7 +3,10 @@
 #include <vector>
 #include <algorithm>
 
-elevator::elevator(int id, const nlohmann::json &conf) : id(id), conf(conf) {}
+elevator::elevator(int id, const nlohmann::json &conf) :
+    id(id),
+    conf(conf),
+    timer(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) {}
 
 void elevator::run() {
     if (!status) {  // if elevator is not running
@@ -181,8 +184,7 @@ void elevator::set_monitor(monitor *m) {
     mon = m;
 }
 
-// getters
-
+// Getters
 class floor *elevator::get_current_floor() {
     return current_floor;
 }
@@ -224,4 +226,12 @@ int elevator::get_load() const {
 
 std::vector<class floor *> elevator::get_accessible_floors() const {
     return accessible_floors;
+}
+
+long long elevator::get_time() {
+    auto current_time = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
+    auto time = current_time - timer;
+    timer = current_time;
+    return time;
 }

@@ -1,8 +1,11 @@
 #include "MainWindow.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <Chart.h>
 
-MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent) : QWidget(parent) {
+MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent) : chart(new Chart(elevator_num)), QWidget(parent) {
+    chart->show();
+
     // Set widgets
     auto elevator_shafts_widget = new QWidget(this);
     auto information_widget = new QWidget(this);
@@ -62,6 +65,8 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     connect(this, &MainWindow::timer_signal, this, &MainWindow::timer_slot);
     connect(this, &MainWindow::load_info_signal, this, &MainWindow::load_info_slot);
     connect(this, &MainWindow::floor_color_signal, this, &MainWindow::floor_color_slot);
+    connect(this, &MainWindow::elevator_statistics_signal, chart, &Chart::elevator_statistics_slot);
+    connect(this, &MainWindow::passenger_statistics_signal, chart, &Chart::passenger_statistics_slot);
 }
 
 // Emitters
@@ -89,6 +94,14 @@ void MainWindow::set_floor_color(int elevator, int floor_num, QString color) {
     emit floor_color_signal(elevator, floor_num, color);
 }
 
+void MainWindow::set_elevator_statistics(int elevator, QVector<long long> elevator_statistics) {
+    emit elevator_statistics_signal(elevator, elevator_statistics);
+}
+
+void MainWindow::set_passenger_statistics(QVector<long long int> passenger_statistics) {
+    emit passenger_statistics_signal(passenger_statistics);
+}
+
 // Slots
 void MainWindow::move_elevator_slot(int elevator, int start, int end) {
     elevator_shafts[elevator]->move_elevator(start, end);
@@ -114,4 +127,12 @@ void MainWindow::load_info_slot(int elevator, int load, QString color) {
 
 void MainWindow::floor_color_slot(int elevator, int floor_num, QString color) {
     elevator_shafts[elevator]->set_floor_color(floor_num, color);
+}
+
+void MainWindow::elevator_statistics_slot(int elevator, QVector<long long> elevator_statistics) {
+    chart->set_elevator_statistics(elevator, elevator_statistics);
+}
+
+void MainWindow::passenger_statistics_slot(QVector<long long> passenger_statistics) {
+    chart->set_passenger_statistics(passenger_statistics);
 }

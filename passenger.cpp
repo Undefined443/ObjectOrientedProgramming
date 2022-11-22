@@ -24,6 +24,8 @@ void passenger::run() {
     int time_unit = conf["simulator.timeUnitMillisecond"];
     if (get_time_gap() > active_time * time_unit && !activated) {
         activated = true;
+        waiting_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count();
         set_random_dest();
         if (current_floor == nullptr) {
             throw std::runtime_error("passenger " + std::to_string(id) + ": current floor is null.");
@@ -72,6 +74,10 @@ void passenger::board(elevator *el) {
     current_floor->remove_passenger(this);
     current_floor = nullptr;
     current_elevator = el;
+
+    auto current_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    auto waiting_time = current_time - waiting_timestamp;
+    mon->add_passenger_waiting_time(waiting_time);
 }
 
 void passenger::alight(class floor *f) {

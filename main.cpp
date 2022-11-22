@@ -1,5 +1,5 @@
-#include "MainWindow.h"
 #include "monitor.h"
+#include "MainWindow.h"
 #include "building.h"
 #include <thread>
 #include <QApplication>
@@ -33,5 +33,6 @@ int main(int argc, char *argv[]) {
     mon = new monitor(b, main_window);
 
     std::thread t(run);
-    return app.exec();
+
+    return QApplication::exec();
 }

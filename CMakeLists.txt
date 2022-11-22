@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 project(ObjectOrientedProgramming VERSION 0.1 LANGUAGES CXX)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Charts)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
@@ -26,7 +26,11 @@ set(PROJECT_SOURCES
         monitor.cpp
         monitor.h
         passenger.cpp
-        passenger.h)
+        passenger.h
+        Chart.cpp
+        Chart.h
+        statistics.cpp
+        statistics.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ObjectOrientedProgramming
@@ -51,7 +55,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(ObjectOrientedProgramming PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(ObjectOrientedProgramming PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
 
 set_target_properties(ObjectOrientedProgramming PROPERTIES
         MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

@@ -3,15 +3,18 @@
 #include <QVector>
 #include <QString>
 
+
 monitor::monitor(building *_building, MainWindow *_main_window) :
     b(_building),
     main_window(_main_window),
-    base_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()).count()),
+    base_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()),
+    refresh_time_stamp(base_time_stamp),
     elevNum(b->conf["elevator.count"]),
     floorNum(b->conf["building.floors"]),
     elevator_status(elevNum, std::vector<int>(4, 0)),  // [elevator]<flag, current floor, direction, load> flag: 0: needn't move 1: need to move
-    floor_info(elevNum, std::vector(floorNum, std::vector<int>(3, 0))) {  // [elevator][floor]<upside number, downside number, alight number>
+    floor_info(elevNum, std::vector(floorNum, std::vector<int>(3, 0))),  // [elevator][floor]<upside number, downside number, alight number>
+    s(elevNum, _main_window)
+    {
     b->set_monitor(this);
     for (int i = 0; i < elevNum; ++i) {
         for (auto accessible_floor: b->conf["elevator.accessibleFloors"][i].get<std::vector<int>>()) {
@@ -58,8 +61,16 @@ void monitor::run() {
         }
     }
 
-    // Set time
-    set_refresh_time_stamp();
+    // Set time label and refresh statistics
+    auto time_passed = set_refresh_time_stamp();
+    for (int i = 0; i < b->elevators.size(); ++i) {
+        auto e = b->elevators[i];
+        if (e->get_status() == elevator::idle) {
+            s.add_elevator_idle_time(i, time_passed);
+        } else {
+            s.add_elevator_running_time(i, time_passed);
+        }
+    }
     auto seconds_passed = (refresh_time_stamp - base_time_stamp) / 1000;
     auto minutes_passed = seconds_passed / 60;
     seconds_passed %= 60;
@@ -139,9 +150,12 @@ QVector<QString> monitor::get_pending_message() {
     return ret;
 }
 
-void monitor::set_refresh_time_stamp() {
-    refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+long long monitor::set_refresh_time_stamp() {
+    auto current_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()).count();
+    auto ret = current_time_stamp - refresh_time_stamp;
+    refresh_time_stamp = current_time_stamp;
+    return ret;
 }
 
 void monitor::set_status(bool _status) {
@@ -150,4 +164,8 @@ void monitor::set_status(bool _status) {
 
 bool monitor::get_status() const {
     return status;
+}
+
+void monitor::add_passenger_waiting_time(long long time) {
+    s.add_passenger_waiting_time(time);
 }

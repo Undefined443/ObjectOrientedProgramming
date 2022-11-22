@@ -5,6 +5,7 @@
 #ifndef MONITOR_H
 #define MONITOR_H
 
+#include "statistics.h"
 #include "building.h"
 #include "MainWindow.h"
 #include <vector>
@@ -28,13 +29,14 @@ public:
 
     bool get_status() const;
 
+    void add_passenger_waiting_time(long long time);
 
 private:
     building *b;
-
     int elevNum;
     int floorNum;
     bool status = false;
+    statistics s;
     MainWindow *main_window;
 
     long long base_time_stamp;  // base time stamp for monitor
@@ -48,10 +50,9 @@ private:
 
     void get_floor_info();
 
-    void set_refresh_time_stamp();
+    long long set_refresh_time_stamp();
 
     QVector<QString> get_pending_message();
 };
-
 
 #endif //MONITOR_H
