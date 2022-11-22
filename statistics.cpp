@@ -69,7 +69,7 @@ QVector<long long> statistics::get_passenger_statistics() const {
     // get mode
     std::map<long long, int> mode;
     for (auto &i: passenger_statistics) {
-        mode[i]++;
+        mode[(i + 500) / 1000 * 1000]++;  // round to the nearest 1000
     }
     result[2] = std::max_element(mode.begin(), mode.end(), [](const auto &a, const auto &b) {
         return a.second < b.second;

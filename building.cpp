@@ -39,8 +39,8 @@ building::building() :
         }
         for (auto el : groups[g]) {
             auto elevator = elevators[el - 1];
-            elevator->set_group_id(g + 1);
-            elevator->set_group(group_elevators);  // set group id
+            elevator->set_group_id(g + 1);  // set group id
+            elevator->set_group(group_elevators);
             elevator->set_current_floor(floors[initial_floor]);  // set initial floor
             // set elevator's accessible floors
             auto floor_array = conf["elevator.accessibleFloors"][g].get<std::vector<int>>();
@@ -92,7 +92,6 @@ void building::remove_passenger(passenger *p) {
     delete p;
     if (passengers.empty()) {
         mon->send_message("<font color=\"black\">All passengers left the building.</font>");
-        //mon->force_refresh();
         mon->set_status(false);
     }
 }

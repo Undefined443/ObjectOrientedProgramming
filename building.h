@@ -36,7 +36,7 @@ private:
     static std::mt19937 e;  // random number generator
     std::poisson_distribution<int> rand_passenger;  // generate random number of passengers
 
-    monitor *mon;  // monitor for the building
+    monitor *mon = nullptr;  // monitor for the building
     nlohmann::json conf;  // store configuration data
     long long refresh_time_stamp;
     int tot_traffic = 0;
