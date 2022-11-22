@@ -66,16 +66,8 @@ void monitor::run() {
         }
     }
 
-    // Set time label and refresh statistics
-    auto time_passed = set_refresh_time_stamp();
-    for (int i = 0; i < b->elevators.size(); ++i) {
-        auto e = b->elevators[i];
-        if (e->get_status() == elevator::idle) {
-            s.add_elevator_idle_time(i, time_passed);
-        } else {
-            s.add_elevator_running_time(i, time_passed);
-        }
-    }
+    // Set time label
+    set_refresh_time_stamp();
     auto seconds_passed = (refresh_time_stamp - base_time_stamp) / 1000;
     auto minutes_passed = seconds_passed / 60;
     seconds_passed %= 60;
@@ -155,12 +147,9 @@ QVector<QString> monitor::get_pending_message() {
     return ret;
 }
 
-long long monitor::set_refresh_time_stamp() {
-    auto current_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()).count();
-    auto ret = current_time_stamp - refresh_time_stamp;
-    refresh_time_stamp = current_time_stamp;
-    return ret;
+void monitor::set_refresh_time_stamp() {
+    refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();;
 }
 
 void monitor::set_status(bool _status) {
@@ -169,6 +158,14 @@ void monitor::set_status(bool _status) {
 
 bool monitor::get_status() const {
     return status;
+}
+
+void monitor::add_elevator_statistic(elevator *e, long long time) {
+    if (e->get_status() == elevator::status::idle) {
+        s.add_elevator_idle_time(e->get_id() - 1, time);
+    } else if (e->get_status() == elevator::status::running) {
+        s.add_elevator_running_time(e->get_id() - 1, time);
+    }
 }
 
 void monitor::add_passenger_waiting_time(long long time) {

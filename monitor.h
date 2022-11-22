@@ -29,6 +29,8 @@ public:
 
     bool get_status() const;
 
+    void add_elevator_statistic(elevator *e, long long time);
+
     void add_passenger_waiting_time(long long time);
 
 private:
@@ -50,7 +52,7 @@ private:
 
     void get_floor_info();
 
-    long long set_refresh_time_stamp();
+    void set_refresh_time_stamp();
 
     QVector<QString> get_pending_message();
 };

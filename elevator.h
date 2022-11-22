@@ -75,17 +75,17 @@ public:
 private:
     int id;
     int group_id = 0;
-    monitor *mon;
+    monitor *mon = nullptr;
     nlohmann::json conf;  // configuration data
-    long long refresh_time_stamp;  // refresh time stamp for elevator
-    long long timer;  // to calculate the running/idle time
+    long long refresh_time_stamp = 0;  // refresh time stamp for elevator
+    long long statistic_time_stamp;  // to calculate the running/idle time
 
     int direction = stop;
     bool status = idle;
     bool full = false;
     int ding_stage = 0;  // indicates at which stage the ding function is running
 
-    class floor *current_floor;
+    class floor *current_floor = nullptr;
     std::vector<passenger *> passengers;  // passengers on the elevator
     std::vector<class floor *> floors;  // all floors
     std::vector<class floor *> accessible_floors;  // floors accessible by the elevator
@@ -103,8 +103,7 @@ private:
 
     long long get_time_gap() const;  // calculate time gap between current time and last run time
 
-    long long get_time();  // get the running/idle time
+    long long get_statistic_time();  // get the running/idle time
 };
-
 
 #endif //ELEVATOR_H

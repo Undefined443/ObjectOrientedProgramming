@@ -122,16 +122,23 @@ void Chart::passenger_statistics_slot(QVector<long long> passenger_statistics) {
     if (passenger_statistics.size() != 4) {
         throw std::invalid_argument("QVector size must be 4");
     }
+    auto new_value = qreal(passenger_statistics[1]) / 1000.0;  // refresh maximum value first
+    if (bar_set->at(1) != new_value) {
+        if (new_value * 1.1 > axisY->max()) {
+            if (axisY->labelFormat() == "%.1f s" && new_value * 1.1 >= 10) {
+                axisY->setLabelFormat("%d s");
+            }
+            axisY->setRange(0, new_value * 1.1);
+        }
+        bar_set->replace(1, new_value);
+    }
     for (int i = 0; i < 4; ++i) {
-        auto new_value = qreal(passenger_statistics[i]) / 1000.0;
+        if (i == 1) {
+            continue;
+        }
+        new_value = qreal(passenger_statistics[i]) / 1000.0;
         if (new_value != bar_set->at(i)) {
             bar_set->replace(i, new_value);
-            if (i == 1) {  // maximum value changed
-                axisY->setRange(0, new_value * 1.1);
-                if (axisY->labelFormat() == "%.1f s" && new_value >= 4) {
-                    axisY->setLabelFormat("%d s");
-                }
-            }
         }
     }
 }

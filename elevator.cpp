@@ -6,9 +6,10 @@
 elevator::elevator(int id, const nlohmann::json &conf) :
     id(id),
     conf(conf),
-    timer(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) {}
+    statistic_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) {}
 
 void elevator::run() {
+    mon->add_elevator_statistic(this, get_statistic_time());
     if (!status) {  // if elevator is not running
         return;
     } else if (ding_stage) {  // elevator is still alighting/boarding passengers, continue to alight/board
@@ -231,16 +232,9 @@ int elevator::get_ding_stage() const {
 }
 
 int elevator::get_alighting_num(class floor *f) {
-    int ret = 0;
-    for (auto p: registry[f]) {
-        if (p->get_destination() == f->get_id()) {
-            ++ret;
-        }
-    }
-//    return std::accumulate(registry[f].begin(), registry[f].end(), 0, [f](int sum, passenger *p) {
-//        return sum + (p->get_destination() == f->get_id());
-//    });
-    return ret;
+    return std::accumulate(registry[f].begin(), registry[f].end(), 0, [f](int sum, passenger *p) {
+        return sum + (p->get_destination() == f->get_id());
+    });
 }
 
 int elevator::get_free_space() const {
@@ -255,12 +249,12 @@ std::vector<class floor *> elevator::get_accessible_floors() const {
     return accessible_floors;
 }
 
-long long elevator::get_time() {
+long long elevator::get_statistic_time() {
     auto current_time = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()).count();
-    auto time = current_time - timer;
-    timer = current_time;
-    return time;
+    auto time_gap = current_time - statistic_time_stamp;
+    statistic_time_stamp = current_time;
+    return time_gap;
 }
 
 int elevator::get_group_id() const {
