@@ -1,11 +1,10 @@
 #include "MainWindow.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QPushButton>
 #include <Chart.h>
 
 MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent) : chart(new Chart(elevator_num)), QWidget(parent) {
-    chart->show();
-
     // Set widgets
     auto elevator_shafts_widget = new QWidget(this);
     auto information_widget = new QWidget(this);
@@ -23,13 +22,11 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     for (int i = 0; i < elevator_num; ++i) {
         auto elevator_shaft = new ElevatorShaft(i + 1, floor_num, speed, elevator_shafts_widget);
         //elevator_shaft->setStyleSheet("background-color:white;border:2px groove gray;border-radius:10px;padding:2px 4px;");
-        elevator_shaft->show();
         elevator_shaft_horizontal_layout->addWidget(elevator_shaft);
         elevator_shafts.push_back(elevator_shaft);
     }
     elevator_shafts_widget->setLayout(elevator_shaft_horizontal_layout);
     elevator_shafts_widget->setStyleSheet("background-color:white;border:none;border-radius:10px;");
-    elevator_shafts_widget->show();
 
     // Add labels in information widget
     time_label = new QLabel(information_widget);
@@ -43,13 +40,16 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
         message_labels.push_back(msg_label);
     }
     message_widget->setLayout(message_vertical_layout);
-    message_widget->show();
+
+    auto statistics_show_button = new QPushButton("Statistics", information_widget);
+    statistics_show_button->setStyleSheet("background-color:white;border:2px groove gray;border-radius:10px;padding:2px 4px;");
+    statistics_show_button->setFixedSize(100, 30);
 
     // Add message widget and time label
     information_horizontal_layout->addWidget(message_widget);
+    information_horizontal_layout->addWidget(statistics_show_button);
     information_horizontal_layout->addWidget(time_label);
     information_widget->setLayout(information_horizontal_layout);
-    information_widget->show();
 
     // Add elevator shaft widget and information widget
     main_window_vertical_layout->addWidget(elevator_shafts_widget);
@@ -67,6 +67,7 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     connect(this, &MainWindow::floor_color_signal, this, &MainWindow::floor_color_slot);
     connect(this, &MainWindow::elevator_statistics_signal, chart, &Chart::elevator_statistics_slot);
     connect(this, &MainWindow::passenger_statistics_signal, chart, &Chart::passenger_statistics_slot);
+    connect(statistics_show_button, &QPushButton::clicked, chart, &Chart::show);
 }
 
 // Emitters

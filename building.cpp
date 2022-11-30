@@ -7,12 +7,17 @@ std::mt19937 building::e = std::mt19937(rd());
 
 // Once the building instance is created, the constructor will read the configuration file and initialize the building.
 building::building() :
-    refresh_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count())
+    refresh_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()),
+    base_time_stamp(refresh_time_stamp)
     {
     std::ifstream conf_file("/Users/xiao/CLionProjects/ObjectOrientedProgramming/config.json");
     conf = nlohmann::json::parse(conf_file);
     conf_file.close();
-    rand_passenger = std::poisson_distribution<>(conf["simulator.passengerSpawnRate"]);  // spawn passengers per time unit
+
+    rand_passenger_normal = std::poisson_distribution<>(conf["simulator.passengerSpawnRate"][0]);  // spawn passengers per time unit
+    rand_passenger_peak = std::poisson_distribution<>(conf["simulator.passengerSpawnRate"][1]);  // spawn passengers per time unit
+    rush_hours = conf["simulator.rushHours"].get<std::vector<std::pair<int, int>>>();
+
     // Create floors
     int floor_num = conf["building.floors"];
     for (int i = 1; i <= floor_num; ++i) {
@@ -29,7 +34,7 @@ building::building() :
         elevator->set_floors(floors);
     }
     // Set elevator groups and attach elevators to floors
-    auto groups = conf["elevator.group"].get<std::vector<std::vector<int>>>();
+    auto groups = conf["elevator.groups"].get<std::vector<std::vector<int>>>();
     int initial_floor = conf["elevator.initialFloor"].get<int>() - 1;
     for (int g = 0; g < groups.size(); ++g) {
         // Create elevator group
@@ -63,7 +68,12 @@ void building::run() {
     if (get_time_gap() > time_unit && tot_traffic < traffic) {  // passed 1 time unit since last refresh
         set_refresh_time();
         // generate random number of passengers
-        int rand_num = rand_passenger(e);
+        int rand_num;
+        if (is_rush_hour()) {
+            rand_num = rand_passenger_peak(e);
+        } else {
+            rand_num = rand_passenger_normal(e);
+        }
         tot_traffic += rand_num;
         if (tot_traffic > traffic) {  // reached maximum traffic
             rand_num -= tot_traffic - traffic;
@@ -119,4 +129,14 @@ long long building::get_time_gap() const {
 
 nlohmann::json building::get_conf() const {
     return conf;
+}
+
+bool building::is_rush_hour() const {
+    int time_unit = conf["simulator.timeUnitMillisecond"];
+    auto relative_time = (refresh_time_stamp - base_time_stamp) / time_unit;
+    return std::any_of(rush_hours.begin(), rush_hours.end(), [time_unit, relative_time](const std::pair<int, int> &p) {
+        auto start_time = p.first * time_unit;
+        auto end_time = p.second * time_unit;
+        return relative_time >= start_time && relative_time <= end_time;
+    });
 }

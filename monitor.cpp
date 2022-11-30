@@ -21,7 +21,7 @@ monitor::monitor(building *_building, MainWindow *_main_window) :
     main_window->set_monitor(this);
 
     // color the accessible floors
-    auto groups = b->conf["elevator.group"].get<std::vector<std::vector<int>>>();
+    auto groups = b->conf["elevator.groups"].get<std::vector<std::vector<int>>>();
     auto accessible_floors = b->conf["elevator.accessibleFloors"].get<std::vector<std::vector<int>>>();
     for (int g = 0; g < groups.size(); ++g) {
         for (auto e: groups[g]) {

@@ -34,20 +34,25 @@ public:
 private:
     static std::random_device rd;  // obtain a random number from hardware
     static std::mt19937 e;  // random number generator
-    std::poisson_distribution<int> rand_passenger;  // generate random number of passengers
+    std::poisson_distribution<int> rand_passenger_normal;  // generate random number of passengers
+    std::poisson_distribution<int> rand_passenger_peak;  // generate random number of passengers
 
     monitor *mon = nullptr;  // monitor for the building
     nlohmann::json conf;  // store configuration data
     long long refresh_time_stamp;
+    long long base_time_stamp;
     int tot_traffic = 0;
 
     std::vector<class floor *> floors;  // floors in the building
     std::vector<elevator *> elevators;  // elevators in the building
     std::vector<passenger *> passengers;  // passengers in the building
+    std::vector<std::pair<int, int>> rush_hours;  // [start, end] of rush hours
 
     void set_refresh_time();  // set refresh time, invoke after each refresh
 
     long long get_time_gap() const;
+
+    bool is_rush_hour() const;
 };
 
 

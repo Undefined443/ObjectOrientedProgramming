@@ -26,26 +26,27 @@ void floor::request_elevator(passenger *p) {
         bool single_return = el_direction != pas_direction;
         int free_space = el->get_free_space() - int(boarding_queue.size());  // free space after boarding other passengers
 
+        int distance;
         if (non_return) {
-            int distance = std::abs(el_cur_flr - id);
-            candidates.emplace_back(el, std::make_pair(distance, free_space));
+            distance = std::abs(el_cur_flr - id);
         } else if (single_return){
-            int distance;
             if (el_direction == elevator::direction::up) {
                 distance = conf["building.floors"].get<int>() - id + conf["building.floors"].get<int>() - el_cur_flr;
             } else {
                 distance = id - 1 + el_cur_flr - 1;
             }
-            candidates.emplace_back(el, std::make_pair(distance, free_space));
         } else {  // double return
-            int distance;
             if (el_direction == elevator::direction::up) {
                 distance = id - 1 + conf["building.floors"].get<int>() - el_cur_flr + conf["building.floors"].get<int>() - 1;
             } else {
                 distance = conf["building.floors"].get<int>() - id + el_cur_flr - 1 + conf["building.floors"].get<int>() - 1;
             }
-            candidates.emplace_back(el, std::make_pair(distance, free_space));
         }
+        // Lighten the load on the main elevator
+        if (el->get_group_id() == 1) {
+            distance += 20;
+        }
+        candidates.emplace_back(el, std::make_pair(distance, free_space));
     }
     std::sort(candidates.begin(), candidates.end(), [](const std::pair<elevator *, std::pair<int, int>> &a, const std::pair<elevator *, std::pair<int, int>> &b) {
         if (a.second.first == b.second.first) {
