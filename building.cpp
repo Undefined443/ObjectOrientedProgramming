@@ -101,7 +101,7 @@ void building::remove_passenger(passenger *p) {
     passengers.erase(std::remove(passengers.begin(), passengers.end(), p), passengers.end());
     mon->send_message("<font color=\"blue\">Passenger " + std::to_string(p->get_id()) + " left the building.</font>");
     delete p;
-    if (passengers.empty()) {
+    if (passengers.empty() && tot_traffic >= conf["simulator.traffic"]) {
         mon->send_message("<font color=\"black\">All passengers left the building.</font>");
         mon->set_status(false);
     }
