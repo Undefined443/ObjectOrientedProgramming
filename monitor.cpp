@@ -13,9 +13,13 @@ monitor::monitor(building *_building, MainWindow *_main_window) :
     floorNum(b->conf["building.floors"]),
     elevator_status(elevNum, std::vector<int>(4, 0)),  // [elevator]<flag, current floor, direction, load> flag: 0: needn't move 1: need to move
     floor_info(elevNum, std::vector(floorNum, std::vector<int>(3, 0))),  // [elevator][floor]<upside number, downside number, alight number>
-    s(elevNum, _main_window)
+    s(new statistics(elevNum, _main_window))
     {
     b->set_monitor(this);
+    s->set_base_timestamp(base_time_stamp);
+    s->set_time_unit(b->conf["simulator.timeUnitMillisecond"]);
+    main_window->set_monitor(this);
+
     // color the accessible floors
     auto groups = b->conf["elevator.group"].get<std::vector<std::vector<int>>>();
     auto accessible_floors = b->conf["elevator.accessibleFloors"].get<std::vector<std::vector<int>>>();
@@ -149,7 +153,7 @@ QVector<QString> monitor::get_pending_message() {
 
 void monitor::set_refresh_time_stamp() {
     refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()).count();;
+            std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
 void monitor::set_status(bool _status) {
@@ -162,12 +166,20 @@ bool monitor::get_status() const {
 
 void monitor::add_elevator_statistic(elevator *e, long long time) {
     if (e->get_status() == elevator::status::idle) {
-        s.add_elevator_idle_time(e->get_id() - 1, time);
+        s->add_elevator_idle_time(e->get_id() - 1, time);
     } else if (e->get_status() == elevator::status::running) {
-        s.add_elevator_running_time(e->get_id() - 1, time);
+        s->add_elevator_running_time(e->get_id() - 1, time);
     }
 }
 
-void monitor::add_passenger_waiting_time(long long time) {
-    s.add_passenger_waiting_time(time);
+void monitor::add_passenger_waiting_time(int elevator, std::pair<long long, long long> time) {
+    s->add_passenger_waiting_time(elevator, time);
+}
+
+void monitor::finish() {
+    s->save();
+}
+
+std::map<long long, long long> monitor::get_estimated_waiting_time(int elevator) {
+    return s->get_estimated_waiting_time(elevator);
 }

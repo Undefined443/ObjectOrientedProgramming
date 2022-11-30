@@ -30,7 +30,9 @@ set(PROJECT_SOURCES
         Chart.cpp
         Chart.h
         statistics.cpp
-        statistics.h)
+        statistics.h
+        LineChart.cpp
+        LineChart.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ObjectOrientedProgramming

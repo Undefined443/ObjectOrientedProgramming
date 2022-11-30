@@ -41,9 +41,8 @@ bool passenger::timer(elevator *el) {
         current_elevator = el;
         timer_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-        // calculate waiting time
-        auto waiting_time = timer_time_stamp - waiting_timestamp;
-        mon->add_passenger_waiting_time(waiting_time);
+        // send waiting time to monitor
+        mon->add_passenger_waiting_time(el->get_id() - 1, std::make_pair(waiting_timestamp, timer_time_stamp));
         return false;
     } else {  // if timer is running, check if time is up
         int time_unit = conf["simulator.timeUnitMillisecond"];

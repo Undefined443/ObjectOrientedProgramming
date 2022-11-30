@@ -5,10 +5,11 @@
 #ifndef MONITOR_H
 #define MONITOR_H
 
-#include "statistics.h"
 #include "building.h"
 #include "MainWindow.h"
+#include "statistics.h"
 #include <vector>
+#include <map>
 #include <string>
 #include <QVector>
 #include <QString>
@@ -16,6 +17,7 @@
 class building;
 class elevator;
 class MainWindow;
+class statistics;
 
 class monitor {
 public:
@@ -31,14 +33,18 @@ public:
 
     void add_elevator_statistic(elevator *e, long long time);
 
-    void add_passenger_waiting_time(long long time);
+    void add_passenger_waiting_time(int elevator, std::pair<long long, long long> time);
+
+    void finish();
+
+    std::map<long long, long long>get_estimated_waiting_time(int elevator);
 
 private:
     building *b;
     int elevNum;
     int floorNum;
     bool status = false;
-    statistics s;
+    statistics *s;
     MainWindow *main_window;
 
     long long base_time_stamp;  // base time stamp for monitor

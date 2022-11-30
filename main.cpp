@@ -13,6 +13,7 @@ void run() {
         b->run();
         mon->run();
     }
+    mon->finish();
 }
 
 int main(int argc, char *argv[]) {

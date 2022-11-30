@@ -21,7 +21,7 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
 
     // Add elevator shafts
     for (int i = 0; i < elevator_num; ++i) {
-        auto elevator_shaft = new ElevatorShaft(floor_num, speed, elevator_shafts_widget);
+        auto elevator_shaft = new ElevatorShaft(i + 1, floor_num, speed, elevator_shafts_widget);
         //elevator_shaft->setStyleSheet("background-color:white;border:2px groove gray;border-radius:10px;padding:2px 4px;");
         elevator_shaft->show();
         elevator_shaft_horizontal_layout->addWidget(elevator_shaft);
@@ -135,4 +135,11 @@ void MainWindow::elevator_statistics_slot(int elevator, QVector<long long> eleva
 
 void MainWindow::passenger_statistics_slot(QVector<long long> passenger_statistics) {
     chart->set_passenger_statistics(passenger_statistics);
+}
+
+void MainWindow::set_monitor(monitor *mon) {
+    m = mon;
+    for (auto elevator_shaft : elevator_shafts) {
+        elevator_shaft->set_monitor(m);
+    }
 }

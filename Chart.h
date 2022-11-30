@@ -1,5 +1,5 @@
-#ifndef STATISTICS_H
-#define STATISTICS_H
+#ifndef CHART_H
+#define CHART_H
 
 #include <QWidget>
 #include <QVector>
@@ -41,5 +41,4 @@ private slots:
     void passenger_statistics_slot(QVector<long long> passenger_statistics);
 };
 
-
-#endif // STATISTICS_H
+#endif // CHART_H

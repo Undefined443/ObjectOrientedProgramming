@@ -1,8 +1,9 @@
-#ifndef BUILDINGWIDGET_H
-#define BUILDINGWIDGET_H
+#ifndef MAINWINWOW_H
+#define MAINWINWOW_H
 
 #include "ElevatorShaft.h"
 #include "Chart.h"
+#include "monitor.h"
 #include <string>
 #include <QWidget>
 #include <QLabel>
@@ -15,6 +16,8 @@ class QWidget;
 class QLabel;
 QT_END_NAMESPACE
 
+class monitor;
+class ElevatorShaft;
 
 class MainWindow : public QWidget {
 public:
@@ -36,6 +39,8 @@ public:
 
     void set_passenger_statistics(QVector<long long> passenger_statistics);
 
+    void set_monitor(monitor *mon);
+
 private:
     Q_OBJECT
     int id = 0;
@@ -43,6 +48,8 @@ private:
     std::vector<QLabel *> message_labels;
     QLabel *time_label;
     Chart *chart;
+    monitor *m;
+
 
     signals:
     void move_elevator_signal(int elevator, int start, int end);
@@ -80,4 +87,4 @@ private slots:
 };
 
 
-#endif // BUILDINGWIDGET_H
+#endif //MAINWINWOW_H

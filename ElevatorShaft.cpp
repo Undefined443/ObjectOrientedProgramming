@@ -1,27 +1,18 @@
 #include "ElevatorShaft.h"
 #include <QHBoxLayout>
-#include <QTextBrowser>
-#include <QLabel>
-#include <vector>
-#include <QPropertyAnimation>
+#include <map>
 
 const int LINE_WIDTH = 72;
 const int LINE_HEIGHT = 25;
 const int PADDING = 0;
-const int BOTTOM_MARGIN = 35;
+const int BOTTOM_MARGIN = 40;
 const int PIC_WIDTH = LINE_HEIGHT - PADDING;
 
 const QString LOAD_LABEL_QSS = "border:2px groove gray;border-radius:5px;";
 
-ElevatorShaft::ElevatorShaft(int floor_num, int speed, QWidget *parent) : QWidget(parent), floors(floor_num), floor_labels(floor_num) {
+ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent) : QWidget(parent), id(_id), floors(floor_num), floor_labels(floor_num), line_chart(new LineChart()) {
     // Set fixed size
     setFixedSize(PIC_WIDTH + LINE_WIDTH, LINE_HEIGHT * floor_num - PADDING + BOTTOM_MARGIN);
-
-    // Set connection
-    connect(this, &ElevatorShaft::move_elevator_signal, this, &ElevatorShaft::move_elevator_slot);
-    connect(this, &ElevatorShaft::floor_info_signal, this, &ElevatorShaft::floor_info_slot);
-    connect(this, &ElevatorShaft::load_info_signal, this, &ElevatorShaft::load_info_slot);
-    connect(this, &ElevatorShaft::floor_color_signal, this, &ElevatorShaft::floor_color_slot);
 
     // Set elevator widget and floors widget
     auto elevator_floors_widget = new QWidget(this);
@@ -46,17 +37,17 @@ ElevatorShaft::ElevatorShaft(int floor_num, int speed, QWidget *parent) : QWidge
     QAnimation->setDuration(speed);
 
     // Set load label
-    load_label = new QLabel(this);
-    load_label->setNum(0);
-    load_label->setAlignment(Qt::AlignCenter);
-    load_label->setFixedSize(PIC_WIDTH, PIC_WIDTH);
-    load_label->setStyleSheet("color:black;background-color:white;" + LOAD_LABEL_QSS);
+    load_button = new QPushButton(this);
+    load_button->setText("0");
+    load_button->setFixedSize(PIC_WIDTH, PIC_WIDTH);
+    load_button->setStyleSheet("color:black;background-color:white;" + LOAD_LABEL_QSS);
 
     // Set layouts
     auto elevator_shaft_vertical_layout = new QVBoxLayout(this);
     auto elevator_floors_horizontal_layout = new QHBoxLayout(elevator_floors_widget);  // for elevator_floors widget
     auto floors_vertical_layout = new QVBoxLayout(floors_widget);  // for floors widget
     elevator_shaft_vertical_layout->setContentsMargins(0, 0, 0, 0);
+    elevator_shaft_vertical_layout->setSpacing(0);
     elevator_floors_horizontal_layout->setContentsMargins(0, 0, 0, 0);
     floors_vertical_layout->setContentsMargins(0, 0, 0, 0);
     elevator_floors_horizontal_layout->setSpacing(0);
@@ -108,8 +99,15 @@ ElevatorShaft::ElevatorShaft(int floor_num, int speed, QWidget *parent) : QWidge
 
     // Add elevator_floors widget and load label to elevator_shaft vertical layout
     elevator_shaft_vertical_layout->addWidget(elevator_floors_widget);
-    elevator_shaft_vertical_layout->addWidget(load_label);
+    elevator_shaft_vertical_layout->addWidget(load_button);
     this->setLayout(elevator_shaft_vertical_layout);
+
+    // Set connection
+    connect(this, &ElevatorShaft::move_elevator_signal, this, &ElevatorShaft::move_elevator_slot);
+    connect(this, &ElevatorShaft::floor_info_signal, this, &ElevatorShaft::floor_info_slot);
+    connect(this, &ElevatorShaft::load_info_signal, this, &ElevatorShaft::load_info_slot);
+    connect(this, &ElevatorShaft::floor_color_signal, this, &ElevatorShaft::floor_color_slot);
+    connect(load_button, &QPushButton::clicked, this, &ElevatorShaft::load_button_clicked_slot);
 }
 
 void ElevatorShaft::move_elevator(int start, int end) {
@@ -168,11 +166,11 @@ void ElevatorShaft::floor_info_slot(int floor_num, int upside_num, int downside_
 }
 
 void ElevatorShaft::load_info_slot(int load, QString color) {
-    load_label->setNum(load);
+    load_button->setText(QString::number(load));
     if (color == "red") {
-        load_label->setStyleSheet("color:white;background-color:red;" + LOAD_LABEL_QSS);
+        load_button->setStyleSheet("color:white;background-color:red;" + LOAD_LABEL_QSS);
     } else {
-        load_label->setStyleSheet("color:black;background-color:" + color + ";" + LOAD_LABEL_QSS);
+        load_button->setStyleSheet("color:black;background-color:" + color + ";" + LOAD_LABEL_QSS);
     }
 }
 
@@ -181,4 +179,12 @@ void ElevatorShaft::floor_color_slot(int floor_num, QString color) {
         throw std::invalid_argument("floor number out of range");
     }
     floors[floor_num]->setStyleSheet("background-color:" + color + ";border:none;border-radius:none;");
+}
+
+void ElevatorShaft::load_button_clicked_slot() {
+    line_chart->set_data(id, m->get_estimated_waiting_time(id - 1));
+}
+
+void ElevatorShaft::set_monitor(monitor *mon) {
+    m = mon;
 }
