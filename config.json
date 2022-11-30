@@ -22,13 +22,12 @@
   "passenger.boardingTimeRange": [1, 3],
   "passenger.activeTimeRange": [2, 10],
   "passenger.totalDestinationRange": [1, 10],
-  "simulator.simulatedTime": 10,
   "simulator.traffic": 1000,
-  "simulator.passengerSpawnRate": [0.05, 0.3],
+  "simulator.passengerSpawnRate": [0.05, 0.8],
   "simulator.rushHours": [
-    [100, 300],
-    [2500, 2800]
+    [800, 1300],
+    [6000, 6500]
   ],
   "simulator.messageDurationMillisecond": 2000,
-  "simulator.timeUnitMillisecond": 5
+  "simulator.timeUnitMillisecond": 10
 }

@@ -42,7 +42,7 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     message_widget->setLayout(message_vertical_layout);
 
     auto statistics_show_button = new QPushButton("Statistics", information_widget);
-    statistics_show_button->setStyleSheet("background-color:white;border:2px groove gray;border-radius:10px;padding:2px 4px;");
+    statistics_show_button->setStyleSheet("color:black;background-color:white;border:2px groove gray;border-radius:10px;padding:2px 4px;");
     statistics_show_button->setFixedSize(100, 30);
 
     // Add message widget and time label

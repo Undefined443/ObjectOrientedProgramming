@@ -181,6 +181,9 @@ bool statistics::is_rush_hour(int elevator, long long time) {
     auto relative_time = (time - base_timestamp) * ratio / sampling_interval_millisecond * sampling_interval_millisecond;
     auto start_time = relative_time - 2 * sampling_interval_millisecond;
     auto end_time = relative_time + 2 * sampling_interval_millisecond;
+    if (start_time < 0) {
+        start_time = 0;
+    }
     for (auto i = start_time; i <= end_time; i += sampling_interval_millisecond) {
         auto total = estimated_waiting_time[elevator - 1][i].first;
         auto count = estimated_waiting_time[elevator - 1][i].second;

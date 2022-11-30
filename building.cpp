@@ -71,6 +71,7 @@ void building::run() {
         int rand_num;
         if (is_rush_hour()) {
             rand_num = rand_passenger_peak(e);
+            qDebug() << "rush hour";
         } else {
             rand_num = rand_passenger_normal(e);
         }
@@ -133,7 +134,7 @@ nlohmann::json building::get_conf() const {
 
 bool building::is_rush_hour() const {
     int time_unit = conf["simulator.timeUnitMillisecond"];
-    auto relative_time = (refresh_time_stamp - base_time_stamp) / time_unit;
+    auto relative_time = (refresh_time_stamp - base_time_stamp);
     return std::any_of(rush_hours.begin(), rush_hours.end(), [time_unit, relative_time](const std::pair<int, int> &p) {
         auto start_time = p.first * time_unit;
         auto end_time = p.second * time_unit;
