@@ -2,6 +2,7 @@
 #include "nlohmann/json.hpp"
 #include <algorithm>
 #include <fstream>
+#include <stdexcept>
 
 const int sampling_interval_millisecond = 5000;  // used for estimated_waiting_time
 
@@ -170,4 +171,23 @@ bool statistics::save() {
     output << data.dump(2);
     output.close();
     return true;
+}
+
+bool statistics::is_rush_hour(int elevator, long long time) {
+    if (elevator <= 0 || elevator > estimated_waiting_time.size()) {
+        throw std::out_of_range("in statistics.cpp, is_rush_hour: parameter time (" + std::to_string(elevator) + ") out of range.");
+    }
+    auto ratio = 1000 / time_unit;
+    auto relative_time = (time - base_timestamp) * ratio / sampling_interval_millisecond * sampling_interval_millisecond;
+    auto start_time = relative_time - 2 * sampling_interval_millisecond;
+    auto end_time = relative_time + 2 * sampling_interval_millisecond;
+    for (auto i = start_time; i <= end_time; i += sampling_interval_millisecond) {
+        auto total = estimated_waiting_time[elevator - 1][i].first;
+        auto count = estimated_waiting_time[elevator - 1][i].second;
+        auto waiting_time = total / count;
+        if (waiting_time > 60 * 1000) {
+            return true;
+        }
+    }
+    return false;
 }

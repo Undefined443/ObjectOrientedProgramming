@@ -1,6 +1,5 @@
 #include "monitor.h"
 #include <memory>
-#include <QVector>
 #include <QString>
 
 
@@ -91,6 +90,30 @@ void monitor::run() {
     if (time != last_time) {
         last_time = time;
         main_window->set_timer(QString::fromStdString(time));
+    }
+
+    // color the accessible floors
+    static std::vector<int> previous_status(elevNum, 0);
+    auto groups = b->conf["elevator.groups"].get<std::vector<std::vector<int>>>();
+    auto accessible_floors = b->conf["elevator.accessibleFloors"].get<std::vector<std::vector<int>>>();
+    for (int g = 0; g < groups.size(); ++g) {
+        for (auto e: groups[g]) {
+            if (s->is_rush_hour(e, refresh_time_stamp)) {
+                if (previous_status[e - 1] != 1) {
+                    previous_status[e - 1] = 1;
+                    for (auto f: accessible_floors[g]) {
+                        main_window->set_floor_color(e - 1, f - 1, "#FFDDDD");
+                    }
+                }
+            } else {
+                if (previous_status[e - 1] != 0) {
+                    previous_status[e - 1] = 0;
+                    for (auto f: accessible_floors[g]) {
+                        main_window->set_floor_color(e - 1, f - 1, "#EDFFED");
+                    }
+                }
+            }
+        }
     }
 }
 

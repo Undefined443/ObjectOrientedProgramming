@@ -33,6 +33,8 @@ public:
 
     bool save();
 
+    bool is_rush_hour(int elevator, long long time);
+
 private:
     std::vector<std::vector<std::vector<long long>>> elevator_statistics;
     std::vector<long long> passenger_statistics;
