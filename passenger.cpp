@@ -26,11 +26,11 @@ void passenger::run() {
         activated = true;
         waiting_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now().time_since_epoch()).count();
-        set_random_dest();
+        set_random_dest();  // set random destination floor
         if (current_floor == nullptr) {
             throw std::runtime_error("passenger " + std::to_string(id) + ": current floor is null.");
         }
-        current_floor->request_elevator(this);
+        current_floor->request_elevator(this);  // request an elevator by current floor
     }
 }
 
@@ -38,7 +38,7 @@ void passenger::run() {
 bool passenger::timer(elevator *el) {
     if (!is_timing) {  // if timer is not running, start the timer
         is_timing = true;
-        current_elevator = el;
+        current_elevator = el;  // mark that the passenger is boarding an elevator
         timer_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
         // send waiting time to monitor
@@ -100,11 +100,13 @@ void passenger::set_monitor(monitor *_monitor) {
     mon = _monitor;
 }
 
+// set refresh time
 void passenger::set_refresh_time() {
     refresh_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
+// get time gap between now and refresh time
 long long passenger::get_time_gap() const {
     return std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()).count() - refresh_time_stamp;

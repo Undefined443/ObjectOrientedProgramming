@@ -32,37 +32,37 @@ public:
 
     void run();  // move elevator up or down
 
-    bool is_full() const;
+    [[nodiscard]] bool is_full() const;  // return true if the elevator is full
 
-    bool is_accessible(int floor_id);
+    bool is_accessible(int floor_id);  // return true if the floor is accessible by the elevator
 
-    void set_group_id(int g_id);
+    void set_group_id(int g_id);  // set group id
 
-    void set_group(std::vector<elevator *> &group);
+    void set_group(std::vector<elevator *> &group);  // set group members
 
     // getters
 
-    class floor *get_current_floor();
+    class floor *get_current_floor();  // get current floor
 
-    int get_id() const;
+    [[nodiscard]] int get_id() const;  // get elevator id
 
-    int get_direction() const;
+    [[nodiscard]] int get_direction() const;  // get direction
 
-    bool get_status() const;
+    [[nodiscard]] bool get_status() const;  // get elevator status
 
-    int get_ding_stage() const;
+    [[nodiscard]] int get_ding_stage() const;  // get ding stage
 
-    int get_alighting_num(class floor *f);
+    int get_alighting_num(class floor *f);  // get alighting number of the floor
 
-    int get_free_space() const;
+    [[nodiscard]] int get_free_space() const;  // get elevator free space
 
-    int get_load() const;
+    [[nodiscard]] int get_load() const;  // get elevator load
 
-    std::vector<class floor *> get_accessible_floors() const;
+    [[nodiscard]] std::vector<class floor *> get_accessible_floors() const;  // get accessible floors
 
-    int get_group_id() const;
+    [[nodiscard]] int get_group_id() const;  // get group id
 
-    std::vector<elevator *> get_group() const;
+    [[nodiscard]] std::vector<elevator *> get_group() const;  // get group members
 
     enum direction {
         up = 1, down = -1, stop = 0
@@ -101,7 +101,7 @@ private:
 
     void set_refresh_time();  // set base time for elevator
 
-    long long get_time_gap() const;  // calculate time gap between current time and last run time
+    [[nodiscard]] long long get_time_gap() const;  // calculate time gap between current time and last run time
 
     long long get_statistic_time();  // get the running/idle time
 };

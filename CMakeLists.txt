@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(ObjectOrientedProgramming VERSION 0.1 LANGUAGES CXX)
+project(ObjectOrientedProgramming VERSION 1.0 LANGUAGES CXX)
+
+install(FILES config.json DESTINATION ObjectOrientedProgramming.app/Contents/MacOS)
+install(DIRECTORY img DESTINATION ObjectOrientedProgramming.app/Contents/MacOS)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Charts)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts)
@@ -14,25 +17,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PROJECT_SOURCES
         main.cpp
         ElevatorShaft.cpp
-        ElevatorShaft.h
         MainWindow.cpp
-        MainWindow.h
         building.cpp
-        building.h
         elevator.cpp
-        elevator.h
         floor.cpp
-        floor.h
         monitor.cpp
-        monitor.h
         passenger.cpp
-        passenger.h
         Chart.cpp
-        Chart.h
         statistics.cpp
-        statistics.h
         LineChart.cpp
-        LineChart.h)
+        )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ObjectOrientedProgramming
@@ -70,6 +64,8 @@ set_target_properties(ObjectOrientedProgramming PROPERTIES
 install(TARGETS ObjectOrientedProgramming
         BUNDLE DESTINATION .
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(FILES config.json DESTINATION ${PROJECT_BINARY_DIR}/ObjectOrientedProgramming.app/Contents/MacOS)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ObjectOrientedProgramming)

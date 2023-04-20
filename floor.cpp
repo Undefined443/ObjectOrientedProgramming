@@ -7,18 +7,18 @@ floor::floor(class building *_b, int id, const nlohmann::json &conf) : b(_b), id
 void floor::request_elevator(passenger *p) {
     // find an elevator
     std::vector<std::pair<elevator *, std::pair<int, int>>> candidates;
-    int pas_direction = p->get_destination() - id > 0 ? elevator::direction::up : elevator::direction::down;
+    int pas_direction = p->get_destination() - id > 0 ? elevator::direction::up : elevator::direction::down;  // passenger direction
     for (auto el: accessible_elevators) {
-        if (!el->is_accessible(p->get_destination())) {
+        if (!el->is_accessible(p->get_destination())) {  // drop the elevator if it is not accessible to the floor
             continue;
         }
-        auto el_status = el->get_status();
-        auto el_direction = el->get_direction();
-        auto el_cur_flr = el->get_current_floor()->get_id();
+        auto el_status = el->get_status();  // get elevator status
+        auto el_direction = el->get_direction();  // get elevator direction
+        auto el_cur_flr = el->get_current_floor()->get_id();  // get elevator current floor
 
         // some temporary variables
-        int el_coming_direction = id - el_cur_flr > 0 ? elevator::direction::up : elevator::direction::down;
-        auto &boarding_queue = pas_direction > 0 ? upside_boarding_queues[el->get_group_id()] : downside_boarding_queues[el->get_group_id()];
+        int el_coming_direction = id - el_cur_flr > 0 ? elevator::direction::up : elevator::direction::down;  // get the direction for the elevator to come to this floor
+        auto &boarding_queue = pas_direction > 0 ? upside_boarding_queues[el->get_group_id()] : downside_boarding_queues[el->get_group_id()];  // get the boarding queue of the elevator
 
         bool is_at_same_floor = (el_cur_flr == id) && (el_direction == pas_direction)  && (el->get_ding_stage() != 0);  // same floor && same direction && open for boarding
         bool is_pass_by = el_direction == pas_direction && el_coming_direction == el_direction;  // indicates whether the elevator can pass by passenger's floor without changing direction
@@ -26,16 +26,17 @@ void floor::request_elevator(passenger *p) {
         bool single_return = el_direction != pas_direction;
         int free_space = el->get_free_space() - int(boarding_queue.size());  // free space after boarding other passengers
 
+        // calculate the distance between elevator and passenger (considering the direction)
         int distance;
-        if (non_return) {
+        if (non_return) {  // elevator is idle || at the same floor || elevator can pass by passenger's floor without changing direction
             distance = std::abs(el_cur_flr - id);
-        } else if (single_return){
+        } else if (single_return){  // elevator is moving && elevator's direction is different from passenger's direction
             if (el_direction == elevator::direction::up) {
                 distance = conf["building.floors"].get<int>() - id + conf["building.floors"].get<int>() - el_cur_flr;
             } else {
                 distance = id - 1 + el_cur_flr - 1;
             }
-        } else {  // double return
+        } else {  // elevator is moving && elevator's direction is the same as passenger's direction && elevator passed this floor
             if (el_direction == elevator::direction::up) {
                 distance = id - 1 + conf["building.floors"].get<int>() - el_cur_flr + conf["building.floors"].get<int>() - 1;
             } else {
@@ -46,15 +47,16 @@ void floor::request_elevator(passenger *p) {
         if (el->get_group_id() == 1) {
             distance += 20;
         }
-        candidates.emplace_back(el, std::make_pair(distance, free_space));
+        candidates.emplace_back(el, std::make_pair(distance, free_space));  // add the elevator to the candidates
     }
+    // sort by distance and free space
     std::sort(candidates.begin(), candidates.end(), [](const std::pair<elevator *, std::pair<int, int>> &a, const std::pair<elevator *, std::pair<int, int>> &b) {
         if (a.second.first == b.second.first) {
             return a.second.second > b.second.second;  // if distance is the same, choose the one with more free space
         }
         return a.second.first < b.second.first;
     });
-    auto nearest_elevator = candidates[0].first;
+    auto nearest_elevator = candidates[0].first;  // get the nearest elevator
 
     // add the passenger to the boarding queue
     if (p->get_destination() > id) {
@@ -86,12 +88,14 @@ void floor::add_passenger(passenger *p) {
     passengers.push_back(p);
 }
 
+// remove the passenger from this floor
 void floor::remove_passenger(passenger *p, elevator *e) {
     passengers.erase(std::remove(passengers.begin(), passengers.end(), p), passengers.end());
     auto &boarding_queue = get_boarding_queue(e);
     boarding_queue.erase(std::remove(boarding_queue.begin(), boarding_queue.end(), p), boarding_queue.end());
 }
 
+// passenger leave the building from this floor
 void floor::leave_building(passenger *p) {
     if (id == 1) {
         passengers.erase(std::remove(passengers.begin(), passengers.end(), p), passengers.end());

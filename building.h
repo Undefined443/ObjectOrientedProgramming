@@ -1,3 +1,8 @@
+/*
+ * Description: The building class is the core of the program. It contains all the elevators and floors, and it will
+ * refresh every second. The refresh function `run()` will spawn passengers, update elevators and floors, and update the statistics.
+ */
+
 #ifndef BUILDING_H
 #define BUILDING_H
 
@@ -20,16 +25,16 @@ public:
     friend class monitor;
 
     // Setup
-    building();
+    building();  // read configuration data, create elevators and floors
 
-    void set_monitor(monitor *_monitor);
+    void set_monitor(monitor *_monitor);  // set monitor
 
     // Methods
     void run();  // refresh the building
 
     void remove_passenger(passenger *p);  // remove passenger from building
 
-    nlohmann::json get_conf() const;  // get configuration data
+    [[nodiscard]] nlohmann::json get_conf() const;  // get configuration data
 
 private:
     static std::random_device rd;  // obtain a random number from hardware
@@ -39,9 +44,9 @@ private:
 
     monitor *mon = nullptr;  // monitor for the building
     nlohmann::json conf;  // store configuration data
-    long long refresh_time_stamp;
-    long long base_time_stamp;
-    int tot_traffic = 0;
+    long long refresh_time_stamp;  // time stamp of the last refresh
+    long long base_time_stamp;  // time stamp of the first refresh
+    int tot_traffic = 0;  // total traffic
 
     std::vector<class floor *> floors;  // floors in the building
     std::vector<elevator *> elevators;  // elevators in the building
@@ -50,10 +55,9 @@ private:
 
     void set_refresh_time();  // set refresh time, invoke after each refresh
 
-    long long get_time_gap() const;
+    [[nodiscard]] long long get_time_gap() const;  // get time gap between now and last refresh
 
-    bool is_rush_hour() const;
+    [[nodiscard]] bool is_rush_hour() const;  // check if it is rush hour
 };
-
 
 #endif //BUILDING_H

@@ -29,5 +29,5 @@
     [6000, 6500]
   ],
   "simulator.messageDurationMillisecond": 2000,
-  "simulator.timeUnitMillisecond": 10
+  "simulator.timeUnitMillisecond": 300
 }

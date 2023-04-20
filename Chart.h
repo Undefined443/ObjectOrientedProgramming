@@ -19,9 +19,9 @@ public:
 
     Chart(int _elevator_num, QWidget *parent = nullptr);
 
-    void set_elevator_statistics(int elevator, QVector<long long> elevator_statistics);
+    void set_elevator_statistics(int elevator, QVector<long long> elevator_statistics);  // update elevator statistics
 
-    void set_passenger_statistics(QVector<long long> passenger_statistics);
+    void set_passenger_statistics(QVector<long long> passenger_statistics);  // update passenger statistics
 
 private:
     Q_OBJECT
@@ -41,4 +41,4 @@ private slots:
     void passenger_statistics_slot(QVector<long long> passenger_statistics);
 };
 
-#endif // CHART_H
+#endif //CHART_H
