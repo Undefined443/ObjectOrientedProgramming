@@ -5,6 +5,10 @@ project(ObjectOrientedProgramming VERSION 1.0 LANGUAGES CXX)
 configure_file(${CMAKE_SOURCE_DIR}/config.json ${CMAKE_BINARY_DIR}/config.json COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/img/elevator.svg ${CMAKE_BINARY_DIR}/img/elevator.svg COPYONLY)
 
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    set(CMAKE_PREFIX_PATH "C:/Qt/6.5.0/mingw_64")
+endif()
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Charts)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts)
 
