@@ -36,5 +36,13 @@ int main(int argc, char *argv[]) {
 
     std::thread t(run);  // create a thread for logic
 
-    return QApplication::exec();  // start the QApplication
+    auto ret = QApplication::exec();  // start the QApplication
+
+    // Close button clicked
+    t.join();
+
+    delete b;
+    delete mon;
+
+    return ret;
 }

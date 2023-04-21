@@ -5,7 +5,7 @@
 #include "Chart.h"
 #include "monitor.h"
 #include <string>
-#include <QWidget>
+#include <QMainWindow>
 #include <QLabel>
 #include <QVector>
 #include <QString>
@@ -19,7 +19,7 @@ QT_END_NAMESPACE
 class monitor;
 class ElevatorShaft;
 
-class MainWindow : public QWidget {
+class MainWindow : public QMainWindow {
 public:
     MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent = nullptr);
 
@@ -41,8 +41,11 @@ public:
 
     void set_monitor(monitor *mon);
 
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private:
-    Q_OBJECT
+Q_OBJECT
     int id = 0;
     std::vector<ElevatorShaft *> elevator_shafts;
     std::vector<QLabel *> message_labels;
@@ -50,8 +53,8 @@ private:
     Chart *chart;
     monitor *m;
 
+signals:
 
-    signals:
     void move_elevator_signal(int elevator, int start, int end);
 
     void floor_info_signal(int elevator, int floor_num, int upside_num, int downside_num, int alight_num);
@@ -69,6 +72,7 @@ private:
     void passenger_statistics_signal(QVector<long long> passenger_statistics);
 
 private slots:
+
     void move_elevator_slot(int elevator, int start, int end);
 
     void floor_info_slot(int elevator, int floor_num, int upside_num, int downside_num, int alight_num);

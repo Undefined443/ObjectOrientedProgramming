@@ -1,4 +1,5 @@
 #include "monitor.h"
+#include <iostream>
 #include <memory>
 #include <QString>
 
@@ -200,6 +201,7 @@ void monitor::add_passenger_waiting_time(int elevator, std::pair<long long, long
 }
 
 void monitor::finish() {
+    std::cout << "Simulation finished" << std::endl;
     s->save();
 }
 

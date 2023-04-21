@@ -174,7 +174,7 @@ bool statistics::is_rush_hour(int elevator, long long time) {
     for (auto i = start_time; i <= end_time; i += sampling_interval_millisecond) {  // for each time division
         auto total = estimated_waiting_time[elevator - 1][i].first;  // total waiting time
         auto count = estimated_waiting_time[elevator - 1][i].second;  // count
-        auto waiting_time = total / count;  // average waiting time
+        auto waiting_time = count != 0 ? total / count : 0;  // average waiting time
         if (waiting_time > 60 * 1000) {  // if average waiting time > 60s
             return true; // it is rush hour
         }

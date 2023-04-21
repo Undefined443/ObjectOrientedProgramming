@@ -27,7 +27,7 @@ public:
 
     void send_message(const std::string &msg);
 
-    void set_status(bool status);
+    void set_status(bool _status);
 
     bool get_status() const;
 

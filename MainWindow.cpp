@@ -1,10 +1,10 @@
 #include "MainWindow.h"
+#include <iostream>
 #include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QPushButton>
 #include <Chart.h>
 
-MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent) : chart(new Chart(elevator_num)), QWidget(parent) {
+MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent) : chart(new Chart(elevator_num)), m(nullptr), QMainWindow(parent) {
     // Set widgets
     auto elevator_shafts_widget = new QWidget(this);
     auto information_widget = new QWidget(this);
@@ -12,7 +12,7 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     auto message_widget = new QWidget(information_widget);
 
     // Set layouts
-    auto main_window_vertical_layout = new QVBoxLayout(this);  // for this
+    auto central_widget_vertical_layout = new QVBoxLayout(this);  // for this
     auto elevator_shaft_horizontal_layout = new QHBoxLayout(elevator_shafts_widget);  // for elevator shaft widget
     auto information_horizontal_layout = new QHBoxLayout(information_widget);  // for information widget
     auto message_vertical_layout = new QVBoxLayout(message_widget);  // for message widget
@@ -52,9 +52,12 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     information_widget->setLayout(information_horizontal_layout);
 
     // Add elevator shaft widget and information widget
-    main_window_vertical_layout->addWidget(elevator_shafts_widget);
-    main_window_vertical_layout->addWidget(information_widget);
-    setLayout(main_window_vertical_layout);
+    central_widget_vertical_layout->addWidget(elevator_shafts_widget);
+    central_widget_vertical_layout->addWidget(information_widget);
+
+    auto* central_widget = new QWidget(this);
+    central_widget->setLayout(central_widget_vertical_layout);
+    setCentralWidget(central_widget);
 
     setStyleSheet("background-color:#ECECEC;");
 
@@ -68,6 +71,25 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     connect(this, &MainWindow::elevator_statistics_signal, chart, &Chart::elevator_statistics_slot);
     connect(this, &MainWindow::passenger_statistics_signal, chart, &Chart::passenger_statistics_slot);
     connect(statistics_show_button, &QPushButton::clicked, chart, &Chart::show);
+}
+
+void MainWindow::closeEvent(QCloseEvent* event) {
+    std::cout << "Close button clicked." << std::endl;
+
+    // Set Qt::WA_DeleteOnClose flag
+    setAttribute(Qt::WA_DeleteOnClose);
+
+    // Call base closeEvent
+    QWidget::closeEvent(event);
+
+    m->set_status(false);
+}
+
+void MainWindow::set_monitor(monitor *mon) {
+    m = mon;
+    for (auto elevator_shaft : elevator_shafts) {
+        elevator_shaft->set_monitor(m);
+    }
 }
 
 // Emitters
@@ -136,11 +158,4 @@ void MainWindow::elevator_statistics_slot(int elevator, QVector<long long> eleva
 
 void MainWindow::passenger_statistics_slot(QVector<long long> passenger_statistics) {
     chart->set_passenger_statistics(passenger_statistics);
-}
-
-void MainWindow::set_monitor(monitor *mon) {
-    m = mon;
-    for (auto elevator_shaft : elevator_shafts) {
-        elevator_shaft->set_monitor(m);
-    }
 }

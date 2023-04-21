@@ -1,5 +1,6 @@
-/cmake-build-debug/*
-/cmake-build-debug-coverage/
-/.idea/
-**/.DS_Store
+cmake-build-debug/*
+cmake-build-debug-coverage/
+.idea/
+.DS_Store
+!data.json
 !/cmake-build-debug/ObjectOrientedProgramming

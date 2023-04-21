@@ -4,6 +4,7 @@
 
 #include "building.h"
 #include <fstream>
+#include <iostream>
 #include <algorithm>
 
 std::random_device building::rd;  // obtain a random number from hardware
@@ -14,9 +15,14 @@ building::building() :
     refresh_time_stamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()),
     base_time_stamp(refresh_time_stamp)
     {
-    std::ifstream conf_file("./config.json");
-    conf = nlohmann::json::parse(conf_file);
-    conf_file.close();
+    try {
+        std::ifstream conf_file("./config.json");
+        conf = nlohmann::json::parse(conf_file);
+        conf_file.close();
+    } catch (nlohmann::detail::parse_error& e) {
+        std::cerr << "Error: File \"config.json\" not found. Put it at the same directory as this executable." << std::endl;
+        exit(1);
+    }
 
     rand_passenger_normal = std::poisson_distribution<>(conf["simulator.passengerSpawnRate"][0]);  // spawn passengers per time unit
     rand_passenger_peak = std::poisson_distribution<>(conf["simulator.passengerSpawnRate"][1]);  // spawn passengers per time unit
