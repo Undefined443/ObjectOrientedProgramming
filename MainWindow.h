@@ -51,7 +51,7 @@ Q_OBJECT
     std::vector<QLabel *> message_labels;
     QLabel *time_label;
     Chart *chart;
-    monitor *m;
+    monitor *m = nullptr;
 
 signals:
 

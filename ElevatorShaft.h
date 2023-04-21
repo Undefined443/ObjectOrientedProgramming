@@ -33,7 +33,7 @@ public:
 private:
     Q_OBJECT
     int id = -1;
-    monitor *m;
+    monitor *m = nullptr;
     QLabel *elevator_label;
     QPushButton *load_button;
     QVector<QWidget *> floors;

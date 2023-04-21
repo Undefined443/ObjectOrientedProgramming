@@ -4,7 +4,7 @@
 #include <QPushButton>
 #include <Chart.h>
 
-MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent) : chart(new Chart(elevator_num)), m(nullptr), QMainWindow(parent) {
+MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent) : chart(new Chart(elevator_num)), QMainWindow(parent) {
     // Set widgets
     auto elevator_shafts_widget = new QWidget(this);
     auto information_widget = new QWidget(this);
