@@ -1,0 +1,305 @@
+# 第二次上机设计说明
+
+下面说明我根据第二次上机作业的要求完成的设计，以及其他对第一次上机程序的改进。
+
+## 上机内容
+
+1. 随机产生每位乘客初次所要到达的楼层，并随机选择一部电梯让其等待;
+2. 每位乘客乘坐电梯达到指定楼层后，随机地停留 10-120 秒后，再随机地去往另一楼层，依此类推。当每位乘客乘坐过 L 次（每人的 L 值不同，在产生乘客时随机地在 1-10 之间确定）电梯后，第 L+1 次为下至底层并结束乘梯行为。到所有乘客结束乘梯行为时，本次仿真结束。
+
+### 程序设计
+
+对于乘客随机目的楼层的设置，以及乘客在停留若干时间后去往另一楼层（以及前往 1 层并离开大楼）功能的实现在 `passenger` 类的 `run()` 函数中完成。
+
+```cpp
+void passenger::run() {
+    // request an elevator after active time
+    int time_unit = conf["simulator.timeUnitMillisecond"];
+    if (get_time_gap() > active_time * time_unit && !activated) {
+        activated = true;
+        set_random_dest();  // set a random destination
+        if (current_floor == nullptr) {
+            throw std::runtime_error("passenger " + std::to_string(id) + ": current floor is null.");
+        }
+        current_floor->request_elevator(this);
+    }
+}
+```
+
+首先，`run()` 函数会判断乘客在当前楼层是否停留了足够长的时间（通过比较乘客下电梯的时间与当前时间的时间间隔完成）。如果是，则调用 `set_random_dest()` 函数随机地设置一个目的楼层，并通过楼层对象提供的 `request_elevator()` 函数请求电梯。
+
+其中，`set_random_dest()` 函数的实现如下：
+
+```cpp
+void passenger::set_random_dest() {
+    if (count_destinations == total_destinations) {  // if the passenger has visited all the floors, leave the building
+        destination_floor = 1;
+        return;
+    }
+    // Set random destination floor
+    while (destination_floor == original_floor) {
+        destination_floor = rand_floor(e);
+        while (count_destinations == total_destinations - 1 && destination_floor == 1) {
+            destination_floor = rand_floor(e);  // the last floor the passenger visit can't be the 1st floor
+        }
+    }
+}
+```
+
+`set_random_dest()` 函数是根据这样两个原则设计的：
+
+1. 乘客最后一次（第 L+1 次）访问的楼层一定是 1 层；
+2. 乘客倒数第二次（第 L 次）访问的楼层一定不是 1 层。
+
+因此，首先，`set_random_dest()` 函数判断当前是否为第 L+1 次访问。如果是，则将目的楼层设为 1 层。否则将目的楼层设为除当前楼层以外的楼层，然后判断这次访问是否为第 L 次访问，如果是，则将目的楼层设为除 1 层以及当前楼层以外的楼层。
+
+对于电梯的请求与分配，是通过 `floor` 对象提供的 `request_elevator()` 函数完成的。
+
+在第一次上机中 `request_elevator()` 函数的实现如下：
+
+```cpp
+void floor::request_elevator(passenger *p) {
+    // find an elevator
+    static int candidate = 0;
+    elevator *nearest_elevator = elevators[candidate++];
+    if (candidate >= elevators.size()) {
+        candidate = 0;
+    }
+    // add the passenger to the boarding queue
+    if (p->get_destination() > id) {
+        upside_boarding_lines[nearest_elevator].push(p);
+    } else {
+        downside_boarding_lines[nearest_elevator].push(p);
+    }
+    // register the passenger
+    nearest_elevator->reg_pas(p);
+}
+```
+
+`request_elevator()` 函数会按顺序分配电梯。比如：给该楼层的第 1 个乘客分配 1 号电梯，给第 2 个乘客分配 2 号电梯，等等。
+
+在第二次上机中，我对 `request_elevator()` 函数进行了改进，改进后的函数如下：
+
+```cpp
+void floor::request_elevator(passenger *p) {
+    // find an elevator
+    std::vector<std::pair<elevator *, std::pair<int, int>>> candidates;
+    int pas_direction = p->get_destination() - id > 0 ? elevator::direction::up : elevator::direction::down;
+    for (auto el: elevators) {
+        auto el_status = el->get_status();
+        auto el_direction = el->get_direction();
+        auto el_cur_flr = el->get_current_floor()->get_id();
+
+        // some temporary variables
+        int el_coming_direction = id - el_cur_flr > 0 ? elevator::direction::up : elevator::direction::down;
+        auto &boarding_queue = pas_direction > 0 ? upside_boarding_queues[el] : downside_boarding_queues[el];
+
+        bool is_at_same_floor = (el_cur_flr == id) && (el_direction == pas_direction)  && (el->get_ding_stage() != 0);  // same floor && same direction && open for boarding
+        bool is_pass_by = el_direction == pas_direction && el_coming_direction == el_direction;  // indicates whether the elevator can pass by passenger's floor without changing direction
+        bool non_return = !el_status || is_at_same_floor || is_pass_by;  // elevator is idle || at the same floor || elevator can pass by passenger's floor without changing direction
+        bool single_return = el_direction != pas_direction;
+        int free_space = el->get_free_space() - int(boarding_queue.size());  // free space after boarding other passengers
+
+        if (non_return) {
+            int distance = std::abs(el_cur_flr - id);
+            candidates.emplace_back(el, std::make_pair(distance, free_space));
+        } else if (single_return){
+            int distance;
+            if (el_direction == elevator::direction::up) {
+                distance = conf["building.floors"].get<int>() - id + conf["building.floors"].get<int>() - el_cur_flr;
+            } else {
+                distance = id - 1 + el_cur_flr - 1;
+            }
+            candidates.emplace_back(el, std::make_pair(distance, free_space));
+        } else {  // double return
+            int distance;
+            if (el_direction == elevator::direction::up) {
+                distance = id - 1 + conf["building.floors"].get<int>() - el_cur_flr + conf["building.floors"].get<int>() - 1;
+            } else {
+                distance = conf["building.floors"].get<int>() - id + el_cur_flr - 1 + conf["building.floors"].get<int>() - 1;
+            }
+            candidates.emplace_back(el, std::make_pair(distance, free_space));
+        }
+    }
+    std::sort(candidates.begin(), candidates.end(), [](const std::pair<elevator *, std::pair<int, int>> &a, const std::pair<elevator *, std::pair<int, int>> &b) {
+        if (a.second.first == b.second.first) {
+            return a.second.second > b.second.second;  // if distance is the same, choose the one with more free space
+        }
+        return a.second.first < b.second.first;
+    });
+    auto nearest_elevator = candidates[0].first;
+
+    // add the passenger to the boarding queue
+    if (p->get_destination() > id) {
+        upside_boarding_queues[nearest_elevator].push(p);
+    } else {
+        downside_boarding_queues[nearest_elevator].push(p);
+    }
+    // register the passenger
+    nearest_elevator->reg_pas(p);
+}
+```
+
+在本次改进后，`request_elevator()` 函数会根据电梯的距离和人数选择一个最合适的电梯。（上机要求是随机分配电梯，但是我觉得没必要再随机分配电梯，而是应该选一个最合适的电梯）。这个函数的思路是这样的：先将所有电梯分为三类：
+
+1. 第一类电梯是不需要折返，直接就可以到达乘客所在楼层的电梯；
+2. 第二类电梯是需要折返一次的电梯；
+3. 第三类电梯是需要折返两次的电梯。
+
+然后，对于每一类电梯，计算它们到达乘客所在楼层的距离，以及（假设）当前楼层等待该电梯的乘客都上电梯后，该电梯的空余空间，并将元组 `(电梯, 距离, 空余空间)` 存入一个数组中。最后，根据距离最近且空余空间最多的原则对数组进行排序，并将排序第一的电梯作为最终选择的电梯。
+
+## 其他改进
+
+### 增加了乘客登梯时间功能
+
+在第一次上机中，乘客登梯是没有时间延时的，所有乘客的登梯动作都瞬间完成。在第二次上机中，每位乘客都有一个随机的登梯时间。乘客登梯、下梯的动作都要花费一定的时间才能完成。
+
+这一功能的实现通过改进 `elevator` 类中电梯到达新的一层后所要执行的一系列函数、以及为 `passenger` 类新增了一个计时函数完成。
+
+对于 `elevator` 类，我将电梯到达一层后的要完成的动作分为四个阶段：
+
+- `0`：电梯到达一层，但是还没有开始执行任何动作；
+- `1`：电梯开始执行下梯动作；
+- `2`：电梯开始执行登梯动作；
+- `3`：电梯确定下一步要移动的方向，或者停止运行。
+
+`ding()` 函数负责判断电梯当前所处的阶段，并根据阶段的不同执行不同的动作。其中，下梯动作由 `alight()` 函数完成，登梯动作由 `board()` 函数完成。
+
+```cpp
+// elevator arrived at a floor
+void elevator::ding() {
+    if (ding_stage == 0) {  // elevator arrived at a new floor, start ding process
+        ++ding_stage;
+    }
+    if (ding_stage == 1) {  // elevator is still alighting passengers, continue to alight
+        alight();
+    }
+    if (ding_stage == 2) {  // elevator is still boarding passengers, continue to board
+        board();
+    }
+    if (ding_stage == 3) {  // finished alight/alight process
+        ding_stage = 0;
+        // no passenger going to the same direction as the elevator
+        if (passengers.empty()) {
+            direction = choose_direction();  // choose a new direction
+            if (direction == stop) {  // no passengers request the elevator currently
+                status = false;  // idle the elevator
+            } else {  // direction changed, board passengers on the new direction
+                if (!current_floor->get_boarding_queue(this).empty()) {
+                    ding_stage = 2;
+                    board();
+                }
+            }
+        }
+    }
+}
+```
+
+`alight()` 函数首先假设没有乘客要在当前楼层下电梯，并将 `ding_stage` 变量设为 2（电梯准备执行登梯动作）。然后，`alight()` 函数会在循环中检查电梯登记表上是否有乘客要在当前楼层下电梯。如果有，则将 `ding_stage` 变量设为 1，并调用该乘客的 `timer()` 函数，该函数会返回一个 bool 值，如果乘客已经准备好下电梯（或登梯）则返回 true，否则返回 false。若乘客准备好下电梯，就调用乘客自身的 `alight()` 函数，然后将乘客移出电梯的乘客数组，并将乘客的登记信息从电梯登记表中删除，然后将 `ding_stage` 变量设为 2。若乘客没有准备好下电梯，则 `alight()` 函数会结束本次循环，等待下一次 `alight()` 函数被调用时再进行判断（即等待乘客准备好下电梯）。
+
+```cpp
+// alight passengers, invoke in ding()
+void elevator::alight() {
+    ding_stage = 2;  // move to the next stage (maybe)
+    int cur_flr = current_floor->get_id();
+    for (auto iter = registry[current_floor].begin(); iter != registry[current_floor].end(); ++iter) {  // scan the registry and alight passengers
+        int dst_flr = (*iter)->get_destination();
+        if (dst_flr == cur_flr) {  // find a passenger to alight
+            ding_stage = 1;  // keep in the current stage
+            if ((*iter)->timer()) {  // wait for passenger to alight
+                // passenger out the elevator
+                (*iter)->alight(current_floor);
+                passengers.erase(
+                        std::remove(passengers.begin(), passengers.end(), *iter),
+                        passengers.end());
+                // remove passenger from registry
+                iter = registry[current_floor].erase(iter) - 1;
+                ding_stage = 2;  // move to the next stage (maybe)
+            } else {  // passenger is still alighting, wait for next time
+                break;
+            }
+        }
+    }
+}
+```
+
+`board()` 函数会在循环中检查当前楼层的登梯队列中是否有乘客，如果有，则调用该乘客的 `timer()` 函数。若乘客准备好登梯，就将乘客的登梯信息从电梯登记表中移除，并将乘客的下梯信息加入电梯登记表，然后执行乘客自身的 `board()` 函数，并将乘客加入电梯的乘客数组中，然后将乘客移出登梯队列。若乘客没有准备好登梯，则 `board()` 函数会结束本次循环，等待下次 `board()` 函数被调用时再进行判断（即等待乘客准备好登梯）。
+
+如果当前楼层的乘梯队列为空，或者电梯满员，则视为电梯的登梯动作完成，并将电梯的 `ding_stage` 变量设为 `3`（电梯即将进行移动方向的判断或停止运行）。
+
+```cpp
+// board passengers, invoke in ding()
+void elevator::board() {
+    // get a boarding queue and board the passengers
+    auto &boarding_queue = current_floor->get_boarding_queue(this);
+    int capacity = conf["elevator.capacity"];
+    while (!boarding_queue.empty() && passengers.size() < capacity) {
+        ding_stage = 2;  // keep in the current stage
+        passenger *p = boarding_queue.front();
+        if (p->timer()) {  // wait for passenger to board
+            // remove old registry
+            registry[current_floor].erase(
+                    std::remove(registry[current_floor].begin(), registry[current_floor].end(), p),
+                    registry[current_floor].end());
+            // insert new registry
+            registry[floors[p->get_destination() - 1]].push_back(p);
+            // passenger enter the elevator
+            p->board(this);
+            passengers.push_back(p);
+            // remove passenger from boarding queue
+            boarding_queue.pop();
+        } else {  // passenger is still boarding, wait for next time
+            break;
+        }
+    }
+    // determine if the elevator is full
+    if (passengers.size() == capacity) {
+        full = true;
+    } else {
+        full = false;
+    }
+    if (boarding_queue.empty() || passengers.size() >= capacity) {  // no more passengers to board
+        ding_stage = 3;  // move to the next stage
+        set_refresh_time();  // elevator is ready to move
+    }
+}
+```
+
+乘客类的 `timer()` 函数实现如下：
+
+```cpp
+bool passenger::timer() {
+    if (!is_timing) {  // if timer is not running, start the timer
+        is_timing = true;
+        timer_time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        return false;
+    } else {  // if timer is running, check if time is up
+        int time_unit = conf["simulator.timeUnitMillisecond"];
+        auto current_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        if (current_time - timer_time_stamp > boarding_time * time_unit) {  // if time is up, return true and stop the timer
+            is_timing = false;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
+```
+
+首先，`timer()` 函数会判断当前是否在计时。如果没有，则开始计时并返回 false（计时器未到时）。否则判断计时器是否到时，如果到时，则返回 true（计时器到时）并停止计时。否则返回 false（计时器未到时）。
+
+### 对显示界面的改进
+
+我在第二次上机中对显示界面进行了一些改进，具体有：
+
+1. 增加了乘客生成信息的显示以及乘客离开大楼信息的显示；
+2. 增加了下梯乘客数量的显示；
+3. 增加了乘客下梯楼层的标记；
+4. 当电梯满员时，电梯会变为红色；
+5. 减少了不必要信息的显示，使界面更简洁；
+6. 当所有乘客离开大楼时，程序会自动停止运行。
+
+## 程序运行演示
+
+![pic](assets/2-1.gif)
