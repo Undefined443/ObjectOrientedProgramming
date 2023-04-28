@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.5)
 
 project(ObjectOrientedProgramming VERSION 1.0 LANGUAGES CXX)
 
-configure_file(${CMAKE_SOURCE_DIR}/config.json ${CMAKE_BINARY_DIR}/config.json COPYONLY)
-configure_file(${CMAKE_SOURCE_DIR}/img/elevator.svg ${CMAKE_BINARY_DIR}/img/elevator.svg COPYONLY)
+#configure_file(${CMAKE_SOURCE_DIR}/data/config.json ${CMAKE_BINARY_DIR}/config.json COPYONLY)
+#configure_file(${CMAKE_SOURCE_DIR}/data/data.json ${CMAKE_BINARY_DIR}/data.json COPYONLY)
+#configure_file(${CMAKE_SOURCE_DIR}/img/elevator.svg ${CMAKE_BINARY_DIR}/img/elevator.svg COPYONLY)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(CMAKE_PREFIX_PATH "C:/Qt/6.5.0/mingw_64")
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")            # If you are using Windows
+    set(CMAKE_PREFIX_PATH "C:/Qt/6.5.0/mingw_64")  # You need to change this path to your Qt MinGW path
 endif()
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Charts)
@@ -72,3 +73,17 @@ install(TARGETS ObjectOrientedProgramming
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ObjectOrientedProgramming)
 endif()
+
+# 检查当前操作系统
+if(APPLE)
+    set(CONFIG_PATH "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS")
+elseif(WIN32)
+    set(CONFIG_PATH "${CMAKE_BINARY_DIR}")
+else()
+    message(FATAL_ERROR "Unsupported operating system")
+endif()
+
+# 将配置文件复制到相应的目录
+file(COPY ${CMAKE_SOURCE_DIR}/data/config.json DESTINATION ${CONFIG_PATH})
+file(COPY ${CMAKE_SOURCE_DIR}/data/data.json DESTINATION ${CONFIG_PATH})
+file(COPY ${CMAKE_SOURCE_DIR}/img/elevator.svg DESTINATION "${CONFIG_PATH}/img")
