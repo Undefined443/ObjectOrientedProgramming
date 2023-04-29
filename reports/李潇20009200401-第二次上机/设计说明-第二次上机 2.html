@@ -1,0 +1,541 @@
+<!DOCTYPE html><html><head>
+      <title>&#x8BBE;&#x8BA1;&#x8BF4;&#x660E;-&#x7B2C;&#x4E8C;&#x6B21;&#x4E0A;&#x673A;</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////Users/xiao/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.6.5/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <h1 class="mume-header" id="%E7%AC%AC%E4%BA%8C%E6%AC%A1%E4%B8%8A%E6%9C%BA%E8%AE%BE%E8%AE%A1%E8%AF%B4%E6%98%8E">&#x7B2C;&#x4E8C;&#x6B21;&#x4E0A;&#x673A;&#x8BBE;&#x8BA1;&#x8BF4;&#x660E;</h1>
+
+<p>&#x4E0B;&#x9762;&#x8BF4;&#x660E;&#x6211;&#x6839;&#x636E;&#x7B2C;&#x4E8C;&#x6B21;&#x4E0A;&#x673A;&#x4F5C;&#x4E1A;&#x7684;&#x8981;&#x6C42;&#x5B8C;&#x6210;&#x7684;&#x8BBE;&#x8BA1;&#xFF0C;&#x4EE5;&#x53CA;&#x5176;&#x4ED6;&#x5BF9;&#x7B2C;&#x4E00;&#x6B21;&#x4E0A;&#x673A;&#x7A0B;&#x5E8F;&#x7684;&#x6539;&#x8FDB;&#x3002;</p>
+<h2 class="mume-header" id="%E4%B8%8A%E6%9C%BA%E5%86%85%E5%AE%B9">&#x4E0A;&#x673A;&#x5185;&#x5BB9;</h2>
+
+<ol>
+<li>&#x968F;&#x673A;&#x4EA7;&#x751F;&#x6BCF;&#x4F4D;&#x4E58;&#x5BA2;&#x521D;&#x6B21;&#x6240;&#x8981;&#x5230;&#x8FBE;&#x7684;&#x697C;&#x5C42;&#xFF0C;&#x5E76;&#x968F;&#x673A;&#x9009;&#x62E9;&#x4E00;&#x90E8;&#x7535;&#x68AF;&#x8BA9;&#x5176;&#x7B49;&#x5F85;;</li>
+<li>&#x6BCF;&#x4F4D;&#x4E58;&#x5BA2;&#x4E58;&#x5750;&#x7535;&#x68AF;&#x8FBE;&#x5230;&#x6307;&#x5B9A;&#x697C;&#x5C42;&#x540E;&#xFF0C;&#x968F;&#x673A;&#x5730;&#x505C;&#x7559; 10-120 &#x79D2;&#x540E;&#xFF0C;&#x518D;&#x968F;&#x673A;&#x5730;&#x53BB;&#x5F80;&#x53E6;&#x4E00;&#x697C;&#x5C42;&#xFF0C;&#x4F9D;&#x6B64;&#x7C7B;&#x63A8;&#x3002;&#x5F53;&#x6BCF;&#x4F4D;&#x4E58;&#x5BA2;&#x4E58;&#x5750;&#x8FC7; L &#x6B21;&#xFF08;&#x6BCF;&#x4EBA;&#x7684; L &#x503C;&#x4E0D;&#x540C;&#xFF0C;&#x5728;&#x4EA7;&#x751F;&#x4E58;&#x5BA2;&#x65F6;&#x968F;&#x673A;&#x5730;&#x5728; 1-10 &#x4E4B;&#x95F4;&#x786E;&#x5B9A;&#xFF09;&#x7535;&#x68AF;&#x540E;&#xFF0C;&#x7B2C; L+1 &#x6B21;&#x4E3A;&#x4E0B;&#x81F3;&#x5E95;&#x5C42;&#x5E76;&#x7ED3;&#x675F;&#x4E58;&#x68AF;&#x884C;&#x4E3A;&#x3002;&#x5230;&#x6240;&#x6709;&#x4E58;&#x5BA2;&#x7ED3;&#x675F;&#x4E58;&#x68AF;&#x884C;&#x4E3A;&#x65F6;&#xFF0C;&#x672C;&#x6B21;&#x4EFF;&#x771F;&#x7ED3;&#x675F;&#x3002;</li>
+</ol>
+<h3 class="mume-header" id="%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1">&#x7A0B;&#x5E8F;&#x8BBE;&#x8BA1;</h3>
+
+<p>&#x5BF9;&#x4E8E;&#x4E58;&#x5BA2;&#x968F;&#x673A;&#x76EE;&#x7684;&#x697C;&#x5C42;&#x7684;&#x8BBE;&#x7F6E;&#xFF0C;&#x4EE5;&#x53CA;&#x4E58;&#x5BA2;&#x5728;&#x505C;&#x7559;&#x82E5;&#x5E72;&#x65F6;&#x95F4;&#x540E;&#x53BB;&#x5F80;&#x53E6;&#x4E00;&#x697C;&#x5C42;&#xFF08;&#x4EE5;&#x53CA;&#x524D;&#x5F80; 1 &#x5C42;&#x5E76;&#x79BB;&#x5F00;&#x5927;&#x697C;&#xFF09;&#x529F;&#x80FD;&#x7684;&#x5B9E;&#x73B0;&#x5728; <code>passenger</code> &#x7C7B;&#x7684; <code>run()</code> &#x51FD;&#x6570;&#x4E2D;&#x5B8C;&#x6210;&#x3002;</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token keyword keyword-void">void</span> passenger<span class="token double-colon punctuation">::</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// request an elevator after active time</span>
+    <span class="token keyword keyword-int">int</span> time_unit <span class="token operator">=</span> conf<span class="token punctuation">[</span><span class="token string">&quot;simulator.timeUnitMillisecond&quot;</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span><span class="token function">get_time_gap</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> active_time <span class="token operator">*</span> time_unit <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>activated<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        activated <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+        <span class="token function">set_random_dest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// set a random destination</span>
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>current_floor <span class="token operator">==</span> <span class="token keyword keyword-nullptr">nullptr</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword keyword-throw">throw</span> std<span class="token double-colon punctuation">::</span><span class="token function">runtime_error</span><span class="token punctuation">(</span><span class="token string">&quot;passenger &quot;</span> <span class="token operator">+</span> std<span class="token double-colon punctuation">::</span><span class="token function">to_string</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">&quot;: current floor is null.&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        current_floor<span class="token operator">-&gt;</span><span class="token function">request_elevator</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p>&#x9996;&#x5148;&#xFF0C;<code>run()</code> &#x51FD;&#x6570;&#x4F1A;&#x5224;&#x65AD;&#x4E58;&#x5BA2;&#x5728;&#x5F53;&#x524D;&#x697C;&#x5C42;&#x662F;&#x5426;&#x505C;&#x7559;&#x4E86;&#x8DB3;&#x591F;&#x957F;&#x7684;&#x65F6;&#x95F4;&#xFF08;&#x901A;&#x8FC7;&#x6BD4;&#x8F83;&#x4E58;&#x5BA2;&#x4E0B;&#x7535;&#x68AF;&#x7684;&#x65F6;&#x95F4;&#x4E0E;&#x5F53;&#x524D;&#x65F6;&#x95F4;&#x7684;&#x65F6;&#x95F4;&#x95F4;&#x9694;&#x5B8C;&#x6210;&#xFF09;&#x3002;&#x5982;&#x679C;&#x662F;&#xFF0C;&#x5219;&#x8C03;&#x7528; <code>set_random_dest()</code> &#x51FD;&#x6570;&#x968F;&#x673A;&#x5730;&#x8BBE;&#x7F6E;&#x4E00;&#x4E2A;&#x76EE;&#x7684;&#x697C;&#x5C42;&#xFF0C;&#x5E76;&#x901A;&#x8FC7;&#x697C;&#x5C42;&#x5BF9;&#x8C61;&#x63D0;&#x4F9B;&#x7684; <code>request_elevator()</code> &#x51FD;&#x6570;&#x8BF7;&#x6C42;&#x7535;&#x68AF;&#x3002;</p>
+<p>&#x5176;&#x4E2D;&#xFF0C;<code>set_random_dest()</code> &#x51FD;&#x6570;&#x7684;&#x5B9E;&#x73B0;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token keyword keyword-void">void</span> passenger<span class="token double-colon punctuation">::</span><span class="token function">set_random_dest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>count_destinations <span class="token operator">==</span> total_destinations<span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// if the passenger has visited all the floors, leave the building</span>
+        destination_floor <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// Set random destination floor</span>
+    <span class="token keyword keyword-while">while</span> <span class="token punctuation">(</span>destination_floor <span class="token operator">==</span> original_floor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        destination_floor <span class="token operator">=</span> <span class="token function">rand_floor</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-while">while</span> <span class="token punctuation">(</span>count_destinations <span class="token operator">==</span> total_destinations <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> destination_floor <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            destination_floor <span class="token operator">=</span> <span class="token function">rand_floor</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// the last floor the passenger visit can&apos;t be the 1st floor</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p><code>set_random_dest()</code> &#x51FD;&#x6570;&#x662F;&#x6839;&#x636E;&#x8FD9;&#x6837;&#x4E24;&#x4E2A;&#x539F;&#x5219;&#x8BBE;&#x8BA1;&#x7684;&#xFF1A;</p>
+<ol>
+<li>&#x4E58;&#x5BA2;&#x6700;&#x540E;&#x4E00;&#x6B21;&#xFF08;&#x7B2C; L+1 &#x6B21;&#xFF09;&#x8BBF;&#x95EE;&#x7684;&#x697C;&#x5C42;&#x4E00;&#x5B9A;&#x662F; 1 &#x5C42;&#xFF1B;</li>
+<li>&#x4E58;&#x5BA2;&#x5012;&#x6570;&#x7B2C;&#x4E8C;&#x6B21;&#xFF08;&#x7B2C; L &#x6B21;&#xFF09;&#x8BBF;&#x95EE;&#x7684;&#x697C;&#x5C42;&#x4E00;&#x5B9A;&#x4E0D;&#x662F; 1 &#x5C42;&#x3002;</li>
+</ol>
+<p>&#x56E0;&#x6B64;&#xFF0C;&#x9996;&#x5148;&#xFF0C;<code>set_random_dest()</code> &#x51FD;&#x6570;&#x5224;&#x65AD;&#x5F53;&#x524D;&#x662F;&#x5426;&#x4E3A;&#x7B2C; L+1 &#x6B21;&#x8BBF;&#x95EE;&#x3002;&#x5982;&#x679C;&#x662F;&#xFF0C;&#x5219;&#x5C06;&#x76EE;&#x7684;&#x697C;&#x5C42;&#x8BBE;&#x4E3A; 1 &#x5C42;&#x3002;&#x5426;&#x5219;&#x5C06;&#x76EE;&#x7684;&#x697C;&#x5C42;&#x8BBE;&#x4E3A;&#x9664;&#x5F53;&#x524D;&#x697C;&#x5C42;&#x4EE5;&#x5916;&#x7684;&#x697C;&#x5C42;&#xFF0C;&#x7136;&#x540E;&#x5224;&#x65AD;&#x8FD9;&#x6B21;&#x8BBF;&#x95EE;&#x662F;&#x5426;&#x4E3A;&#x7B2C; L &#x6B21;&#x8BBF;&#x95EE;&#xFF0C;&#x5982;&#x679C;&#x662F;&#xFF0C;&#x5219;&#x5C06;&#x76EE;&#x7684;&#x697C;&#x5C42;&#x8BBE;&#x4E3A;&#x9664; 1 &#x5C42;&#x4EE5;&#x53CA;&#x5F53;&#x524D;&#x697C;&#x5C42;&#x4EE5;&#x5916;&#x7684;&#x697C;&#x5C42;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;&#x7535;&#x68AF;&#x7684;&#x8BF7;&#x6C42;&#x4E0E;&#x5206;&#x914D;&#xFF0C;&#x662F;&#x901A;&#x8FC7; <code>floor</code> &#x5BF9;&#x8C61;&#x63D0;&#x4F9B;&#x7684; <code>request_elevator()</code> &#x51FD;&#x6570;&#x5B8C;&#x6210;&#x7684;&#x3002;</p>
+<p>&#x5728;&#x7B2C;&#x4E00;&#x6B21;&#x4E0A;&#x673A;&#x4E2D; <code>request_elevator()</code> &#x51FD;&#x6570;&#x7684;&#x5B9E;&#x73B0;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token keyword keyword-void">void</span> floor<span class="token double-colon punctuation">::</span><span class="token function">request_elevator</span><span class="token punctuation">(</span>passenger <span class="token operator">*</span>p<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// find an elevator</span>
+    <span class="token keyword keyword-static">static</span> <span class="token keyword keyword-int">int</span> candidate <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    elevator <span class="token operator">*</span>nearest_elevator <span class="token operator">=</span> elevators<span class="token punctuation">[</span>candidate<span class="token operator">++</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>candidate <span class="token operator">&gt;=</span> elevators<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        candidate <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// add the passenger to the boarding queue</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>p<span class="token operator">-&gt;</span><span class="token function">get_destination</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        upside_boarding_lines<span class="token punctuation">[</span>nearest_elevator<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
+        downside_boarding_lines<span class="token punctuation">[</span>nearest_elevator<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// register the passenger</span>
+    nearest_elevator<span class="token operator">-&gt;</span><span class="token function">reg_pas</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><p><code>request_elevator()</code> &#x51FD;&#x6570;&#x4F1A;&#x6309;&#x987A;&#x5E8F;&#x5206;&#x914D;&#x7535;&#x68AF;&#x3002;&#x6BD4;&#x5982;&#xFF1A;&#x7ED9;&#x8BE5;&#x697C;&#x5C42;&#x7684;&#x7B2C; 1 &#x4E2A;&#x4E58;&#x5BA2;&#x5206;&#x914D; 1 &#x53F7;&#x7535;&#x68AF;&#xFF0C;&#x7ED9;&#x7B2C; 2 &#x4E2A;&#x4E58;&#x5BA2;&#x5206;&#x914D; 2 &#x53F7;&#x7535;&#x68AF;&#xFF0C;&#x7B49;&#x7B49;&#x3002;</p>
+<p>&#x5728;&#x7B2C;&#x4E8C;&#x6B21;&#x4E0A;&#x673A;&#x4E2D;&#xFF0C;&#x6211;&#x5BF9; <code>request_elevator()</code> &#x51FD;&#x6570;&#x8FDB;&#x884C;&#x4E86;&#x6539;&#x8FDB;&#xFF0C;&#x6539;&#x8FDB;&#x540E;&#x7684;&#x51FD;&#x6570;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token keyword keyword-void">void</span> floor<span class="token double-colon punctuation">::</span><span class="token function">request_elevator</span><span class="token punctuation">(</span>passenger <span class="token operator">*</span>p<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// find an elevator</span>
+    std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span>std<span class="token double-colon punctuation">::</span>pair<span class="token operator">&lt;</span>elevator <span class="token operator">*</span><span class="token punctuation">,</span> std<span class="token double-colon punctuation">::</span>pair<span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token punctuation">,</span> <span class="token keyword keyword-int">int</span><span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> candidates<span class="token punctuation">;</span>
+    <span class="token keyword keyword-int">int</span> pas_direction <span class="token operator">=</span> p<span class="token operator">-&gt;</span><span class="token function">get_destination</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> id <span class="token operator">&gt;</span> <span class="token number">0</span> <span class="token operator">?</span> elevator<span class="token double-colon punctuation">::</span>direction<span class="token double-colon punctuation">::</span>up <span class="token operator">:</span> elevator<span class="token double-colon punctuation">::</span>direction<span class="token double-colon punctuation">::</span>down<span class="token punctuation">;</span>
+    <span class="token keyword keyword-for">for</span> <span class="token punctuation">(</span><span class="token keyword keyword-auto">auto</span> el<span class="token operator">:</span> elevators<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword keyword-auto">auto</span> el_status <span class="token operator">=</span> el<span class="token operator">-&gt;</span><span class="token function">get_status</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-auto">auto</span> el_direction <span class="token operator">=</span> el<span class="token operator">-&gt;</span><span class="token function">get_direction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-auto">auto</span> el_cur_flr <span class="token operator">=</span> el<span class="token operator">-&gt;</span><span class="token function">get_current_floor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token function">get_id</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// some temporary variables</span>
+        <span class="token keyword keyword-int">int</span> el_coming_direction <span class="token operator">=</span> id <span class="token operator">-</span> el_cur_flr <span class="token operator">&gt;</span> <span class="token number">0</span> <span class="token operator">?</span> elevator<span class="token double-colon punctuation">::</span>direction<span class="token double-colon punctuation">::</span>up <span class="token operator">:</span> elevator<span class="token double-colon punctuation">::</span>direction<span class="token double-colon punctuation">::</span>down<span class="token punctuation">;</span>
+        <span class="token keyword keyword-auto">auto</span> <span class="token operator">&amp;</span>boarding_queue <span class="token operator">=</span> pas_direction <span class="token operator">&gt;</span> <span class="token number">0</span> <span class="token operator">?</span> upside_boarding_queues<span class="token punctuation">[</span>el<span class="token punctuation">]</span> <span class="token operator">:</span> downside_boarding_queues<span class="token punctuation">[</span>el<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+        <span class="token keyword keyword-bool">bool</span> is_at_same_floor <span class="token operator">=</span> <span class="token punctuation">(</span>el_cur_flr <span class="token operator">==</span> id<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>el_direction <span class="token operator">==</span> pas_direction<span class="token punctuation">)</span>  <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>el<span class="token operator">-&gt;</span><span class="token function">get_ding_stage</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// same floor &amp;&amp; same direction &amp;&amp; open for boarding</span>
+        <span class="token keyword keyword-bool">bool</span> is_pass_by <span class="token operator">=</span> el_direction <span class="token operator">==</span> pas_direction <span class="token operator">&amp;&amp;</span> el_coming_direction <span class="token operator">==</span> el_direction<span class="token punctuation">;</span>  <span class="token comment">// indicates whether the elevator can pass by passenger&apos;s floor without changing direction</span>
+        <span class="token keyword keyword-bool">bool</span> non_return <span class="token operator">=</span> <span class="token operator">!</span>el_status <span class="token operator">||</span> is_at_same_floor <span class="token operator">||</span> is_pass_by<span class="token punctuation">;</span>  <span class="token comment">// elevator is idle || at the same floor || elevator can pass by passenger&apos;s floor without changing direction</span>
+        <span class="token keyword keyword-bool">bool</span> single_return <span class="token operator">=</span> el_direction <span class="token operator">!=</span> pas_direction<span class="token punctuation">;</span>
+        <span class="token keyword keyword-int">int</span> free_space <span class="token operator">=</span> el<span class="token operator">-&gt;</span><span class="token function">get_free_space</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token keyword keyword-int">int</span><span class="token punctuation">(</span>boarding_queue<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// free space after boarding other passengers</span>
+
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>non_return<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword keyword-int">int</span> distance <span class="token operator">=</span> std<span class="token double-colon punctuation">::</span><span class="token function">abs</span><span class="token punctuation">(</span>el_cur_flr <span class="token operator">-</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            candidates<span class="token punctuation">.</span><span class="token function">emplace_back</span><span class="token punctuation">(</span>el<span class="token punctuation">,</span> std<span class="token double-colon punctuation">::</span><span class="token function">make_pair</span><span class="token punctuation">(</span>distance<span class="token punctuation">,</span> free_space<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>single_return<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword keyword-int">int</span> distance<span class="token punctuation">;</span>
+            <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>el_direction <span class="token operator">==</span> elevator<span class="token double-colon punctuation">::</span>direction<span class="token double-colon punctuation">::</span>up<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                distance <span class="token operator">=</span> conf<span class="token punctuation">[</span><span class="token string">&quot;building.floors&quot;</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token generic-function"><span class="token function">get</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> id <span class="token operator">+</span> conf<span class="token punctuation">[</span><span class="token string">&quot;building.floors&quot;</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token generic-function"><span class="token function">get</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> el_cur_flr<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
+                distance <span class="token operator">=</span> id <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">+</span> el_cur_flr <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            candidates<span class="token punctuation">.</span><span class="token function">emplace_back</span><span class="token punctuation">(</span>el<span class="token punctuation">,</span> std<span class="token double-colon punctuation">::</span><span class="token function">make_pair</span><span class="token punctuation">(</span>distance<span class="token punctuation">,</span> free_space<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>  <span class="token comment">// double return</span>
+            <span class="token keyword keyword-int">int</span> distance<span class="token punctuation">;</span>
+            <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>el_direction <span class="token operator">==</span> elevator<span class="token double-colon punctuation">::</span>direction<span class="token double-colon punctuation">::</span>up<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                distance <span class="token operator">=</span> id <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">+</span> conf<span class="token punctuation">[</span><span class="token string">&quot;building.floors&quot;</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token generic-function"><span class="token function">get</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> el_cur_flr <span class="token operator">+</span> conf<span class="token punctuation">[</span><span class="token string">&quot;building.floors&quot;</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token generic-function"><span class="token function">get</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
+                distance <span class="token operator">=</span> conf<span class="token punctuation">[</span><span class="token string">&quot;building.floors&quot;</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token generic-function"><span class="token function">get</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> id <span class="token operator">+</span> el_cur_flr <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">+</span> conf<span class="token punctuation">[</span><span class="token string">&quot;building.floors&quot;</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token generic-function"><span class="token function">get</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            candidates<span class="token punctuation">.</span><span class="token function">emplace_back</span><span class="token punctuation">(</span>el<span class="token punctuation">,</span> std<span class="token double-colon punctuation">::</span><span class="token function">make_pair</span><span class="token punctuation">(</span>distance<span class="token punctuation">,</span> free_space<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    std<span class="token double-colon punctuation">::</span><span class="token function">sort</span><span class="token punctuation">(</span>candidates<span class="token punctuation">.</span><span class="token function">begin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> candidates<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token keyword keyword-const">const</span> std<span class="token double-colon punctuation">::</span>pair<span class="token operator">&lt;</span>elevator <span class="token operator">*</span><span class="token punctuation">,</span> std<span class="token double-colon punctuation">::</span>pair<span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token punctuation">,</span> <span class="token keyword keyword-int">int</span><span class="token operator">&gt;&gt;</span> <span class="token operator">&amp;</span>a<span class="token punctuation">,</span> <span class="token keyword keyword-const">const</span> std<span class="token double-colon punctuation">::</span>pair<span class="token operator">&lt;</span>elevator <span class="token operator">*</span><span class="token punctuation">,</span> std<span class="token double-colon punctuation">::</span>pair<span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token punctuation">,</span> <span class="token keyword keyword-int">int</span><span class="token operator">&gt;&gt;</span> <span class="token operator">&amp;</span>b<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>a<span class="token punctuation">.</span>second<span class="token punctuation">.</span>first <span class="token operator">==</span> b<span class="token punctuation">.</span>second<span class="token punctuation">.</span>first<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword keyword-return">return</span> a<span class="token punctuation">.</span>second<span class="token punctuation">.</span>second <span class="token operator">&gt;</span> b<span class="token punctuation">.</span>second<span class="token punctuation">.</span>second<span class="token punctuation">;</span>  <span class="token comment">// if distance is the same, choose the one with more free space</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword keyword-return">return</span> a<span class="token punctuation">.</span>second<span class="token punctuation">.</span>first <span class="token operator">&lt;</span> b<span class="token punctuation">.</span>second<span class="token punctuation">.</span>first<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword keyword-auto">auto</span> nearest_elevator <span class="token operator">=</span> candidates<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>first<span class="token punctuation">;</span>
+
+    <span class="token comment">// add the passenger to the boarding queue</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>p<span class="token operator">-&gt;</span><span class="token function">get_destination</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        upside_boarding_queues<span class="token punctuation">[</span>nearest_elevator<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
+        downside_boarding_queues<span class="token punctuation">[</span>nearest_elevator<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// register the passenger</span>
+    nearest_elevator<span class="token operator">-&gt;</span><span class="token function">reg_pas</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><p>&#x5728;&#x672C;&#x6B21;&#x6539;&#x8FDB;&#x540E;&#xFF0C;<code>request_elevator()</code> &#x51FD;&#x6570;&#x4F1A;&#x6839;&#x636E;&#x7535;&#x68AF;&#x7684;&#x8DDD;&#x79BB;&#x548C;&#x4EBA;&#x6570;&#x9009;&#x62E9;&#x4E00;&#x4E2A;&#x6700;&#x5408;&#x9002;&#x7684;&#x7535;&#x68AF;&#x3002;&#xFF08;&#x4E0A;&#x673A;&#x8981;&#x6C42;&#x662F;&#x968F;&#x673A;&#x5206;&#x914D;&#x7535;&#x68AF;&#xFF0C;&#x4F46;&#x662F;&#x6211;&#x89C9;&#x5F97;&#x6CA1;&#x5FC5;&#x8981;&#x518D;&#x968F;&#x673A;&#x5206;&#x914D;&#x7535;&#x68AF;&#xFF0C;&#x800C;&#x662F;&#x5E94;&#x8BE5;&#x9009;&#x4E00;&#x4E2A;&#x6700;&#x5408;&#x9002;&#x7684;&#x7535;&#x68AF;&#xFF09;&#x3002;&#x8FD9;&#x4E2A;&#x51FD;&#x6570;&#x7684;&#x601D;&#x8DEF;&#x662F;&#x8FD9;&#x6837;&#x7684;&#xFF1A;&#x5148;&#x5C06;&#x6240;&#x6709;&#x7535;&#x68AF;&#x5206;&#x4E3A;&#x4E09;&#x7C7B;&#xFF1A;</p>
+<ol>
+<li>&#x7B2C;&#x4E00;&#x7C7B;&#x7535;&#x68AF;&#x662F;&#x4E0D;&#x9700;&#x8981;&#x6298;&#x8FD4;&#xFF0C;&#x76F4;&#x63A5;&#x5C31;&#x53EF;&#x4EE5;&#x5230;&#x8FBE;&#x4E58;&#x5BA2;&#x6240;&#x5728;&#x697C;&#x5C42;&#x7684;&#x7535;&#x68AF;&#xFF1B;</li>
+<li>&#x7B2C;&#x4E8C;&#x7C7B;&#x7535;&#x68AF;&#x662F;&#x9700;&#x8981;&#x6298;&#x8FD4;&#x4E00;&#x6B21;&#x7684;&#x7535;&#x68AF;&#xFF1B;</li>
+<li>&#x7B2C;&#x4E09;&#x7C7B;&#x7535;&#x68AF;&#x662F;&#x9700;&#x8981;&#x6298;&#x8FD4;&#x4E24;&#x6B21;&#x7684;&#x7535;&#x68AF;&#x3002;</li>
+</ol>
+<p>&#x7136;&#x540E;&#xFF0C;&#x5BF9;&#x4E8E;&#x6BCF;&#x4E00;&#x7C7B;&#x7535;&#x68AF;&#xFF0C;&#x8BA1;&#x7B97;&#x5B83;&#x4EEC;&#x5230;&#x8FBE;&#x4E58;&#x5BA2;&#x6240;&#x5728;&#x697C;&#x5C42;&#x7684;&#x8DDD;&#x79BB;&#xFF0C;&#x4EE5;&#x53CA;&#xFF08;&#x5047;&#x8BBE;&#xFF09;&#x5F53;&#x524D;&#x697C;&#x5C42;&#x7B49;&#x5F85;&#x8BE5;&#x7535;&#x68AF;&#x7684;&#x4E58;&#x5BA2;&#x90FD;&#x4E0A;&#x7535;&#x68AF;&#x540E;&#xFF0C;&#x8BE5;&#x7535;&#x68AF;&#x7684;&#x7A7A;&#x4F59;&#x7A7A;&#x95F4;&#xFF0C;&#x5E76;&#x5C06;&#x5143;&#x7EC4; <code>(&#x7535;&#x68AF;, &#x8DDD;&#x79BB;, &#x7A7A;&#x4F59;&#x7A7A;&#x95F4;)</code> &#x5B58;&#x5165;&#x4E00;&#x4E2A;&#x6570;&#x7EC4;&#x4E2D;&#x3002;&#x6700;&#x540E;&#xFF0C;&#x6839;&#x636E;&#x8DDD;&#x79BB;&#x6700;&#x8FD1;&#x4E14;&#x7A7A;&#x4F59;&#x7A7A;&#x95F4;&#x6700;&#x591A;&#x7684;&#x539F;&#x5219;&#x5BF9;&#x6570;&#x7EC4;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#xFF0C;&#x5E76;&#x5C06;&#x6392;&#x5E8F;&#x7B2C;&#x4E00;&#x7684;&#x7535;&#x68AF;&#x4F5C;&#x4E3A;&#x6700;&#x7EC8;&#x9009;&#x62E9;&#x7684;&#x7535;&#x68AF;&#x3002;</p>
+<h2 class="mume-header" id="%E5%85%B6%E4%BB%96%E6%94%B9%E8%BF%9B">&#x5176;&#x4ED6;&#x6539;&#x8FDB;</h2>
+
+<h3 class="mume-header" id="%E5%A2%9E%E5%8A%A0%E4%BA%86%E4%B9%98%E5%AE%A2%E7%99%BB%E6%A2%AF%E6%97%B6%E9%97%B4%E5%8A%9F%E8%83%BD">&#x589E;&#x52A0;&#x4E86;&#x4E58;&#x5BA2;&#x767B;&#x68AF;&#x65F6;&#x95F4;&#x529F;&#x80FD;</h3>
+
+<p>&#x5728;&#x7B2C;&#x4E00;&#x6B21;&#x4E0A;&#x673A;&#x4E2D;&#xFF0C;&#x4E58;&#x5BA2;&#x767B;&#x68AF;&#x662F;&#x6CA1;&#x6709;&#x65F6;&#x95F4;&#x5EF6;&#x65F6;&#x7684;&#xFF0C;&#x6240;&#x6709;&#x4E58;&#x5BA2;&#x7684;&#x767B;&#x68AF;&#x52A8;&#x4F5C;&#x90FD;&#x77AC;&#x95F4;&#x5B8C;&#x6210;&#x3002;&#x5728;&#x7B2C;&#x4E8C;&#x6B21;&#x4E0A;&#x673A;&#x4E2D;&#xFF0C;&#x6BCF;&#x4F4D;&#x4E58;&#x5BA2;&#x90FD;&#x6709;&#x4E00;&#x4E2A;&#x968F;&#x673A;&#x7684;&#x767B;&#x68AF;&#x65F6;&#x95F4;&#x3002;&#x4E58;&#x5BA2;&#x767B;&#x68AF;&#x3001;&#x4E0B;&#x68AF;&#x7684;&#x52A8;&#x4F5C;&#x90FD;&#x8981;&#x82B1;&#x8D39;&#x4E00;&#x5B9A;&#x7684;&#x65F6;&#x95F4;&#x624D;&#x80FD;&#x5B8C;&#x6210;&#x3002;</p>
+<p>&#x8FD9;&#x4E00;&#x529F;&#x80FD;&#x7684;&#x5B9E;&#x73B0;&#x901A;&#x8FC7;&#x6539;&#x8FDB; <code>elevator</code> &#x7C7B;&#x4E2D;&#x7535;&#x68AF;&#x5230;&#x8FBE;&#x65B0;&#x7684;&#x4E00;&#x5C42;&#x540E;&#x6240;&#x8981;&#x6267;&#x884C;&#x7684;&#x4E00;&#x7CFB;&#x5217;&#x51FD;&#x6570;&#x3001;&#x4EE5;&#x53CA;&#x4E3A; <code>passenger</code> &#x7C7B;&#x65B0;&#x589E;&#x4E86;&#x4E00;&#x4E2A;&#x8BA1;&#x65F6;&#x51FD;&#x6570;&#x5B8C;&#x6210;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E; <code>elevator</code> &#x7C7B;&#xFF0C;&#x6211;&#x5C06;&#x7535;&#x68AF;&#x5230;&#x8FBE;&#x4E00;&#x5C42;&#x540E;&#x7684;&#x8981;&#x5B8C;&#x6210;&#x7684;&#x52A8;&#x4F5C;&#x5206;&#x4E3A;&#x56DB;&#x4E2A;&#x9636;&#x6BB5;&#xFF1A;</p>
+<ul>
+<li><code>0</code>&#xFF1A;&#x7535;&#x68AF;&#x5230;&#x8FBE;&#x4E00;&#x5C42;&#xFF0C;&#x4F46;&#x662F;&#x8FD8;&#x6CA1;&#x6709;&#x5F00;&#x59CB;&#x6267;&#x884C;&#x4EFB;&#x4F55;&#x52A8;&#x4F5C;&#xFF1B;</li>
+<li><code>1</code>&#xFF1A;&#x7535;&#x68AF;&#x5F00;&#x59CB;&#x6267;&#x884C;&#x4E0B;&#x68AF;&#x52A8;&#x4F5C;&#xFF1B;</li>
+<li><code>2</code>&#xFF1A;&#x7535;&#x68AF;&#x5F00;&#x59CB;&#x6267;&#x884C;&#x767B;&#x68AF;&#x52A8;&#x4F5C;&#xFF1B;</li>
+<li><code>3</code>&#xFF1A;&#x7535;&#x68AF;&#x786E;&#x5B9A;&#x4E0B;&#x4E00;&#x6B65;&#x8981;&#x79FB;&#x52A8;&#x7684;&#x65B9;&#x5411;&#xFF0C;&#x6216;&#x8005;&#x505C;&#x6B62;&#x8FD0;&#x884C;&#x3002;</li>
+</ul>
+<p><code>ding()</code> &#x51FD;&#x6570;&#x8D1F;&#x8D23;&#x5224;&#x65AD;&#x7535;&#x68AF;&#x5F53;&#x524D;&#x6240;&#x5904;&#x7684;&#x9636;&#x6BB5;&#xFF0C;&#x5E76;&#x6839;&#x636E;&#x9636;&#x6BB5;&#x7684;&#x4E0D;&#x540C;&#x6267;&#x884C;&#x4E0D;&#x540C;&#x7684;&#x52A8;&#x4F5C;&#x3002;&#x5176;&#x4E2D;&#xFF0C;&#x4E0B;&#x68AF;&#x52A8;&#x4F5C;&#x7531; <code>alight()</code> &#x51FD;&#x6570;&#x5B8C;&#x6210;&#xFF0C;&#x767B;&#x68AF;&#x52A8;&#x4F5C;&#x7531; <code>board()</code> &#x51FD;&#x6570;&#x5B8C;&#x6210;&#x3002;</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token comment">// elevator arrived at a floor</span>
+<span class="token keyword keyword-void">void</span> elevator<span class="token double-colon punctuation">::</span><span class="token function">ding</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>ding_stage <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// elevator arrived at a new floor, start ding process</span>
+        <span class="token operator">++</span>ding_stage<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>ding_stage <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// elevator is still alighting passengers, continue to alight</span>
+        <span class="token function">alight</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>ding_stage <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// elevator is still boarding passengers, continue to board</span>
+        <span class="token function">board</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>ding_stage <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// finished alight/alight process</span>
+        ding_stage <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token comment">// no passenger going to the same direction as the elevator</span>
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>passengers<span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            direction <span class="token operator">=</span> <span class="token function">choose_direction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// choose a new direction</span>
+            <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>direction <span class="token operator">==</span> stop<span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// no passengers request the elevator currently</span>
+                status <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>  <span class="token comment">// idle the elevator</span>
+            <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>  <span class="token comment">// direction changed, board passengers on the new direction</span>
+                <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>current_floor<span class="token operator">-&gt;</span><span class="token function">get_boarding_queue</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    ding_stage <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+                    <span class="token function">board</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p><code>alight()</code> &#x51FD;&#x6570;&#x9996;&#x5148;&#x5047;&#x8BBE;&#x6CA1;&#x6709;&#x4E58;&#x5BA2;&#x8981;&#x5728;&#x5F53;&#x524D;&#x697C;&#x5C42;&#x4E0B;&#x7535;&#x68AF;&#xFF0C;&#x5E76;&#x5C06; <code>ding_stage</code> &#x53D8;&#x91CF;&#x8BBE;&#x4E3A; 2&#xFF08;&#x7535;&#x68AF;&#x51C6;&#x5907;&#x6267;&#x884C;&#x767B;&#x68AF;&#x52A8;&#x4F5C;&#xFF09;&#x3002;&#x7136;&#x540E;&#xFF0C;<code>alight()</code> &#x51FD;&#x6570;&#x4F1A;&#x5728;&#x5FAA;&#x73AF;&#x4E2D;&#x68C0;&#x67E5;&#x7535;&#x68AF;&#x767B;&#x8BB0;&#x8868;&#x4E0A;&#x662F;&#x5426;&#x6709;&#x4E58;&#x5BA2;&#x8981;&#x5728;&#x5F53;&#x524D;&#x697C;&#x5C42;&#x4E0B;&#x7535;&#x68AF;&#x3002;&#x5982;&#x679C;&#x6709;&#xFF0C;&#x5219;&#x5C06; <code>ding_stage</code> &#x53D8;&#x91CF;&#x8BBE;&#x4E3A; 1&#xFF0C;&#x5E76;&#x8C03;&#x7528;&#x8BE5;&#x4E58;&#x5BA2;&#x7684; <code>timer()</code> &#x51FD;&#x6570;&#xFF0C;&#x8BE5;&#x51FD;&#x6570;&#x4F1A;&#x8FD4;&#x56DE;&#x4E00;&#x4E2A; bool &#x503C;&#xFF0C;&#x5982;&#x679C;&#x4E58;&#x5BA2;&#x5DF2;&#x7ECF;&#x51C6;&#x5907;&#x597D;&#x4E0B;&#x7535;&#x68AF;&#xFF08;&#x6216;&#x767B;&#x68AF;&#xFF09;&#x5219;&#x8FD4;&#x56DE; true&#xFF0C;&#x5426;&#x5219;&#x8FD4;&#x56DE; false&#x3002;&#x82E5;&#x4E58;&#x5BA2;&#x51C6;&#x5907;&#x597D;&#x4E0B;&#x7535;&#x68AF;&#xFF0C;&#x5C31;&#x8C03;&#x7528;&#x4E58;&#x5BA2;&#x81EA;&#x8EAB;&#x7684; <code>alight()</code> &#x51FD;&#x6570;&#xFF0C;&#x7136;&#x540E;&#x5C06;&#x4E58;&#x5BA2;&#x79FB;&#x51FA;&#x7535;&#x68AF;&#x7684;&#x4E58;&#x5BA2;&#x6570;&#x7EC4;&#xFF0C;&#x5E76;&#x5C06;&#x4E58;&#x5BA2;&#x7684;&#x767B;&#x8BB0;&#x4FE1;&#x606F;&#x4ECE;&#x7535;&#x68AF;&#x767B;&#x8BB0;&#x8868;&#x4E2D;&#x5220;&#x9664;&#xFF0C;&#x7136;&#x540E;&#x5C06; <code>ding_stage</code> &#x53D8;&#x91CF;&#x8BBE;&#x4E3A; 2&#x3002;&#x82E5;&#x4E58;&#x5BA2;&#x6CA1;&#x6709;&#x51C6;&#x5907;&#x597D;&#x4E0B;&#x7535;&#x68AF;&#xFF0C;&#x5219; <code>alight()</code> &#x51FD;&#x6570;&#x4F1A;&#x7ED3;&#x675F;&#x672C;&#x6B21;&#x5FAA;&#x73AF;&#xFF0C;&#x7B49;&#x5F85;&#x4E0B;&#x4E00;&#x6B21; <code>alight()</code> &#x51FD;&#x6570;&#x88AB;&#x8C03;&#x7528;&#x65F6;&#x518D;&#x8FDB;&#x884C;&#x5224;&#x65AD;&#xFF08;&#x5373;&#x7B49;&#x5F85;&#x4E58;&#x5BA2;&#x51C6;&#x5907;&#x597D;&#x4E0B;&#x7535;&#x68AF;&#xFF09;&#x3002;</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token comment">// alight passengers, invoke in ding()</span>
+<span class="token keyword keyword-void">void</span> elevator<span class="token double-colon punctuation">::</span><span class="token function">alight</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    ding_stage <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>  <span class="token comment">// move to the next stage (maybe)</span>
+    <span class="token keyword keyword-int">int</span> cur_flr <span class="token operator">=</span> current_floor<span class="token operator">-&gt;</span><span class="token function">get_id</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword keyword-for">for</span> <span class="token punctuation">(</span><span class="token keyword keyword-auto">auto</span> iter <span class="token operator">=</span> registry<span class="token punctuation">[</span>current_floor<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">begin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> iter <span class="token operator">!=</span> registry<span class="token punctuation">[</span>current_floor<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token operator">++</span>iter<span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// scan the registry and alight passengers</span>
+        <span class="token keyword keyword-int">int</span> dst_flr <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">*</span>iter<span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token function">get_destination</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>dst_flr <span class="token operator">==</span> cur_flr<span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// find a passenger to alight</span>
+            ding_stage <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>  <span class="token comment">// keep in the current stage</span>
+            <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token operator">*</span>iter<span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token function">timer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// wait for passenger to alight</span>
+                <span class="token comment">// passenger out the elevator</span>
+                <span class="token punctuation">(</span><span class="token operator">*</span>iter<span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token function">alight</span><span class="token punctuation">(</span>current_floor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                passengers<span class="token punctuation">.</span><span class="token function">erase</span><span class="token punctuation">(</span>
+                        std<span class="token double-colon punctuation">::</span><span class="token function">remove</span><span class="token punctuation">(</span>passengers<span class="token punctuation">.</span><span class="token function">begin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> passengers<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">*</span>iter<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                        passengers<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token comment">// remove passenger from registry</span>
+                iter <span class="token operator">=</span> registry<span class="token punctuation">[</span>current_floor<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">erase</span><span class="token punctuation">(</span>iter<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+                ding_stage <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>  <span class="token comment">// move to the next stage (maybe)</span>
+            <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>  <span class="token comment">// passenger is still alighting, wait for next time</span>
+                <span class="token keyword keyword-break">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p><code>board()</code> &#x51FD;&#x6570;&#x4F1A;&#x5728;&#x5FAA;&#x73AF;&#x4E2D;&#x68C0;&#x67E5;&#x5F53;&#x524D;&#x697C;&#x5C42;&#x7684;&#x767B;&#x68AF;&#x961F;&#x5217;&#x4E2D;&#x662F;&#x5426;&#x6709;&#x4E58;&#x5BA2;&#xFF0C;&#x5982;&#x679C;&#x6709;&#xFF0C;&#x5219;&#x8C03;&#x7528;&#x8BE5;&#x4E58;&#x5BA2;&#x7684; <code>timer()</code> &#x51FD;&#x6570;&#x3002;&#x82E5;&#x4E58;&#x5BA2;&#x51C6;&#x5907;&#x597D;&#x767B;&#x68AF;&#xFF0C;&#x5C31;&#x5C06;&#x4E58;&#x5BA2;&#x7684;&#x767B;&#x68AF;&#x4FE1;&#x606F;&#x4ECE;&#x7535;&#x68AF;&#x767B;&#x8BB0;&#x8868;&#x4E2D;&#x79FB;&#x9664;&#xFF0C;&#x5E76;&#x5C06;&#x4E58;&#x5BA2;&#x7684;&#x4E0B;&#x68AF;&#x4FE1;&#x606F;&#x52A0;&#x5165;&#x7535;&#x68AF;&#x767B;&#x8BB0;&#x8868;&#xFF0C;&#x7136;&#x540E;&#x6267;&#x884C;&#x4E58;&#x5BA2;&#x81EA;&#x8EAB;&#x7684; <code>board()</code> &#x51FD;&#x6570;&#xFF0C;&#x5E76;&#x5C06;&#x4E58;&#x5BA2;&#x52A0;&#x5165;&#x7535;&#x68AF;&#x7684;&#x4E58;&#x5BA2;&#x6570;&#x7EC4;&#x4E2D;&#xFF0C;&#x7136;&#x540E;&#x5C06;&#x4E58;&#x5BA2;&#x79FB;&#x51FA;&#x767B;&#x68AF;&#x961F;&#x5217;&#x3002;&#x82E5;&#x4E58;&#x5BA2;&#x6CA1;&#x6709;&#x51C6;&#x5907;&#x597D;&#x767B;&#x68AF;&#xFF0C;&#x5219; <code>board()</code> &#x51FD;&#x6570;&#x4F1A;&#x7ED3;&#x675F;&#x672C;&#x6B21;&#x5FAA;&#x73AF;&#xFF0C;&#x7B49;&#x5F85;&#x4E0B;&#x6B21; <code>board()</code> &#x51FD;&#x6570;&#x88AB;&#x8C03;&#x7528;&#x65F6;&#x518D;&#x8FDB;&#x884C;&#x5224;&#x65AD;&#xFF08;&#x5373;&#x7B49;&#x5F85;&#x4E58;&#x5BA2;&#x51C6;&#x5907;&#x597D;&#x767B;&#x68AF;&#xFF09;&#x3002;</p>
+<p>&#x5982;&#x679C;&#x5F53;&#x524D;&#x697C;&#x5C42;&#x7684;&#x4E58;&#x68AF;&#x961F;&#x5217;&#x4E3A;&#x7A7A;&#xFF0C;&#x6216;&#x8005;&#x7535;&#x68AF;&#x6EE1;&#x5458;&#xFF0C;&#x5219;&#x89C6;&#x4E3A;&#x7535;&#x68AF;&#x7684;&#x767B;&#x68AF;&#x52A8;&#x4F5C;&#x5B8C;&#x6210;&#xFF0C;&#x5E76;&#x5C06;&#x7535;&#x68AF;&#x7684; <code>ding_stage</code> &#x53D8;&#x91CF;&#x8BBE;&#x4E3A; <code>3</code>&#xFF08;&#x7535;&#x68AF;&#x5373;&#x5C06;&#x8FDB;&#x884C;&#x79FB;&#x52A8;&#x65B9;&#x5411;&#x7684;&#x5224;&#x65AD;&#x6216;&#x505C;&#x6B62;&#x8FD0;&#x884C;&#xFF09;&#x3002;</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token comment">// board passengers, invoke in ding()</span>
+<span class="token keyword keyword-void">void</span> elevator<span class="token double-colon punctuation">::</span><span class="token function">board</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// get a boarding queue and board the passengers</span>
+    <span class="token keyword keyword-auto">auto</span> <span class="token operator">&amp;</span>boarding_queue <span class="token operator">=</span> current_floor<span class="token operator">-&gt;</span><span class="token function">get_boarding_queue</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword keyword-int">int</span> capacity <span class="token operator">=</span> conf<span class="token punctuation">[</span><span class="token string">&quot;elevator.capacity&quot;</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword keyword-while">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>boarding_queue<span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> passengers<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> capacity<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        ding_stage <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>  <span class="token comment">// keep in the current stage</span>
+        passenger <span class="token operator">*</span>p <span class="token operator">=</span> boarding_queue<span class="token punctuation">.</span><span class="token function">front</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>p<span class="token operator">-&gt;</span><span class="token function">timer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// wait for passenger to board</span>
+            <span class="token comment">// remove old registry</span>
+            registry<span class="token punctuation">[</span>current_floor<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">erase</span><span class="token punctuation">(</span>
+                    std<span class="token double-colon punctuation">::</span><span class="token function">remove</span><span class="token punctuation">(</span>registry<span class="token punctuation">[</span>current_floor<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">begin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> registry<span class="token punctuation">[</span>current_floor<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> p<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                    registry<span class="token punctuation">[</span>current_floor<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// insert new registry</span>
+            registry<span class="token punctuation">[</span>floors<span class="token punctuation">[</span>p<span class="token operator">-&gt;</span><span class="token function">get_destination</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// passenger enter the elevator</span>
+            p<span class="token operator">-&gt;</span><span class="token function">board</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            passengers<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// remove passenger from boarding queue</span>
+            boarding_queue<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>  <span class="token comment">// passenger is still boarding, wait for next time</span>
+            <span class="token keyword keyword-break">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// determine if the elevator is full</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>passengers<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> capacity<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        full <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
+        full <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>boarding_queue<span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> passengers<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&gt;=</span> capacity<span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// no more passengers to board</span>
+        ding_stage <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>  <span class="token comment">// move to the next stage</span>
+        <span class="token function">set_refresh_time</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// elevator is ready to move</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p>&#x4E58;&#x5BA2;&#x7C7B;&#x7684; <code>timer()</code> &#x51FD;&#x6570;&#x5B9E;&#x73B0;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token keyword keyword-bool">bool</span> passenger<span class="token double-colon punctuation">::</span><span class="token function">timer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>is_timing<span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// if timer is not running, start the timer</span>
+        is_timing <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+        timer_time_stamp <span class="token operator">=</span> std<span class="token double-colon punctuation">::</span>chrono<span class="token double-colon punctuation">::</span><span class="token generic-function"><span class="token function">duration_cast</span><span class="token generic class-name"><span class="token operator">&lt;</span>std<span class="token double-colon punctuation">::</span>chrono<span class="token double-colon punctuation">::</span>milliseconds<span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span>std<span class="token double-colon punctuation">::</span>chrono<span class="token double-colon punctuation">::</span>system_clock<span class="token double-colon punctuation">::</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">time_since_epoch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>  <span class="token comment">// if timer is running, check if time is up</span>
+        <span class="token keyword keyword-int">int</span> time_unit <span class="token operator">=</span> conf<span class="token punctuation">[</span><span class="token string">&quot;simulator.timeUnitMillisecond&quot;</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-auto">auto</span> current_time <span class="token operator">=</span> std<span class="token double-colon punctuation">::</span>chrono<span class="token double-colon punctuation">::</span><span class="token generic-function"><span class="token function">duration_cast</span><span class="token generic class-name"><span class="token operator">&lt;</span>std<span class="token double-colon punctuation">::</span>chrono<span class="token double-colon punctuation">::</span>milliseconds<span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span>std<span class="token double-colon punctuation">::</span>chrono<span class="token double-colon punctuation">::</span>system_clock<span class="token double-colon punctuation">::</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">time_since_epoch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>current_time <span class="token operator">-</span> timer_time_stamp <span class="token operator">&gt;</span> boarding_time <span class="token operator">*</span> time_unit<span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// if time is up, return true and stop the timer</span>
+            is_timing <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+            <span class="token keyword keyword-return">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
+            <span class="token keyword keyword-return">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p>&#x9996;&#x5148;&#xFF0C;<code>timer()</code> &#x51FD;&#x6570;&#x4F1A;&#x5224;&#x65AD;&#x5F53;&#x524D;&#x662F;&#x5426;&#x5728;&#x8BA1;&#x65F6;&#x3002;&#x5982;&#x679C;&#x6CA1;&#x6709;&#xFF0C;&#x5219;&#x5F00;&#x59CB;&#x8BA1;&#x65F6;&#x5E76;&#x8FD4;&#x56DE; false&#xFF08;&#x8BA1;&#x65F6;&#x5668;&#x672A;&#x5230;&#x65F6;&#xFF09;&#x3002;&#x5426;&#x5219;&#x5224;&#x65AD;&#x8BA1;&#x65F6;&#x5668;&#x662F;&#x5426;&#x5230;&#x65F6;&#xFF0C;&#x5982;&#x679C;&#x5230;&#x65F6;&#xFF0C;&#x5219;&#x8FD4;&#x56DE; true&#xFF08;&#x8BA1;&#x65F6;&#x5668;&#x5230;&#x65F6;&#xFF09;&#x5E76;&#x505C;&#x6B62;&#x8BA1;&#x65F6;&#x3002;&#x5426;&#x5219;&#x8FD4;&#x56DE; false&#xFF08;&#x8BA1;&#x65F6;&#x5668;&#x672A;&#x5230;&#x65F6;&#xFF09;&#x3002;</p>
+<h3 class="mume-header" id="%E5%AF%B9%E6%98%BE%E7%A4%BA%E7%95%8C%E9%9D%A2%E7%9A%84%E6%94%B9%E8%BF%9B">&#x5BF9;&#x663E;&#x793A;&#x754C;&#x9762;&#x7684;&#x6539;&#x8FDB;</h3>
+
+<p>&#x6211;&#x5728;&#x7B2C;&#x4E8C;&#x6B21;&#x4E0A;&#x673A;&#x4E2D;&#x5BF9;&#x663E;&#x793A;&#x754C;&#x9762;&#x8FDB;&#x884C;&#x4E86;&#x4E00;&#x4E9B;&#x6539;&#x8FDB;&#xFF0C;&#x5177;&#x4F53;&#x6709;&#xFF1A;</p>
+<ol>
+<li>&#x589E;&#x52A0;&#x4E86;&#x4E58;&#x5BA2;&#x751F;&#x6210;&#x4FE1;&#x606F;&#x7684;&#x663E;&#x793A;&#x4EE5;&#x53CA;&#x4E58;&#x5BA2;&#x79BB;&#x5F00;&#x5927;&#x697C;&#x4FE1;&#x606F;&#x7684;&#x663E;&#x793A;&#xFF1B;</li>
+<li>&#x589E;&#x52A0;&#x4E86;&#x4E0B;&#x68AF;&#x4E58;&#x5BA2;&#x6570;&#x91CF;&#x7684;&#x663E;&#x793A;&#xFF1B;</li>
+<li>&#x589E;&#x52A0;&#x4E86;&#x4E58;&#x5BA2;&#x4E0B;&#x68AF;&#x697C;&#x5C42;&#x7684;&#x6807;&#x8BB0;&#xFF1B;</li>
+<li>&#x5F53;&#x7535;&#x68AF;&#x6EE1;&#x5458;&#x65F6;&#xFF0C;&#x7535;&#x68AF;&#x4F1A;&#x53D8;&#x4E3A;&#x7EA2;&#x8272;&#xFF1B;</li>
+<li>&#x51CF;&#x5C11;&#x4E86;&#x4E0D;&#x5FC5;&#x8981;&#x4FE1;&#x606F;&#x7684;&#x663E;&#x793A;&#xFF0C;&#x4F7F;&#x754C;&#x9762;&#x66F4;&#x7B80;&#x6D01;&#xFF1B;</li>
+<li>&#x5F53;&#x6240;&#x6709;&#x4E58;&#x5BA2;&#x79BB;&#x5F00;&#x5927;&#x697C;&#x65F6;&#xFF0C;&#x7A0B;&#x5E8F;&#x4F1A;&#x81EA;&#x52A8;&#x505C;&#x6B62;&#x8FD0;&#x884C;&#x3002;</li>
+</ol>
+<h2 class="mume-header" id="%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E6%BC%94%E7%A4%BA">&#x7A0B;&#x5E8F;&#x8FD0;&#x884C;&#x6F14;&#x793A;</h2>
+
+<p><img src="assets/demo.gif" alt="pic"></p>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    </body></html>

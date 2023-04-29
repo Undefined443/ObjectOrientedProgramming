@@ -1,0 +1,13 @@
+{
+  "elevator.count": 10,
+  "elevator.capacity": 15,
+  "elevator.initialFloor": 1,
+  "elevator.speed": 1,
+  "building.floors": 40,
+  "passenger.boardingTimeRange": [1, 3],
+  "passenger.activeTimeRange": [0, 10],
+  "simulator.simulatedTime": 10,
+  "simulator.traffic": 1000,
+  "simulator.refreshRateMillisecond": 300,
+  "simulator.passengerSpawnRate": 0.5
+}
