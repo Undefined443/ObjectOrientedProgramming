@@ -3,4 +3,7 @@ cmake-build-debug-coverage/
 cmake-build-release/
 build/
 .idea/
+.vscode/
 .DS_Store
+*.stash
+Makefile

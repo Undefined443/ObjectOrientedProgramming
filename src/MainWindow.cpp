@@ -6,13 +6,14 @@
 
 MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent) : chart(new Chart(elevator_num)), QMainWindow(parent) {
     // Set widgets
+    auto* central_widget = new QWidget(this);
     auto elevator_shafts_widget = new QWidget(this);
     auto information_widget = new QWidget(this);
     // Set widget in information widget
     auto message_widget = new QWidget(information_widget);
 
     // Set layouts
-    auto central_widget_vertical_layout = new QVBoxLayout(this);  // for this
+    auto central_widget_vertical_layout = new QVBoxLayout(central_widget);  // for central widget
     auto elevator_shaft_horizontal_layout = new QHBoxLayout(elevator_shafts_widget);  // for elevator shaft widget
     auto information_horizontal_layout = new QHBoxLayout(information_widget);  // for information widget
     auto message_vertical_layout = new QVBoxLayout(message_widget);  // for message widget
@@ -25,7 +26,6 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
         elevator_shaft_horizontal_layout->addWidget(elevator_shaft);
         elevator_shafts.push_back(elevator_shaft);
     }
-    elevator_shafts_widget->setLayout(elevator_shaft_horizontal_layout);
     elevator_shafts_widget->setStyleSheet("background-color:white;border:none;border-radius:10px;");
 
     // Add labels in information widget
@@ -39,7 +39,6 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
         message_vertical_layout->addWidget(msg_label);
         message_labels.push_back(msg_label);
     }
-    message_widget->setLayout(message_vertical_layout);
 
     auto statistics_show_button = new QPushButton("Statistics", information_widget);
     statistics_show_button->setStyleSheet("color:black;background-color:white;border:2px groove gray;border-radius:10px;padding:2px 4px;");
@@ -49,14 +48,11 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     information_horizontal_layout->addWidget(message_widget);
     information_horizontal_layout->addWidget(statistics_show_button);
     information_horizontal_layout->addWidget(time_label);
-    information_widget->setLayout(information_horizontal_layout);
 
     // Add elevator shaft widget and information widget
     central_widget_vertical_layout->addWidget(elevator_shafts_widget);
     central_widget_vertical_layout->addWidget(information_widget);
 
-    auto* central_widget = new QWidget(this);
-    central_widget->setLayout(central_widget_vertical_layout);
     setCentralWidget(central_widget);
 
     setStyleSheet("background-color:#ECECEC;");

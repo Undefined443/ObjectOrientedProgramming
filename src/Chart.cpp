@@ -17,16 +17,16 @@ Chart::Chart(int _elevator_num, QWidget *parent) :
     QWidget(parent) {
 
     // Set widgets
-    auto elevator_panel = new QWidget(this);
+    // auto elevator_panel = new QWidget(this);
 
     // Set layout
-    auto grid_layout = new QGridLayout(elevator_panel);
+    auto grid_layout = new QGridLayout(this);
 
     QVector<QChartView *> chart_view_vector(elevator_num);
 
     // Set elevator panel
     for (int i = 0; i < elevator_num; ++i) {
-        chart_view_vector[i] = new QChartView(elevator_panel);
+        chart_view_vector[i] = new QChartView(this);
         pie_series_vector[i] = new QPieSeries(chart_view_vector[i]);
 
         chart_view_vector[i]->setMinimumHeight(HEIGHT);
@@ -43,7 +43,6 @@ Chart::Chart(int _elevator_num, QWidget *parent) :
 
         grid_layout->addWidget(chart_view_vector[i], i / COLUMN, i % COLUMN);
     }
-    elevator_panel->setLayout(grid_layout);
 
     // Set passenger panel
     auto series = new QBarSeries();
@@ -72,8 +71,6 @@ Chart::Chart(int _elevator_num, QWidget *parent) :
     chart_view->setMinimumHeight(HEIGHT);
 
     grid_layout->addWidget(chart_view, elevator_num / COLUMN, elevator_num % COLUMN, 1, 2);
-
-    setLayout(grid_layout);
 
     // Initialize
     // Elevator

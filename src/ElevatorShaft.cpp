@@ -26,7 +26,7 @@ ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent)
     // Set elevator label
     elevator_label = new QLabel(elevator_widget);
     elevator_label->setFixedSize(PIC_WIDTH, PIC_WIDTH);
-    QPixmap pixmap("img/elevator.svg");
+    QPixmap pixmap("images/elevator.svg");
     QPixmap scaled = pixmap.scaled(elevator_label->size(), Qt::KeepAspectRatio);
     elevator_label->setPixmap(scaled);
     elevator_label->setGeometry(0, (floor_num - 1) * LINE_HEIGHT, PIC_WIDTH, PIC_WIDTH);
@@ -81,7 +81,6 @@ ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent)
         floor_layout->addWidget(upside_num);
         floor_layout->addWidget(downside_num);
         floor_layout->addWidget(alight_num);
-        floor->setLayout(floor_layout);
 
         floor->setStyleSheet("background-color:#ECECEC;border:none;");
         floor->setFixedSize(LINE_WIDTH, LINE_HEIGHT);
@@ -90,17 +89,14 @@ ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent)
         // Add floor to floors vertical layout
         floors_vertical_layout->addWidget(floor);
     }
-    floors_widget->setLayout(floors_vertical_layout);
 
     // Add elevator and floors widget to elevator_floors horizontal layout
     elevator_floors_horizontal_layout->addWidget(elevator_widget);
     elevator_floors_horizontal_layout->addWidget(floors_widget);
-    elevator_floors_widget->setLayout(elevator_floors_horizontal_layout);
 
     // Add elevator_floors widget and load label to elevator_shaft vertical layout
     elevator_shaft_vertical_layout->addWidget(elevator_floors_widget);
     elevator_shaft_vertical_layout->addWidget(load_button);
-    this->setLayout(elevator_shaft_vertical_layout);
 
     // Set connection
     connect(this, &ElevatorShaft::move_elevator_signal, this, &ElevatorShaft::move_elevator_slot);
