@@ -1,95 +1,94 @@
-cmake_minimum_required(VERSION 3.5)
+# 设置 CMake 最低版本要求
+cmake_minimum_required(VERSION 3.20)
 
-project(ObjectOrientedProgramming VERSION 1.0 LANGUAGES CXX)
+# 项目名称、版本、语言
+project(
+    ObjectOrientedProgramming
+    VERSION 1.0
+    LANGUAGES CXX)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")            # If you are using Windows
-    set(CMAKE_PREFIX_PATH "C:/Qt/6.5.0/mingw_64")  # You need to change this path to your Qt MinGW path
+# 设置 C++ 标准
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Windows 指定 Qt MinGW 路径
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    set(CMAKE_PREFIX_PATH "C:/Qt/6.5.0/mingw_64")
 endif()
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Charts)
+# 导入库
+find_package(QT NAMES Qt6 Qt5 REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts)
+find_package(nlohmann_json REQUIRED)
 
+# （Qt）自动生成 UI、MOC、RCC 文件
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(PROJECT_SOURCES
-        src/main.cpp
-        src/ElevatorShaft.cpp
-        src/MainWindow.cpp
-        src/building.cpp
-        src/elevator.cpp
-        src/floor.cpp
-        src/monitor.cpp
-        src/passenger.cpp
-        src/Chart.cpp
-        src/statistics.cpp
-        src/LineChart.cpp
-        include/ElevatorShaft.h
-        include/MainWindow.h
-        include/building.h
-        include/elevator.h
-        include/floor.h
-        include/monitor.h
-        include/passenger.h
-        include/Chart.h
-        include/statistics.h
-        include/LineChart.h
-        )
 
+# 引入源文件和头文件
+file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp" "include/*.h")
+
+# 创建可执行文件
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(ObjectOrientedProgramming
-            MANUAL_FINALIZATION
-            ${PROJECT_SOURCES}
-            )
-    # Define target properties for Android with Qt 6 as:
-    #    set_property(TARGET ObjectOrientedProgramming APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-    #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-    # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
+    qt_add_executable(ObjectOrientedProgramming MANUAL_FINALIZATION ${PROJECT_SOURCES})
 else()
-    if(ANDROID)
-        add_library(ObjectOrientedProgramming SHARED
-                ${PROJECT_SOURCES}
-                )
-        # Define properties for Android with Qt 5 after find_package() calls as:
-        #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(ObjectOrientedProgramming
-                ${PROJECT_SOURCES}
-                )
-    endif()
+    add_executable(ObjectOrientedProgramming ${PROJECT_SOURCES})
 endif()
 
+# 设置头文件目录
 target_include_directories(ObjectOrientedProgramming PRIVATE ${PROJECT_SOURCE_DIR}/include)
+
+# 链接库
 target_link_libraries(ObjectOrientedProgramming PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
+target_link_libraries(ObjectOrientedProgramming PRIVATE nlohmann_json::nlohmann_json)
 
-set_target_properties(ObjectOrientedProgramming PROPERTIES
-        MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-        MACOSX_BUNDLE ON
-        WIN32_EXECUTABLE ON
-        )
+# 设置目标属性
+set_target_properties(
+    ObjectOrientedProgramming
+    PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER app.undefined443.dev
+               MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+               MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+               MACOSX_BUNDLE OFF
+               WIN32_EXECUTABLE ON)
 
-install(TARGETS ObjectOrientedProgramming
-        BUNDLE DESTINATION .
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
+# 完成 Qt6 可执行文件的最终配置
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ObjectOrientedProgramming)
 endif()
 
-# 检查当前操作系统
+# 设置资源文件目录
 if(APPLE)
-    set(CONFIG_PATH "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS")
+    set(RESOURCE_PATH "${CMAKE_BINARY_DIR}")
 elseif(WIN32)
-    set(CONFIG_PATH "${CMAKE_BINARY_DIR}")
+    set(RESOURCE_PATH "${CMAKE_BINARY_DIR}")
 else()
-    message(FATAL_ERROR "Unsupported operating system")
+    set(RESOURCE_PATH "${CMAKE_BINARY_DIR}")
+    # message(FATAL_ERROR "Unsupported operating system")
 endif()
 
-# 将配置文件复制到相应的目录
-file(COPY ${CMAKE_SOURCE_DIR}/resources/data/config.json DESTINATION ${CONFIG_PATH})
-file(COPY ${CMAKE_SOURCE_DIR}/resources/data/data.json DESTINATION ${CONFIG_PATH})
-file(COPY ${CMAKE_SOURCE_DIR}/resources/images/elevator.svg DESTINATION "${CONFIG_PATH}/images")
+# 拷贝资源文件
+file(COPY ${CMAKE_SOURCE_DIR}/resources/data/ DESTINATION ${RESOURCE_PATH})
+file(COPY ${CMAKE_SOURCE_DIR}/resources/images/ DESTINATION ${RESOURCE_PATH}/images)
+
+# 定义平台特定的安装路径
+if(APPLE)
+    set(APP_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/Applications")
+    set(RESOURCE_INSTALL_DIR "${APP_INSTALL_DIR}/${PROJECT_NAME}.app/Contents/Resources")
+elseif(WIN32)
+    set(APP_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+    set(RESOURCE_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+else()
+    set(APP_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+    set(RESOURCE_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+endif()
+
+# 安装可执行文件
+install(
+    TARGETS ObjectOrientedProgramming
+    BUNDLE DESTINATION "${APP_INSTALL_DIR}"
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# 安装资源文件
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/ DESTINATION "${RESOURCE_INSTALL_DIR}")

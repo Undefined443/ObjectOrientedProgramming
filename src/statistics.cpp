@@ -127,7 +127,12 @@ std::map<long long, long long> statistics::get_estimated_waiting_time(int elevat
         auto time_division = i.first;  // time division
         auto total = i.second.first;  // total waiting time
         auto count = i.second.second;  // count
-        ret[time_division] = total / count;  // average waiting time
+		if (count <= 0) {
+			// throw std::runtime_error("Division by zero error");
+			ret[time_division] = 0;
+		} else {
+			ret[time_division] = total / count;  // average waiting time
+		}
     }
     return ret;
 }
