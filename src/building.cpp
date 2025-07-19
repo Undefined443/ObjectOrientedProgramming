@@ -17,11 +17,11 @@ building::building()
           std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()),
       base_time_stamp(refresh_time_stamp) {
     try {
-        std::ifstream conf_file("./config.json");
+        std::ifstream conf_file("./data/config.json");
         conf = nlohmann::json::parse(conf_file);
         conf_file.close();
     } catch (nlohmann::detail::parse_error &e) {
-        std::cerr << "Error: File \"config.json\" not found. Put it at the same directory as this executable." << std::endl;
+        std::cerr << "Error: File \"./data/config.json\" not found. Put it at the same directory as this executable." << std::endl;
         exit(1);
     }
 

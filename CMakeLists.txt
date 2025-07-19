@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.20)
 # 项目名称、版本、语言
 project(
     ObjectOrientedProgramming
-    VERSION 1.0
+    VERSION 5.5.0
     LANGUAGES CXX)
 
 # 设置 C++ 标准
@@ -68,27 +68,68 @@ else()
 endif()
 
 # 拷贝资源文件
-file(COPY ${CMAKE_SOURCE_DIR}/resources/data/ DESTINATION ${RESOURCE_PATH})
+file(COPY ${CMAKE_SOURCE_DIR}/resources/data/ DESTINATION ${RESOURCE_PATH}/data)
 file(COPY ${CMAKE_SOURCE_DIR}/resources/images/ DESTINATION ${RESOURCE_PATH}/images)
 
+# ------------------------------------------------------------------------------
+# 安装
+
 # 定义平台特定的安装路径
-if(APPLE)
-    set(APP_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/Applications")
-    set(RESOURCE_INSTALL_DIR "${APP_INSTALL_DIR}/${PROJECT_NAME}.app/Contents/Resources")
-elseif(WIN32)
-    set(APP_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
-    set(RESOURCE_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
-else()
-    set(APP_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
-    set(RESOURCE_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
-endif()
+# if(APPLE)
+#     set(APP_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/Applications")
+#     set(RESOURCE_INSTALL_DIR "${APP_INSTALL_DIR}/${PROJECT_NAME}.app/Contents/Resources")
+# elseif(WIN32)
+#     set(APP_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+#     set(RESOURCE_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+# else()
+#     set(APP_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+#     set(RESOURCE_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+# endif()
 
 # 安装可执行文件
-install(
-    TARGETS ObjectOrientedProgramming
-    BUNDLE DESTINATION "${APP_INSTALL_DIR}"
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+# install(
+#     TARGETS ObjectOrientedProgramming
+#     BUNDLE DESTINATION "${APP_INSTALL_DIR}"
+#     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # 安装资源文件
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/ DESTINATION "${RESOURCE_INSTALL_DIR}")
+# install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/ DESTINATION "${RESOURCE_INSTALL_DIR}")
+
+# ------------------------------------------------------------------------------
+# 打包
+
+# 获取平台信息
+if(APPLE)
+    set(PLATFORM_NAME "macos")
+elseif(WIN32)
+    set(PLATFORM_NAME "windows")
+else()
+    set(PLATFORM_NAME "linux")
+endif()
+
+# 创建发布目录名称
+set(RELEASE_DIR "${PROJECT_NAME}-${PLATFORM_NAME}-v${PROJECT_VERSION}")
+
+# 添加创建发布目录和打包的命令
+add_custom_command(
+    OUTPUT ${RELEASE_DIR}.tar.gz
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${RELEASE_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_NAME} ${RELEASE_DIR}/
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/data ${RELEASE_DIR}/data
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/images ${RELEASE_DIR}/images
+    COMMAND ${CMAKE_COMMAND} -E tar -cf ${RELEASE_DIR}.tar.gz ${RELEASE_DIR}
+    # COMMAND ${CMAKE_COMMAND} -E remove_directory ${RELEASE_DIR}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    DEPENDS ${PROJECT_NAME}
+    COMMENT "Creating release package: ${RELEASE_DIR}.tar.gz"
+)
+
+# 添加打包目标
+add_custom_target(
+    package
+    DEPENDS ${RELEASE_DIR}.tar.gz
+)
+
+# 确保在构建结束后再执行打包
+add_dependencies(package ${PROJECT_NAME})
