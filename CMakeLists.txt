@@ -40,7 +40,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
 qt_finalize_executable(${PROJECT_NAME})
 
 # 拷贝资源文件
-file(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_BINARY_DIR}/resources)
+file(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_BINARY_DIR})
 
 # ------------------------------------------------------------------------------
 # 安装与打包
