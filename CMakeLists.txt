@@ -43,9 +43,7 @@ qt_finalize_executable(${PROJECT_NAME})
 file(COPY ${CMAKE_SOURCE_DIR}/resources/ DESTINATION ${CMAKE_BINARY_DIR})
 
 # ------------------------------------------------------------------------------
-# 打包
-
-include(CPack)
+# 安装与打包
 
 # 设置包信息
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
@@ -64,3 +62,6 @@ endif()
 install(TARGETS ${PROJECT_NAME} DESTINATION .)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/data DESTINATION .)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/images DESTINATION .)
+
+# 使用 CPack 打包
+include(CPack)

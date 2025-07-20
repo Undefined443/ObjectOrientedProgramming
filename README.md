@@ -91,3 +91,11 @@ Windows:
    ```sh
    ./ObjectOrientedProgramming
    ```
+
+## Package
+
+构建完成后，在 `build` 目录下执行：
+
+```sh
+cpack
+```
