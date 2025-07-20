@@ -18,11 +18,11 @@ building::building()
               .count()),
       base_time_stamp(refresh_time_stamp) {
     try {
-        std::ifstream conf_file("./data/config.json");
+        std::ifstream conf_file("./resources/data/config.json");
         conf = nlohmann::json::parse(conf_file);
         conf_file.close();
     } catch (nlohmann::detail::parse_error &e) {
-        std::cerr << "Error: File \"./data/config.json\" not found. Put it at the same directory as this executable."
+        std::cerr << "Error: File \"./resources/data/config.json\" not found. Put it at the same directory as this executable."
                   << std::endl;
         exit(1);
     }

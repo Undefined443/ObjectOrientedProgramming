@@ -40,7 +40,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
 qt_finalize_executable(${PROJECT_NAME})
 
 # 拷贝资源文件
-file(COPY ${CMAKE_SOURCE_DIR}/resources/ DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_BINARY_DIR}/resources)
 
 # ------------------------------------------------------------------------------
 # 安装与打包
@@ -60,8 +60,7 @@ endif()
 
 # 设置安装组件
 install(TARGETS ${PROJECT_NAME} DESTINATION .)
-install(DIRECTORY ${CMAKE_BINARY_DIR}/data DESTINATION .)
-install(DIRECTORY ${CMAKE_BINARY_DIR}/images DESTINATION .)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/resources DESTINATION .)
 
 # 使用 CPack 打包
 include(CPack)
