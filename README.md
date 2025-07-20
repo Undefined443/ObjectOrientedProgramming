@@ -52,34 +52,21 @@
 
 ![png](.assets/3.png){width=300 height=200}
 
-## Usage
+## Prerequisites
 
-### macOS / Ubuntu
+macOS:
 
-0. 安装依赖：
+```sh
+brew install qt@6 nlohmann-json
+```
 
-   ```sh
-   # macOS
-   brew install qt@6 nlohmann-json
-   # Ubuntu
-   sudo apt install qt6-base-dev nlohmann-json3-dev
-   ```
+Ubuntu:
 
-1. 构建：
+```sh
+sudo apt install qt6-base-dev nlohmann-json3-dev
+```
 
-   ```sh
-   mkdir build && cd build
-   cmake ..
-   make
-   ```
-
-2. 运行
-
-   ```sh
-   ./ObjectOrientedProgramming
-   ```
-
-### Windows
+Windows:
 
 1. 下载并安装 [MSYS2](https://www.msys2.org/#installation)
 
@@ -89,15 +76,18 @@
    pacman -S mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-qt6-base mingw-w64-ucrt-x86_64-qt6-charts mingw-w64-ucrt-x86_64-nlohmann-json
    ```
 
-3. 构建：
+## Build & Run
+
+1. 构建：
 
    ```sh
-   cmake -S . -B build
-   cmake --build build -- -j%(nproc)
+   mkdir build && cd build
+   cmake ..
+   cmake --build . -- -j$(nproc)
    ```
 
-4. 运行：
+2. 运行
 
    ```sh
-   ./build/ObjectOrientedProgramming.exe
+   ./ObjectOrientedProgramming
    ```
