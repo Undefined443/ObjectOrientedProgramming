@@ -6,4 +6,4 @@ build/
 .vscode/
 .DS_Store
 *.stash
-Makefile
+CMakeUserPresets.json

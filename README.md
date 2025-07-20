@@ -54,6 +54,8 @@
 
 ## Usage
 
+### macOS / Ubuntu
+
 0. 安装依赖：
 
    ```sh
@@ -75,4 +77,27 @@
 
    ```sh
    ./ObjectOrientedProgramming
+   ```
+
+### Windows
+
+1. 下载并安装 [MSYS2](https://www.msys2.org/#installation)
+
+2. 在 MSYS2 UCRT64 环境下安装项目依赖：
+
+   ```sh
+   pacman -S mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-qt6-base mingw-w64-ucrt-x86_64-qt6-charts mingw-w64-ucrt-x86_64-nlohmann-json
+   ```
+
+3. 构建：
+
+   ```sh
+   cmake -S . -B build
+   cmake --build build -- -j%(nproc)
+   ```
+
+4. 运行：
+
+   ```sh
+   ./build/ObjectOrientedProgramming.exe
    ```

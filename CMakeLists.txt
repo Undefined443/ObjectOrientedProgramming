@@ -1,135 +1,66 @@
 # 设置 CMake 最低版本要求
 cmake_minimum_required(VERSION 3.20)
 
-# 项目名称、版本、语言
+# 设置项目信息
 project(
     ObjectOrientedProgramming
-    VERSION 5.5.0
+    VERSION 5.5.1
     LANGUAGES CXX)
 
 # 设置 C++ 标准
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Windows 指定 Qt MinGW 路径
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(CMAKE_PREFIX_PATH "C:/Qt/6.5.0/mingw_64")
-endif()
-
 # 导入库
-find_package(QT NAMES Qt6 Qt5 REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts)
-find_package(nlohmann_json REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Charts)
+find_package(nlohmann_json CONFIG REQUIRED)
 
-# （Qt）自动生成 UI、MOC、RCC 文件
+# Qt 相关设置
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-# 引入源文件和头文件
+# 引入源文件
 file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp" "include/*.h")
 
 # 创建可执行文件
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(ObjectOrientedProgramming MANUAL_FINALIZATION ${PROJECT_SOURCES})
-else()
-    add_executable(ObjectOrientedProgramming ${PROJECT_SOURCES})
-endif()
+qt_add_executable(${PROJECT_NAME} MANUAL_FINALIZATION ${PROJECT_SOURCES})
 
-# 设置头文件目录
-target_include_directories(ObjectOrientedProgramming PRIVATE ${PROJECT_SOURCE_DIR}/include)
+# 设置 include 目录
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 # 链接库
-target_link_libraries(ObjectOrientedProgramming PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
-target_link_libraries(ObjectOrientedProgramming PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets Qt6::Charts)
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 # 设置目标属性
-set_target_properties(
-    ObjectOrientedProgramming
-    PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER app.undefined443.dev
-               MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-               MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-               MACOSX_BUNDLE OFF
-               WIN32_EXECUTABLE ON)
+set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
 
 # 完成 Qt6 可执行文件的最终配置
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(ObjectOrientedProgramming)
-endif()
-
-# 设置资源文件目录
-if(APPLE)
-    set(RESOURCE_PATH "${CMAKE_BINARY_DIR}")
-elseif(WIN32)
-    set(RESOURCE_PATH "${CMAKE_BINARY_DIR}")
-else()
-    set(RESOURCE_PATH "${CMAKE_BINARY_DIR}")
-    # message(FATAL_ERROR "Unsupported operating system")
-endif()
+qt_finalize_executable(${PROJECT_NAME})
 
 # 拷贝资源文件
-file(COPY ${CMAKE_SOURCE_DIR}/resources/data/ DESTINATION ${RESOURCE_PATH}/data)
-file(COPY ${CMAKE_SOURCE_DIR}/resources/images/ DESTINATION ${RESOURCE_PATH}/images)
-
-# ------------------------------------------------------------------------------
-# 安装
-
-# 定义平台特定的安装路径
-# if(APPLE)
-#     set(APP_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/Applications")
-#     set(RESOURCE_INSTALL_DIR "${APP_INSTALL_DIR}/${PROJECT_NAME}.app/Contents/Resources")
-# elseif(WIN32)
-#     set(APP_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
-#     set(RESOURCE_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
-# else()
-#     set(APP_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
-#     set(RESOURCE_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
-# endif()
-
-# 安装可执行文件
-# install(
-#     TARGETS ObjectOrientedProgramming
-#     BUNDLE DESTINATION "${APP_INSTALL_DIR}"
-#     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-# 安装资源文件
-# install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/ DESTINATION "${RESOURCE_INSTALL_DIR}")
+file(COPY ${CMAKE_SOURCE_DIR}/resources/ DESTINATION ${CMAKE_BINARY_DIR})
 
 # ------------------------------------------------------------------------------
 # 打包
 
-# 获取平台信息
-if(APPLE)
-    set(PLATFORM_NAME "macos")
-elseif(WIN32)
-    set(PLATFORM_NAME "windows")
+include(CPack)
+
+# 设置包信息
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Object Oriented Programming Project")
+set(CPACK_PACKAGE_VENDOR "undefined443")
+
+# 设置包格式
+if(WIN32)
+    set(CPACK_GENERATOR "ZIP")
 else()
-    set(PLATFORM_NAME "linux")
+    set(CPACK_GENERATOR "TGZ")
 endif()
 
-# 创建发布目录名称
-set(RELEASE_DIR "${PROJECT_NAME}-${PLATFORM_NAME}-v${PROJECT_VERSION}")
-
-# 添加创建发布目录和打包的命令
-add_custom_command(
-    OUTPUT ${RELEASE_DIR}.tar.gz
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${RELEASE_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_NAME} ${RELEASE_DIR}/
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/data ${RELEASE_DIR}/data
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/images ${RELEASE_DIR}/images
-    COMMAND ${CMAKE_COMMAND} -E tar -cf ${RELEASE_DIR}.tar.gz ${RELEASE_DIR}
-    # COMMAND ${CMAKE_COMMAND} -E remove_directory ${RELEASE_DIR}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    DEPENDS ${PROJECT_NAME}
-    COMMENT "Creating release package: ${RELEASE_DIR}.tar.gz"
-)
-
-# 添加打包目标
-add_custom_target(
-    package
-    DEPENDS ${RELEASE_DIR}.tar.gz
-)
-
-# 确保在构建结束后再执行打包
-add_dependencies(package ${PROJECT_NAME})
+# 设置安装组件
+install(TARGETS ${PROJECT_NAME} DESTINATION .)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/data DESTINATION .)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/images DESTINATION .)
