@@ -31,7 +31,7 @@ ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent)
     // Set elevator label
     elevator_label = new QLabel(elevator_widget);
     elevator_label->setFixedSize(PIC_WIDTH, PIC_WIDTH);
-    QPixmap pixmap("./resources/images/elevator.svg");
+    QPixmap pixmap(":/images/elevator.svg");
     QPixmap scaled = pixmap.scaled(elevator_label->size(), Qt::KeepAspectRatio);
     elevator_label->setPixmap(scaled);
     elevator_label->setGeometry(0, (floor_num - 1) * LINE_HEIGHT, PIC_WIDTH, PIC_WIDTH);

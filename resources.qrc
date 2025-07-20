@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/elevator.svg</file>
+    </qresource>
+</RCC>
