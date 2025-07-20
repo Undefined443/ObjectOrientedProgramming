@@ -3,6 +3,10 @@
 #include <cmath>
 #include <stdexcept>
 
+#include "building.h"
+#include "elevator.h"
+#include "passenger.h"
+
 floor::floor(class building *_b, int id, const nlohmann::json &conf) : b(_b), id(id), conf(conf) {}
 
 void floor::request_elevator(passenger *p) {

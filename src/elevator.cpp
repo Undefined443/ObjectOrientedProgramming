@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "floor.h"
+#include "monitor.h"
+#include "passenger.h"
 
 elevator::elevator(int id, const nlohmann::json &conf)
     : id(id),

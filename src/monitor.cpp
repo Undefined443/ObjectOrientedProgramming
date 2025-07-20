@@ -4,6 +4,12 @@
 #include <iostream>
 #include <memory>
 
+#include "MainWindow.h"
+#include "building.h"
+#include "elevator.h"
+#include "floor.h"
+#include "statistics.h"
+
 monitor::monitor(building *_building, MainWindow *_main_window)
     : b(_building),
       main_window(_main_window),

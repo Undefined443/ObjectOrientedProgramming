@@ -7,18 +7,14 @@
 #include <QVector>
 #include <string>
 
-#include "Chart.h"
-#include "ElevatorShaft.h"
-#include "monitor.h"
-
 QT_BEGIN_NAMESPACE
 class Chart;
 class QWidget;
 class QLabel;
 QT_END_NAMESPACE
 
-class monitor;
 class ElevatorShaft;
+class monitor;
 
 class MainWindow : public QMainWindow {
    public:

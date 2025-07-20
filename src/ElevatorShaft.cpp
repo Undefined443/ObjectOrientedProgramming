@@ -3,6 +3,9 @@
 #include <QHBoxLayout>
 #include <map>
 
+#include "LineChart.h"
+#include "monitor.h"
+
 const int LINE_WIDTH = 72;
 const int LINE_HEIGHT = 25;
 const int PADDING = 0;
@@ -28,9 +31,8 @@ ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent)
     // Set elevator label
     elevator_label = new QLabel(elevator_widget);
     elevator_label->setFixedSize(PIC_WIDTH, PIC_WIDTH);
-    QPixmap pixmap("images/elevator.svg");
-    QPixmap scaled = pixmap.scaled(elevator_label->size(), Qt::KeepAspectRatio);
-    elevator_label->setPixmap(scaled);
+    QPixmap pixmap(":/images/elevator.svg");
+    elevator_label->setPixmap(pixmap.scaled(elevator_label->size(), Qt::KeepAspectRatio));
     elevator_label->setGeometry(0, (floor_num - 1) * LINE_HEIGHT, PIC_WIDTH, PIC_WIDTH);
     elevator_label->setStyleSheet("background-color:white;border:none;");
 

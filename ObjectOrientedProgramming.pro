@@ -2,6 +2,7 @@ QT += widgets charts
 TEMPLATE = app
 TARGET = ObjectOrientedProgramming
 INCLUDEPATH += include
+RESOURCES += resources.qrc
 
 DESTDIR = $$PWD/build
 OBJECTS_DIR = $$PWD/build/obj
@@ -20,8 +21,7 @@ HEADERS += include/building.h \
            include/MainWindow.h \
            include/monitor.h \
            include/passenger.h \
-           include/statistics.h \
-           include/nlohmann/json.hpp
+           include/statistics.h
 
 SOURCES += src/building.cpp \
            src/Chart.cpp \

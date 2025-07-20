@@ -1,14 +1,12 @@
 #ifndef PASSENGER_H
 #define PASSENGER_H
 
+#include <nlohmann/json.hpp>
 #include <random>
 
-#include "building.h"
-#include "elevator.h"
-#include "floor.h"
-#include "monitor.h"
-#include "nlohmann/json.hpp"
-
+class building;
+class elevator;
+class floor;
 class monitor;
 
 class passenger {

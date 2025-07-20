@@ -2,9 +2,10 @@
 
 #include <algorithm>
 #include <fstream>
+#include <nlohmann/json.hpp>
 #include <stdexcept>
 
-#include "nlohmann/json.hpp"
+#include "MainWindow.h"
 
 const int sampling_interval_millisecond = 5000;  // used for estimated_waiting_time
 
@@ -140,7 +141,7 @@ std::map<long long, long long> statistics::get_estimated_waiting_time(int elevat
 
 // load statistics from file
 bool statistics::load() {
-    std::ifstream input("./data/data.json");
+    std::ifstream input("data/data.json");
     if (!input) {  // if file not exist
         return false;
     }
@@ -155,7 +156,7 @@ bool statistics::load() {
 
 // save statistics to file
 bool statistics::save() {
-    std::ofstream output("./data/data.json");
+    std::ofstream output("data/data.json");
     if (!output.is_open()) {  // if file not exist
         return false;
     }

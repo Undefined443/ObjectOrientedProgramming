@@ -1,5 +1,9 @@
 #include "passenger.h"
 
+#include "elevator.h"
+#include "floor.h"
+#include "monitor.h"
+
 // Initialize the static variable
 int passenger::c_id = 0;
 std::random_device passenger::rd;

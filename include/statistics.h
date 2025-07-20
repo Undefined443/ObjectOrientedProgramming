@@ -5,9 +5,6 @@
 #include <map>
 #include <vector>
 
-#include "MainWindow.h"
-
-class Chart;
 class MainWindow;
 
 class statistics {

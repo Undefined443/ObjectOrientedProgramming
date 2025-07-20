@@ -8,49 +8,49 @@
 
 **基础题目**
 
-![基础题目](.assets/basic-title.png){width=300 height=200}
+![基础题目](.assets/basic-title.png)
 
 <details>
 <summary>上机细节</summary>
 
 **第一次上机**
 
-![第一次上机](.assets/1st/title.png){width=300 height=200}
+![第一次上机](.assets/1st/title.png)
 
 [第一次上机报告](.assets/1st/design-description.md)
 
 **第二次上机**
 
-![第二次上机](.assets/2nd/title.png){width=300 height=200}
+![第二次上机](.assets/2nd/title.png)
 
 [第二次上机报告](.assets/2nd/design-description.md)
 
 **第三次上机**
 
-![第三次上机](.assets/3rd/title.png){width=300 height=200}
+![第三次上机](.assets/3rd/title.png)
 
 [第三次上机报告](.assets/3rd/design-description.md)
 
 **第四次上机**
 
-![第四次上机](.assets/4th/title.png){width=300 height=200}
+![第四次上机](.assets/4th/title.png)
 
 [第四次上机报告](.assets/4th/design-description.md)
 
 **第五次上机**
 
-![第五次上机](.assets/5th/title.png){width=300 height=200}
+![第五次上机](.assets/5th/title.png)
 
 [第五次上机报告](.assets/5th/design-description.md)
 </details>
 
 **最终效果**
 
-![png](.assets/1.gif){width=300 height=200}
+![png](.assets/1.gif)
 
-![png](.assets/2.gif){width=300 height=200}
+![png](.assets/2.gif)
 
-![png](.assets/3.png){width=300 height=200}
+![png](.assets/3.png)
 
 ## Prerequisites
 

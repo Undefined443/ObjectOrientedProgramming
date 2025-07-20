@@ -11,10 +11,6 @@
 #include <string>
 #include <vector>
 
-#include "MainWindow.h"
-#include "building.h"
-#include "statistics.h"
-
 class building;
 class elevator;
 class MainWindow;

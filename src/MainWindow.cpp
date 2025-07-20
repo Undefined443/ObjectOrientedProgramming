@@ -1,10 +1,12 @@
 #include "MainWindow.h"
 
-#include <Chart.h>
-
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <iostream>
+
+#include "Chart.h"
+#include "ElevatorShaft.h"
+#include "monitor.h"
 
 MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget* parent)
     : chart(new Chart(elevator_num)), QMainWindow(parent) {
