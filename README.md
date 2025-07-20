@@ -8,7 +8,7 @@
 
 **基础题目**
 
-![基础题目](.assets/basic-title.png =400x)
+![基础题目](.assets/basic-title.png)
 
 <details>
 <summary>上机细节</summary>

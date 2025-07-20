@@ -20,11 +20,11 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-# 添加资源文件
-qt_add_resources(RESOURCES resources.qrc)
-
 # 引入源文件
 file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp" "include/*.h")
+
+# 创建资源文件
+qt_add_resources(RESOURCES resources.qrc)
 
 # 创建可执行文件
 qt_add_executable(${PROJECT_NAME} MANUAL_FINALIZATION ${PROJECT_SOURCES} ${RESOURCES})
