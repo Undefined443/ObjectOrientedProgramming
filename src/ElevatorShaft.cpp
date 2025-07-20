@@ -31,12 +31,10 @@ ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent)
     // Set elevator label
     elevator_label = new QLabel(elevator_widget);
     elevator_label->setFixedSize(PIC_WIDTH, PIC_WIDTH);
-    QIcon icon(":/images/elevator.svg");
-    QPixmap pixmap = icon.pixmap(elevator_label->size());
-    if (pixmap.isNull()) {
-        qDebug() << "Failed to load elevator icon";
-    }
+    QPixmap pixmap(":/images/elevator.svg");
+    // QPixmap scaled = pixmap.scaled(elevator_label->size(), Qt::KeepAspectRatio);
     elevator_label->setPixmap(pixmap);
+    elevator_label->setScaledContents(true);
     elevator_label->setGeometry(0, (floor_num - 1) * LINE_HEIGHT, PIC_WIDTH, PIC_WIDTH);
     elevator_label->setStyleSheet("background-color:white;border:none;");
 
