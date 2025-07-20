@@ -1,8 +1,9 @@
-#include "monitor.h"
+#include <QApplication>
+#include <thread>
+
 #include "MainWindow.h"
 #include "building.h"
-#include <thread>
-#include <QApplication>
+#include "monitor.h"
 
 building *b;
 monitor *mon;
@@ -11,8 +12,8 @@ MainWindow *main_window;
 // logic thread
 void run() {
     while (mon->get_status()) {  // while the simulation is running
-        b->run();  // refresh the building
-        mon->run();  // refresh the monitor
+        b->run();                // refresh the building
+        mon->run();              // refresh the monitor
     }
     mon->finish();  // finish the simulation
 }
@@ -22,10 +23,10 @@ int main(int argc, char *argv[]) {
 
     b = new building();  // create a building
 
-    auto conf = b->get_conf();  // get the configuration of the building
-    int elevator_count = conf["elevator.count"];  // get the number of elevators
-    int floor_num = conf["building.floors"];  // get the number of floors
-    int time_unit = conf["simulator.timeUnitMillisecond"];  // get the time unit
+    auto conf = b->get_conf();                                  // get the configuration of the building
+    int elevator_count = conf["elevator.count"];                // get the number of elevators
+    int floor_num = conf["building.floors"];                    // get the number of floors
+    int time_unit = conf["simulator.timeUnitMillisecond"];      // get the time unit
     int speed = conf["elevator.speed"].get<int>() * time_unit;  // get the speed of the elevator
 
     main_window = new MainWindow(elevator_count, floor_num, speed);  // create a MainWindow

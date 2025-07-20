@@ -1,16 +1,17 @@
 #ifndef STATISTICS_H
 #define STATISTICS_H
 
-#include "MainWindow.h"
-#include <vector>
-#include <map>
 #include <QVector>
+#include <map>
+#include <vector>
+
+#include "MainWindow.h"
 
 class Chart;
 class MainWindow;
 
 class statistics {
-public:
+   public:
     statistics(int elevator_num, MainWindow *main_window);
 
     void add_elevator_idle_time(int elevator, long long time);  // add elevator idle time
@@ -19,9 +20,11 @@ public:
 
     void add_passenger_waiting_time(int elevator, std::pair<long, long> time);  // add passenger waiting time
 
-    [[nodiscard("elevator statistics")]] QVector<long long> get_elevator_statistics(int elevator) const;  // get elevator statistics
+    [[nodiscard("elevator statistics")]] QVector<long long> get_elevator_statistics(
+        int elevator) const;  // get elevator statistics
 
-    [[nodiscard("passenger statistics")]] QVector<long long> get_passenger_statistics() const;  // get passenger statistics
+    [[nodiscard("passenger statistics")]] QVector<long long> get_passenger_statistics()
+        const;  // get passenger statistics
 
     void set_base_timestamp(long long time_stamp);  // set base time stamp for statistics
 
@@ -35,9 +38,9 @@ public:
 
     bool is_rush_hour(int elevator, long long time);  // return true if it is rush hour
 
-private:
+   private:
     std::vector<std::vector<std::vector<long long>>> elevator_statistics;  // store elevator statistics
-    std::vector<long long> passenger_statistics;  // store passenger statistics
+    std::vector<long long> passenger_statistics;                           // store passenger statistics
     MainWindow *main_window;
     long long base_timestamp = 0;
     int time_unit = 0;
@@ -46,4 +49,4 @@ private:
                                                                                                // data.second: count
 };
 
-#endif //STATISTICS_H
+#endif  // STATISTICS_H

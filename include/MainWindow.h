@@ -1,14 +1,15 @@
 #ifndef MAINWINWOW_H
 #define MAINWINWOW_H
 
-#include "ElevatorShaft.h"
-#include "Chart.h"
-#include "monitor.h"
-#include <string>
-#include <QMainWindow>
 #include <QLabel>
-#include <QVector>
+#include <QMainWindow>
 #include <QString>
+#include <QVector>
+#include <string>
+
+#include "Chart.h"
+#include "ElevatorShaft.h"
+#include "monitor.h"
 
 QT_BEGIN_NAMESPACE
 class Chart;
@@ -20,7 +21,7 @@ class monitor;
 class ElevatorShaft;
 
 class MainWindow : public QMainWindow {
-public:
+   public:
     MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent = nullptr);
 
     void move_elevator(int elevator, int start, int end);
@@ -41,11 +42,11 @@ public:
 
     void set_monitor(monitor *mon);
 
-protected:
+   protected:
     void closeEvent(QCloseEvent *event) override;
 
-private:
-Q_OBJECT
+   private:
+    Q_OBJECT
     int id = 0;
     std::vector<ElevatorShaft *> elevator_shafts;
     std::vector<QLabel *> message_labels;
@@ -53,7 +54,7 @@ Q_OBJECT
     Chart *chart;
     monitor *m = nullptr;
 
-signals:
+   signals:
 
     void move_elevator_signal(int elevator, int start, int end);
 
@@ -71,7 +72,7 @@ signals:
 
     void passenger_statistics_signal(QVector<long long> passenger_statistics);
 
-private slots:
+   private slots:
 
     void move_elevator_slot(int elevator, int start, int end);
 
@@ -90,5 +91,4 @@ private slots:
     void passenger_statistics_slot(QVector<long long> passenger_statistics);
 };
 
-
-#endif //MAINWINWOW_H
+#endif  // MAINWINWOW_H

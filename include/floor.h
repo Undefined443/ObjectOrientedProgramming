@@ -1,21 +1,22 @@
 #ifndef FLOOR_H
 #define FLOOR_H
 
-#include "elevator.h"
-#include "passenger.h"
-#include "building.h"
-#include "monitor.h"
-#include <nlohmann/json.hpp>
-#include <vector>
-#include <queue>
 #include <map>
+#include <nlohmann/json.hpp>
+#include <queue>
+#include <vector>
+
+#include "building.h"
+#include "elevator.h"
+#include "monitor.h"
+#include "passenger.h"
 
 class elevator;
 class passenger;
 class monitor;
 
 class floor {
-public:
+   public:
     friend class monitor;
 
     floor(class building *_b, int id, const nlohmann::json &conf);
@@ -24,7 +25,8 @@ public:
 
     void set_monitor(monitor *_monitor);
 
-    void add_passenger(passenger *p);  // add passenger to the floor, call after passenger alight the elevator && passenger spawned on this floor
+    void add_passenger(passenger *p);  // add passenger to the floor, call after passenger alight the elevator &&
+                                       // passenger spawned on this floor
 
     void request_elevator(passenger *p);
 
@@ -34,9 +36,10 @@ public:
 
     int get_id() const;
 
-    void remove_passenger(passenger *p, elevator *e);  // remove passenger from the floor, call after passenger board the elevator
+    void remove_passenger(passenger *p,
+                          elevator *e);  // remove passenger from the floor, call after passenger board the elevator
 
-private:
+   private:
     int id;
     nlohmann::json conf;
     building *b;
@@ -50,5 +53,4 @@ private:
     std::map<int, std::vector<passenger *>> downside_boarding_queues;
 };
 
-
-#endif //FLOOR_H
+#endif  // FLOOR_H

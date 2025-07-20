@@ -1,20 +1,20 @@
 #ifndef CHART_H
 #define CHART_H
 
-#include <QWidget>
-#include <QVector>
-#include <QString>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QtCharts>
 #include <QPropertyAnimation>
+#include <QString>
+#include <QVector>
+#include <QWidget>
+#include <QtCharts>
 
 QT_BEGIN_NAMESPACE
 class QWidget;
 QT_END_NAMESPACE
 
 class Chart : public QWidget {
-public:
+   public:
     friend class MainWindow;
 
     Chart(int _elevator_num, QWidget *parent = nullptr);
@@ -23,22 +23,22 @@ public:
 
     void set_passenger_statistics(QVector<long long> passenger_statistics);  // update passenger statistics
 
-private:
+   private:
     Q_OBJECT
     int elevator_num;
     QVector<QPieSeries *> pie_series_vector;
     QBarSet *bar_set;
     QValueAxis *axisY;
 
-    signals:
+   signals:
     void elevator_statistics_signal(int elevator, QVector<long long> elevator_statistics);
 
     void passenger_statistics_signal(QVector<long long> passenger_statistics);
 
-private slots:
+   private slots:
     void elevator_statistics_slot(int elevator, QVector<long long> elevator_statistics);
 
     void passenger_statistics_slot(QVector<long long> passenger_statistics);
 };
 
-#endif //CHART_H
+#endif  // CHART_H

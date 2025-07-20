@@ -1,10 +1,13 @@
 #include "MainWindow.h"
-#include <iostream>
-#include <QHBoxLayout>
-#include <QPushButton>
+
 #include <Chart.h>
 
-MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *parent) : chart(new Chart(elevator_num)), QMainWindow(parent) {
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <iostream>
+
+MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget* parent)
+    : chart(new Chart(elevator_num)), QMainWindow(parent) {
     // Set widgets
     auto* central_widget = new QWidget(this);
     auto elevator_shafts_widget = new QWidget(this);
@@ -13,16 +16,17 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     auto message_widget = new QWidget(information_widget);
 
     // Set layouts
-    auto central_widget_vertical_layout = new QVBoxLayout(central_widget);  // for central widget
+    auto central_widget_vertical_layout = new QVBoxLayout(central_widget);            // for central widget
     auto elevator_shaft_horizontal_layout = new QHBoxLayout(elevator_shafts_widget);  // for elevator shaft widget
-    auto information_horizontal_layout = new QHBoxLayout(information_widget);  // for information widget
-    auto message_vertical_layout = new QVBoxLayout(message_widget);  // for message widget
+    auto information_horizontal_layout = new QHBoxLayout(information_widget);         // for information widget
+    auto message_vertical_layout = new QVBoxLayout(message_widget);                   // for message widget
     elevator_shaft_horizontal_layout->setSpacing(0);
 
     // Add elevator shafts
     for (int i = 0; i < elevator_num; ++i) {
         auto elevator_shaft = new ElevatorShaft(i + 1, floor_num, speed, elevator_shafts_widget);
-        //elevator_shaft->setStyleSheet("background-color:white;border:2px groove gray;border-radius:10px;padding:2px 4px;");
+        // elevator_shaft->setStyleSheet("background-color:white;border:2px groove gray;border-radius:10px;padding:2px
+        // 4px;");
         elevator_shaft_horizontal_layout->addWidget(elevator_shaft);
         elevator_shafts.push_back(elevator_shaft);
     }
@@ -41,7 +45,8 @@ MainWindow::MainWindow(int elevator_num, int floor_num, int speed, QWidget *pare
     }
 
     auto statistics_show_button = new QPushButton("Statistics", information_widget);
-    statistics_show_button->setStyleSheet("color:black;background-color:white;border:2px groove gray;border-radius:10px;padding:2px 4px;");
+    statistics_show_button->setStyleSheet(
+        "color:black;background-color:white;border:2px groove gray;border-radius:10px;padding:2px 4px;");
     statistics_show_button->setFixedSize(100, 30);
 
     // Add message widget and time label
@@ -81,7 +86,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     m->set_status(false);
 }
 
-void MainWindow::set_monitor(monitor *mon) {
+void MainWindow::set_monitor(monitor* mon) {
     m = mon;
     for (auto elevator_shaft : elevator_shafts) {
         elevator_shaft->set_monitor(m);
@@ -89,25 +94,17 @@ void MainWindow::set_monitor(monitor *mon) {
 }
 
 // Emitters
-void MainWindow::move_elevator(int elevator, int start, int end) {
-    emit move_elevator_signal(elevator, start, end);
-}
+void MainWindow::move_elevator(int elevator, int start, int end) { emit move_elevator_signal(elevator, start, end); }
 
 void MainWindow::set_floor_info(int elevator, int floor_num, int upside_num, int downside_num, int alight_num) {
     emit floor_info_signal(elevator, floor_num, upside_num, downside_num, alight_num);
 }
 
-void MainWindow::set_message(QVector<QString> messages) {
-    emit message_signal(messages);
-}
+void MainWindow::set_message(QVector<QString> messages) { emit message_signal(messages); }
 
-void MainWindow::set_timer(QString time) {
-    emit timer_signal(time);
-}
+void MainWindow::set_timer(QString time) { emit timer_signal(time); }
 
-void MainWindow::set_load_info(int elevator, int load, QString color) {
-    emit load_info_signal(elevator, load, color);
-}
+void MainWindow::set_load_info(int elevator, int load, QString color) { emit load_info_signal(elevator, load, color); }
 
 void MainWindow::set_floor_color(int elevator, int floor_num, QString color) {
     emit floor_color_signal(elevator, floor_num, color);
@@ -136,9 +133,7 @@ void MainWindow::message_slot(QVector<QString> messages) {
     }
 }
 
-void MainWindow::timer_slot(QString time) {
-    time_label->setText(time);
-}
+void MainWindow::timer_slot(QString time) { time_label->setText(time); }
 
 void MainWindow::load_info_slot(int elevator, int load, QString color) {
     elevator_shafts[elevator]->set_load_info(load, color);

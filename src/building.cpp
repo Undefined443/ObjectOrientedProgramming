@@ -14,19 +14,23 @@ std::mt19937 building::e = std::mt19937(rd());  // random number generator
 // Once the building instance is created, the constructor will read the configuration file and initialize the building.
 building::building()
     : refresh_time_stamp(
-          std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()),
+          std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
+              .count()),
       base_time_stamp(refresh_time_stamp) {
     try {
         std::ifstream conf_file("./data/config.json");
         conf = nlohmann::json::parse(conf_file);
         conf_file.close();
     } catch (nlohmann::detail::parse_error &e) {
-        std::cerr << "Error: File \"./data/config.json\" not found. Put it at the same directory as this executable." << std::endl;
+        std::cerr << "Error: File \"./data/config.json\" not found. Put it at the same directory as this executable."
+                  << std::endl;
         exit(1);
     }
 
-    rand_passenger_normal = std::poisson_distribution<>(conf["simulator.passengerSpawnRate"][0]);  // spawn passengers per time unit
-    rand_passenger_peak = std::poisson_distribution<>(conf["simulator.passengerSpawnRate"][1]);    // spawn passengers per time unit
+    rand_passenger_normal =
+        std::poisson_distribution<>(conf["simulator.passengerSpawnRate"][0]);  // spawn passengers per time unit
+    rand_passenger_peak =
+        std::poisson_distribution<>(conf["simulator.passengerSpawnRate"][1]);  // spawn passengers per time unit
     rush_hours = conf["simulator.rushHours"].get<std::vector<std::pair<int, int>>>();
 
     // Create floors
@@ -70,8 +74,8 @@ building::building()
 }
 
 // Core function
-// Building will refresh every second. The refresh function will spawn passengers, update elevators and floors, and update the
-// statistics.
+// Building will refresh every second. The refresh function will spawn passengers, update elevators and floors, and
+// update the statistics.
 void building::run() {
     // Spawn passengers
     int traffic = conf["simulator.traffic"];
@@ -141,12 +145,14 @@ void building::set_monitor(monitor *_monitor) {
 // set the refresh time stamp to current time
 void building::set_refresh_time() {
     refresh_time_stamp =
-        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
+            .count();
 }
 
 // Get the time gap between now and the last refresh time
 long long building::get_time_gap() const {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() -
+    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
+               .count() -
            refresh_time_stamp;
 }
 

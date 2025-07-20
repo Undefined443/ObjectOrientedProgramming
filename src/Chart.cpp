@@ -1,21 +1,21 @@
 #include "Chart.h"
-#include <exception>
-#include <QtCharts>
-#include <QVBoxLayout>
+
 #include <QGridLayout>
-#include <QtWidgets>
+#include <QVBoxLayout>
 #include <QVector>
+#include <QtCharts>
+#include <QtWidgets>
+#include <exception>
 
 const int COLUMN = 5;
 const int HEIGHT = 250;
 
-Chart::Chart(int _elevator_num, QWidget *parent) :
-    elevator_num(_elevator_num),
-    pie_series_vector(elevator_num),
-    bar_set(new QBarSet("")),
-    axisY(new QValueAxis()),
-    QWidget(parent) {
-
+Chart::Chart(int _elevator_num, QWidget *parent)
+    : elevator_num(_elevator_num),
+      pie_series_vector(elevator_num),
+      bar_set(new QBarSet("")),
+      axisY(new QValueAxis()),
+      QWidget(parent) {
     // Set widgets
     // auto elevator_panel = new QWidget(this);
 
@@ -99,14 +99,14 @@ void Chart::set_passenger_statistics(QVector<long long> passenger_statistics) {
 
 // Slots
 void Chart::elevator_statistics_slot(int elevator, QVector<long long> elevator_statistics) {
-    if ((long long) pie_series_vector[elevator]->slices()[0]->value() != elevator_statistics[0]) {  // got a new value
+    if ((long long)pie_series_vector[elevator]->slices()[0]->value() != elevator_statistics[0]) {  // got a new value
         pie_series_vector[elevator]->slices()[0]->setValue(qreal(elevator_statistics[0]));
         auto idle_time_str = "Idle: " + QString::number(elevator_statistics[0] / 1000) + " s";
         if (pie_series_vector[elevator]->slices()[0]->label() != idle_time_str) {  // need to update label
             pie_series_vector[elevator]->slices()[0]->setLabel(idle_time_str);
         }
     }
-    if ((long long) pie_series_vector[elevator]->slices()[1]->value() != elevator_statistics[1]) {  // got a new value
+    if ((long long)pie_series_vector[elevator]->slices()[1]->value() != elevator_statistics[1]) {  // got a new value
         pie_series_vector[elevator]->slices()[1]->setValue(qreal(elevator_statistics[1]));
         auto running_time_str = "Running: " + QString::number(elevator_statistics[1] / 1000) + " s";
         if (pie_series_vector[elevator]->slices()[1]->label() != running_time_str) {  // need to update label

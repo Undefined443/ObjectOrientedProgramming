@@ -1,46 +1,64 @@
 #include "floor.h"
-#include <stdexcept>
+
 #include <cmath>
+#include <stdexcept>
 
 floor::floor(class building *_b, int id, const nlohmann::json &conf) : b(_b), id(id), conf(conf) {}
 
 void floor::request_elevator(passenger *p) {
     // find an elevator
     std::vector<std::pair<elevator *, std::pair<int, int>>> candidates;
-    int pas_direction = p->get_destination() - id > 0 ? elevator::direction::up : elevator::direction::down;  // passenger direction
-    for (auto el: accessible_elevators) {
+    int pas_direction =
+        p->get_destination() - id > 0 ? elevator::direction::up : elevator::direction::down;  // passenger direction
+    for (auto el : accessible_elevators) {
         if (!el->is_accessible(p->get_destination())) {  // drop the elevator if it is not accessible to the floor
             continue;
         }
-        auto el_status = el->get_status();  // get elevator status
-        auto el_direction = el->get_direction();  // get elevator direction
+        auto el_status = el->get_status();                    // get elevator status
+        auto el_direction = el->get_direction();              // get elevator direction
         auto el_cur_flr = el->get_current_floor()->get_id();  // get elevator current floor
 
         // some temporary variables
-        int el_coming_direction = id - el_cur_flr > 0 ? elevator::direction::up : elevator::direction::down;  // get the direction for the elevator to come to this floor
-        auto &boarding_queue = pas_direction > 0 ? upside_boarding_queues[el->get_group_id()] : downside_boarding_queues[el->get_group_id()];  // get the boarding queue of the elevator
+        int el_coming_direction =
+            id - el_cur_flr > 0
+                ? elevator::direction::up
+                : elevator::direction::down;  // get the direction for the elevator to come to this floor
+        auto &boarding_queue =
+            pas_direction > 0 ? upside_boarding_queues[el->get_group_id()]
+                              : downside_boarding_queues[el->get_group_id()];  // get the boarding queue of the elevator
 
-        bool is_at_same_floor = (el_cur_flr == id) && (el_direction == pas_direction)  && (el->get_ding_stage() != 0);  // same floor && same direction && open for boarding
-        bool is_pass_by = el_direction == pas_direction && el_coming_direction == el_direction;  // indicates whether the elevator can pass by passenger's floor without changing direction
-        bool non_return = !el_status || is_at_same_floor || is_pass_by;  // elevator is idle || at the same floor || elevator can pass by passenger's floor without changing direction
+        bool is_at_same_floor = (el_cur_flr == id) && (el_direction == pas_direction) &&
+                                (el->get_ding_stage() != 0);  // same floor && same direction && open for boarding
+        bool is_pass_by = el_direction == pas_direction &&
+                          el_coming_direction == el_direction;  // indicates whether the elevator can pass by
+                                                                // passenger's floor without changing direction
+        bool non_return =
+            !el_status || is_at_same_floor || is_pass_by;  // elevator is idle || at the same floor || elevator can pass
+                                                           // by passenger's floor without changing direction
         bool single_return = el_direction != pas_direction;
-        int free_space = el->get_free_space() - int(boarding_queue.size());  // free space after boarding other passengers
+        int free_space =
+            el->get_free_space() - int(boarding_queue.size());  // free space after boarding other passengers
 
         // calculate the distance between elevator and passenger (considering the direction)
         int distance;
-        if (non_return) {  // elevator is idle || at the same floor || elevator can pass by passenger's floor without changing direction
+        if (non_return) {  // elevator is idle || at the same floor || elevator can pass by passenger's floor without
+                           // changing direction
             distance = std::abs(el_cur_flr - id);
-        } else if (single_return){  // elevator is moving && elevator's direction is different from passenger's direction
+        } else if (single_return) {  // elevator is moving && elevator's direction is different from passenger's
+                                     // direction
             if (el_direction == elevator::direction::up) {
                 distance = conf["building.floors"].get<int>() - id + conf["building.floors"].get<int>() - el_cur_flr;
             } else {
                 distance = id - 1 + el_cur_flr - 1;
             }
-        } else {  // elevator is moving && elevator's direction is the same as passenger's direction && elevator passed this floor
+        } else {  // elevator is moving && elevator's direction is the same as passenger's direction && elevator passed
+                  // this floor
             if (el_direction == elevator::direction::up) {
-                distance = id - 1 + conf["building.floors"].get<int>() - el_cur_flr + conf["building.floors"].get<int>() - 1;
+                distance =
+                    id - 1 + conf["building.floors"].get<int>() - el_cur_flr + conf["building.floors"].get<int>() - 1;
             } else {
-                distance = conf["building.floors"].get<int>() - id + el_cur_flr - 1 + conf["building.floors"].get<int>() - 1;
+                distance =
+                    conf["building.floors"].get<int>() - id + el_cur_flr - 1 + conf["building.floors"].get<int>() - 1;
             }
         }
         // Lighten the load on the main elevator
@@ -50,12 +68,15 @@ void floor::request_elevator(passenger *p) {
         candidates.emplace_back(el, std::make_pair(distance, free_space));  // add the elevator to the candidates
     }
     // sort by distance and free space
-    std::sort(candidates.begin(), candidates.end(), [](const std::pair<elevator *, std::pair<int, int>> &a, const std::pair<elevator *, std::pair<int, int>> &b) {
-        if (a.second.first == b.second.first) {
-            return a.second.second > b.second.second;  // if distance is the same, choose the one with more free space
-        }
-        return a.second.first < b.second.first;
-    });
+    std::sort(
+        candidates.begin(), candidates.end(),
+        [](const std::pair<elevator *, std::pair<int, int>> &a, const std::pair<elevator *, std::pair<int, int>> &b) {
+            if (a.second.first == b.second.first) {
+                return a.second.second >
+                       b.second.second;  // if distance is the same, choose the one with more free space
+            }
+            return a.second.first < b.second.first;
+        });
     auto nearest_elevator = candidates[0].first;  // get the nearest elevator
 
     // add the passenger to the boarding queue
@@ -65,28 +86,23 @@ void floor::request_elevator(passenger *p) {
         downside_boarding_queues[nearest_elevator->get_group_id()].push_back(p);
     }
     // register the passenger
-    for (auto e:nearest_elevator->get_group()) {
+    for (auto e : nearest_elevator->get_group()) {
         if (e->reg_pas(p)) {
             break;
         }
     }
 }
 
-void floor::add_accessible_elevator(elevator *e) {
-    accessible_elevators.push_back(e);
-}
+void floor::add_accessible_elevator(elevator *e) { accessible_elevators.push_back(e); }
 
 std::vector<passenger *> &floor::get_boarding_queue(elevator *e) {
-    return e->get_direction() > 0 ? upside_boarding_queues[e->get_group_id()] : downside_boarding_queues[e->get_group_id()];
+    return e->get_direction() > 0 ? upside_boarding_queues[e->get_group_id()]
+                                  : downside_boarding_queues[e->get_group_id()];
 }
 
-int floor::get_id() const {
-    return id;
-}
+int floor::get_id() const { return id; }
 
-void floor::add_passenger(passenger *p) {
-    passengers.push_back(p);
-}
+void floor::add_passenger(passenger *p) { passengers.push_back(p); }
 
 // remove the passenger from this floor
 void floor::remove_passenger(passenger *p, elevator *e) {
@@ -105,6 +121,4 @@ void floor::leave_building(passenger *p) {
     }
 }
 
-void floor::set_monitor(monitor *_monitor) {
-    mon = _monitor;
-}
+void floor::set_monitor(monitor *_monitor) { mon = _monitor; }

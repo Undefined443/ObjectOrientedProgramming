@@ -1,22 +1,23 @@
 #ifndef ELEVATOR_H
 #define ELEVATOR_H
 
-#include "passenger.h"
+#include <map>
+#include <queue>
+#include <vector>
+
 #include "monitor.h"
 #include "nlohmann/json.hpp"
-#include <vector>
-#include <queue>
-#include <map>
+#include "passenger.h"
 
 class passenger;
 class floor;
 class monitor;
 
 class elevator {
-public:
+   public:
     friend class monitor;
 
-    elevator(int id, const nlohmann::json& conf);
+    elevator(int id, const nlohmann::json &conf);
 
     void set_current_floor(class floor *f);  // set initial floor
 
@@ -64,21 +65,17 @@ public:
 
     [[nodiscard]] std::vector<elevator *> get_group() const;  // get group members
 
-    enum direction {
-        up = 1, down = -1, stop = 0
-    };
+    enum direction { up = 1, down = -1, stop = 0 };
 
-    enum status {
-        running = 1, idle = 0
-    };
+    enum status { running = 1, idle = 0 };
 
-private:
+   private:
     int id;
     int group_id = 0;
     monitor *mon = nullptr;
-    nlohmann::json conf;  // configuration data
+    nlohmann::json conf;               // configuration data
     long long refresh_time_stamp = 0;  // refresh time stamp for elevator
-    long long statistic_time_stamp;  // to calculate the running/idle time
+    long long statistic_time_stamp;    // to calculate the running/idle time
 
     int direction = stop;
     bool status = idle;
@@ -86,12 +83,13 @@ private:
     int ding_stage = 0;  // indicates at which stage the ding function is running
 
     class floor *current_floor = nullptr;
-    std::vector<passenger *> passengers;  // passengers on the elevator
-    std::vector<class floor *> floors;  // all floors
+    std::vector<passenger *> passengers;           // passengers on the elevator
+    std::vector<class floor *> floors;             // all floors
     std::vector<class floor *> accessible_floors;  // floors accessible by the elevator
     std::vector<elevator *> group;
 
-    std::map<class floor *, std::vector<passenger *>> registry;  // table of passengers to be boarded/alighted at each floor
+    std::map<class floor *, std::vector<passenger *>>
+        registry;  // table of passengers to be boarded/alighted at each floor
 
     void board();  // board passengers
 
@@ -106,4 +104,4 @@ private:
     long long get_statistic_time();  // get the running/idle time
 };
 
-#endif //ELEVATOR_H
+#endif  // ELEVATOR_H

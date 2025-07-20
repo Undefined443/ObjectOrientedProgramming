@@ -1,4 +1,5 @@
 #include "ElevatorShaft.h"
+
 #include <QHBoxLayout>
 #include <map>
 
@@ -10,7 +11,8 @@ const int PIC_WIDTH = LINE_HEIGHT - PADDING;
 
 const QString LOAD_LABEL_QSS = "border:2px groove gray;border-radius:5px;";
 
-ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent) : QWidget(parent), id(_id), floors(floor_num), floor_labels(floor_num), line_chart(new LineChart()) {
+ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent)
+    : QWidget(parent), id(_id), floors(floor_num), floor_labels(floor_num), line_chart(new LineChart()) {
     // Set fixed size
     setFixedSize(PIC_WIDTH + LINE_WIDTH, LINE_HEIGHT * floor_num - PADDING + BOTTOM_MARGIN);
 
@@ -45,7 +47,7 @@ ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent)
     // Set layouts
     auto elevator_shaft_vertical_layout = new QVBoxLayout(this);
     auto elevator_floors_horizontal_layout = new QHBoxLayout(elevator_floors_widget);  // for elevator_floors widget
-    auto floors_vertical_layout = new QVBoxLayout(floors_widget);  // for floors widget
+    auto floors_vertical_layout = new QVBoxLayout(floors_widget);                      // for floors widget
     elevator_shaft_vertical_layout->setContentsMargins(0, 0, 0, 0);
     elevator_shaft_vertical_layout->setSpacing(0);
     elevator_floors_horizontal_layout->setContentsMargins(0, 0, 0, 0);
@@ -60,7 +62,7 @@ ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent)
 
         // Set floor labels
         auto upside_num = new QLabel(floor);
-        auto downside_num = new QLabel( floor);
+        auto downside_num = new QLabel(floor);
         auto alight_num = new QLabel(floor);
         upside_num->setAlignment(Qt::AlignCenter);
         downside_num->setAlignment(Qt::AlignCenter);
@@ -106,21 +108,15 @@ ElevatorShaft::ElevatorShaft(int _id, int floor_num, int speed, QWidget *parent)
     connect(load_button, &QPushButton::clicked, this, &ElevatorShaft::load_button_clicked_slot);
 }
 
-void ElevatorShaft::move_elevator(int start, int end) {
-    emit move_elevator_signal(start, end);
-}
+void ElevatorShaft::move_elevator(int start, int end) { emit move_elevator_signal(start, end); }
 
 void ElevatorShaft::set_floor_info(int floor_num, int upside_num, int downside_num, int alight_num) {
     emit floor_info_signal(floor_num, upside_num, downside_num, alight_num);
 }
 
-void ElevatorShaft::set_load_info(int load, QString color) {
-    emit load_info_signal(load, color);
-}
+void ElevatorShaft::set_load_info(int load, QString color) { emit load_info_signal(load, color); }
 
-void ElevatorShaft::set_floor_color(int floor_num, QString color) {
-    emit floor_color_signal(floor_num, color);
-}
+void ElevatorShaft::set_floor_color(int floor_num, QString color) { emit floor_color_signal(floor_num, color); }
 
 void ElevatorShaft::move_elevator_slot(int start, int end) {
     // Move elevator
@@ -177,10 +173,6 @@ void ElevatorShaft::floor_color_slot(int floor_num, QString color) {
     floors[floor_num]->setStyleSheet("background-color:" + color + ";border:none;border-radius:none;");
 }
 
-void ElevatorShaft::load_button_clicked_slot() {
-    line_chart->set_data(id, m->get_estimated_waiting_time(id - 1));
-}
+void ElevatorShaft::load_button_clicked_slot() { line_chart->set_data(id, m->get_estimated_waiting_time(id - 1)); }
 
-void ElevatorShaft::set_monitor(monitor *mon) {
-    m = mon;
-}
+void ElevatorShaft::set_monitor(monitor *mon) { m = mon; }

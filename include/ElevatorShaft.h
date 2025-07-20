@@ -1,14 +1,15 @@
 #ifndef ELEVATORSHAFT_H
 #define ELEVATORSHAFT_H
 
-#include "LineChart.h"
-#include "monitor.h"
-#include <vector>
-#include <QWidget>
 #include <QLabel>
 #include <QPropertyAnimation>
-#include <QString>
 #include <QPushButton>
+#include <QString>
+#include <QWidget>
+#include <vector>
+
+#include "LineChart.h"
+#include "monitor.h"
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -17,7 +18,7 @@ QT_END_NAMESPACE
 class monitor;
 
 class ElevatorShaft : public QWidget {
-public:
+   public:
     ElevatorShaft(int id, int floor_num, int speed, QWidget *parent = nullptr);
 
     void move_elevator(int start, int end);
@@ -30,7 +31,7 @@ public:
 
     void set_monitor(monitor *mon);
 
-private:
+   private:
     Q_OBJECT
     int id = -1;
     monitor *m = nullptr;
@@ -41,7 +42,7 @@ private:
     QPropertyAnimation *QAnimation;
     LineChart *line_chart;
 
-    signals:
+   signals:
     void move_elevator_signal(int start, int end);
 
     void floor_info_signal(int floor_num, int upside_num, int downside_num, int alight_num);
@@ -50,7 +51,7 @@ private:
 
     void floor_color_signal(int floor_num, QString color);
 
-private slots:
+   private slots:
     void move_elevator_slot(int start, int end);
 
     void floor_info_slot(int floor_num, int upside_num, int downside_num, int alight_num);
@@ -62,4 +63,4 @@ private slots:
     void load_button_clicked_slot();
 };
 
-#endif //ELEVATORSHAFT_H
+#endif  // ELEVATORSHAFT_H

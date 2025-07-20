@@ -1,24 +1,26 @@
 #ifndef PASSENGER_H
 #define PASSENGER_H
 
+#include <random>
+
+#include "building.h"
 #include "elevator.h"
 #include "floor.h"
-#include "building.h"
 #include "monitor.h"
 #include "nlohmann/json.hpp"
-#include <random>
 
 class monitor;
 
 class passenger {
-public:
+   public:
     passenger(class building *b, class floor *f, const nlohmann::json &conf);
 
     void set_monitor(monitor *m);
 
     void run();
 
-    bool timer(elevator *el);  // passenger needs some time to alight/board the elevator, if time is up, then passenger can alight/board the elevator
+    bool timer(elevator *el);  // passenger needs some time to alight/board the elevator, if time is up, then passenger
+                               // can alight/board the elevator
 
     void board(elevator *el);  // clear current floor
 
@@ -32,21 +34,21 @@ public:
 
     elevator *get_current_elevator();
 
-private:
+   private:
     static int c_id;
     static std::random_device rd;  // obtain a random number from hardware
-    static std::mt19937 e;  // random number generator
+    static std::mt19937 e;         // random number generator
 
-    std::uniform_int_distribution<int> rand_boarding_time;  // generate random boarding time
-    std::uniform_int_distribution<int> rand_floor;  // generate random floor destination
-    std::uniform_int_distribution<int> rand_active_time;  // how long a passenger require an elevator
+    std::uniform_int_distribution<int> rand_boarding_time;      // generate random boarding time
+    std::uniform_int_distribution<int> rand_floor;              // generate random floor destination
+    std::uniform_int_distribution<int> rand_active_time;        // how long a passenger require an elevator
     std::uniform_int_distribution<int> rand_total_destination;  // how many floors a passenger will visit
 
     const nlohmann::json conf;
     monitor *mon;
 
     long long refresh_time_stamp;  // refresh time stamp for passenger
-    long long timer_time_stamp;  // time stamp for timer
+    long long timer_time_stamp;    // time stamp for timer
 
     int id;
     int original_floor;
@@ -54,8 +56,8 @@ private:
     int count_destinations = 0;  // count how many floors a passenger has visited
     int total_destinations;
     class floor *current_floor;
-    int boarding_time;  // random boarding time for each passenger
-    int active_time;  // random active time for each passenger
+    int boarding_time;       // random boarding time for each passenger
+    int active_time;         // random active time for each passenger
     bool activated = false;  // whether the passenger is active
     bool is_timing = false;  // whether the timer is running
     long long waiting_timestamp;
@@ -70,5 +72,4 @@ private:
     long long get_time_gap() const;  // calculate time gap between current time and last run time
 };
 
-
-#endif //PASSENGER_H
+#endif  // PASSENGER_H
