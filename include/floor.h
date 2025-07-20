@@ -6,14 +6,10 @@
 #include <queue>
 #include <vector>
 
-#include "building.h"
-#include "elevator.h"
-#include "monitor.h"
-#include "passenger.h"
-
+class building;
 class elevator;
-class passenger;
 class monitor;
+class passenger;
 
 class floor {
    public:

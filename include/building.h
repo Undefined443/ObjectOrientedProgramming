@@ -8,14 +8,9 @@
 #define BUILDING_H
 
 #include <chrono>
+#include <nlohmann/json.hpp>
 #include <random>
 #include <vector>
-
-#include "elevator.h"
-#include "floor.h"
-#include "monitor.h"
-#include "nlohmann/json.hpp"
-#include "passenger.h"
 
 class passenger;
 class floor;

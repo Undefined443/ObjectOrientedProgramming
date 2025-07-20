@@ -2,12 +2,9 @@
 #define ELEVATOR_H
 
 #include <map>
+#include <nlohmann/json.hpp>
 #include <queue>
 #include <vector>
-
-#include "monitor.h"
-#include "nlohmann/json.hpp"
-#include "passenger.h"
 
 class passenger;
 class floor;

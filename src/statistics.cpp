@@ -2,9 +2,10 @@
 
 #include <algorithm>
 #include <fstream>
+#include <nlohmann/json.hpp>
 #include <stdexcept>
 
-#include "nlohmann/json.hpp"
+#include "MainWindow.h"
 
 const int sampling_interval_millisecond = 5000;  // used for estimated_waiting_time
 

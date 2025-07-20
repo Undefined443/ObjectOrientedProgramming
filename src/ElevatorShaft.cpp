@@ -3,6 +3,9 @@
 #include <QHBoxLayout>
 #include <map>
 
+#include "LineChart.h"
+#include "monitor.h"
+
 const int LINE_WIDTH = 72;
 const int LINE_HEIGHT = 25;
 const int PADDING = 0;

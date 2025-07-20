@@ -5,8 +5,6 @@
 #include <QtCharts>
 #include <map>
 
-class monitor;
-
 class LineChart : public QWidget {
    public:
     explicit LineChart(QWidget *parent = nullptr);

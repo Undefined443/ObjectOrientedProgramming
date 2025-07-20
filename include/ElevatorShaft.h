@@ -8,13 +8,11 @@
 #include <QWidget>
 #include <vector>
 
-#include "LineChart.h"
-#include "monitor.h"
-
 QT_BEGIN_NAMESPACE
 class QLabel;
 QT_END_NAMESPACE
 
+class LineChart;
 class monitor;
 
 class ElevatorShaft : public QWidget {

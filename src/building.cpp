@@ -4,9 +4,15 @@
 
 #include "building.h"
 
+#include <QDebug>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+
+#include "elevator.h"
+#include "floor.h"
+#include "monitor.h"
+#include "passenger.h"
 
 std::random_device building::rd;                // obtain a random number from hardware
 std::mt19937 building::e = std::mt19937(rd());  // random number generator
@@ -22,7 +28,8 @@ building::building()
         conf = nlohmann::json::parse(conf_file);
         conf_file.close();
     } catch (nlohmann::detail::parse_error &e) {
-        std::cerr << "Error: File \"./resources/data/config.json\" not found. Put it at the same directory as this executable."
+        std::cerr << "Error: File \"./resources/data/config.json\" not found. Put it at the same directory as this "
+                     "executable."
                   << std::endl;
         exit(1);
     }
